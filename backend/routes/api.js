@@ -8,7 +8,7 @@ import { convertInput } from '../controllers/convertHandler.js'
 const imperialConverter = Router();
 
 imperialConverter.get('/', (req, res) => {
-    res.status(200).sendFile(join(pathFrontEnd, 'index.html'))
+    res.status(200).sendFile(join(pathFrontEnd, '/public/converter.html'))
 })
 
 imperialConverter.get('/api/convert', (req, res) => {

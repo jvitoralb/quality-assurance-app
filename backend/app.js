@@ -13,9 +13,7 @@ app.use(express.urlencoded({extended: true}))
 app.use(express.static(pathFrontEnd))
 
 app.get('/', (req, res) => {
-    res.status(200).json({
-        page: 'home'
-    })
+    res.status(200).sendFile(`${pathFrontEnd}/public/index.html`)
 })
 
 app.use('/metric-converter', imperialConverter)
