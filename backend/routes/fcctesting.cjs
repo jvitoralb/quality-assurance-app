@@ -26,19 +26,20 @@
 */
 
 'use strict';
-import cors from 'cors'
-import fs from 'fs'
-import emitter from '../test-runner.js'
-// const cors = require('cors');
-// const fs = require('fs');
-// const runner = require('../test-runner.js');
-
-const runner = emitter
+// import cors from 'cors'
+// import fs from 'fs'
+// import emitter from '../test-runner.js'
 
 
-export default function (app) {
-    // module.exports = function (app) {
+// const runner = emitter
+const cors = require('cors');
+const fs = require('fs');
+const runner = import('../test-runner.js')
 
+
+// export default function (app) {
+module.exports = function coucou(app) {
+    console.log(__dirname)
     app.route('/_api/server.js')
         .get(function (req, res, next) {
             console.log('requested');

@@ -78,8 +78,8 @@ export class ConvertHandler {
             result = String(this.inputValue / convertRate[this.inputUnit])
         }
 
-        if (result.length > 7) {
-            result = result.slice(0, 6)
+        if (result.length > 8) {
+            result = result.slice(0, 8)
         }
 
         let [ returnUnit ] = this.units.filter(pair => pair[0] === this.inputUnit)

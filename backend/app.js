@@ -1,6 +1,6 @@
 import express from 'express'
 import cors from 'cors'
-import fcctesting from './routes/fcctesting.js'
+import fcctesting from './routes/fcctesting.cjs'
 import notFound from './middleware/notFound.js'
 import imperialConverter from './routes/api.js'
 
