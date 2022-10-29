@@ -2,14 +2,14 @@ export class ConvertHandler {
     constructor() {
         this.inputValue = '',
         this.inputUnit = '',
-        this.units = [
-            ['kg', 'kilograms', 'lbs'],
-            ['lbs', 'pounds', 'kg'],
-            ['l', 'liter', 'gal'],
-            ['gal', 'galon', 'l'],
-            ['km', 'kilometers', 'mi'],
-            ['mi', 'miles', 'km']
-        ]
+        this.units = {
+            kg: ['kilograms', 'lbs', 0.453592],
+            lbs: ['pounds', 'kg', 0.453592],
+            l: ['liters', 'gal', 3.78541],
+            gal: ['gallons', 'l', 3.78541],
+            km: ['kilometers', 'mi', 1.60934],
+            mi: ['miles', 'km', 1.60934]
+        }
     }
 
     getInput = (input) => {
@@ -17,10 +17,9 @@ export class ConvertHandler {
 
         this.inputValue = input.replace(/[a-z]+/gi, '') || '1'
 
-        this.units.forEach(pair => {
-            let unit = pair[0]
-            if (unitLower === unit) {
-                this.inputUnit = unit
+        Object.keys(this.units).forEach(key => {
+            if (unitLower === key) {
+                this.inputUnit = key
             }
         })
     }
@@ -50,41 +49,32 @@ export class ConvertHandler {
     }
 
     getUnitName = () => {
-        let [ unitPair ] = this.units.filter(pair => pair[0] === this.inputUnit)
+        let [ unitName ] = this.units[this.inputUnit]
 
-        return unitPair[1]
+        return unitName
     }
 
     convert = () => {
-        let kgLbs = 2.20462 // kg to lbs convert rate
-        let galL = 3.78541 // gal to liter convert rate
-        let miKm = 1.60934 // mile to km convert rate
+        // 0.453592,lbs to kg convert rate
+        // 3.78541,gal to liter convert rate
+        // 1.60934,mile to km convert rate
         let result
 
-        const convertRate = {
-            'kg': kgLbs,
-            'gal': galL,
-            'mi': miKm,
-            'lbs': kgLbs,
-            'l': galL,
-            'km': miKm
-        }
-
-        if (['kg', 'gal', 'mi'].includes(this.inputUnit)) {
-            result = String(this.inputValue * convertRate[this.inputUnit])
+        if (['lbs', 'gal', 'mi'].includes(this.inputUnit)) {
+            result = this.inputValue * this.units[this.inputUnit][2]
         }
         // Then add a request unit before calling this
-        if (['lbs', 'l', 'km'].includes(this.inputUnit)) {
-            result = String(this.inputValue / convertRate[this.inputUnit])
+        if (['kg', 'l', 'km'].includes(this.inputUnit)) {
+            result = this.inputValue / this.units[this.inputUnit][2]
         }
 
-        if (result.length > 8) {
-            result = result.slice(0, 8)
+        if (`${result}`.length > 5) {
+            result = result.toFixed(5)
         }
 
-        let [ returnUnit ] = this.units.filter(pair => pair[0] === this.inputUnit)
+        let [ unitName, returnUnit ] = this.units[this.inputUnit]
 
-        return result + returnUnit[2]
+        return result + returnUnit
     }
 }
 
@@ -130,17 +120,20 @@ export const convertInputTests = (input) => {
             unitName: handle.getUnitName()
         }
         handle.getInput(handle.convert())
-        return{
+
+        let returnNum = handle.getValue()
+        let returnUnit = handle.getUnit()
+        let returnUnitName = handle.getUnitName()
+        return {
             ...init,
-           returnNum: handle.getValue(),
-           returnUnit: handle.getUnit()
+            returnNum,
+            returnUnit,
+            string: `${init.initNum} ${init.unitName} converts to ${returnNum} ${returnUnitName}`
         }
     } catch(err) {
         if (!handle.inputValue && !handle.inputUnit) {
-            return res.send('invalid number and unit')
+            return err
         }
-        res.send(err.message)
+        return err
     }
 }
-
-// export default ConvertHandler

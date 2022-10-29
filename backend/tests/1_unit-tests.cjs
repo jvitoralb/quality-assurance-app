@@ -6,7 +6,7 @@ suite('Unit Tests', async () => {
     let testHandler = new ConvertHandler()
     let assert = chai.assert
 
-    suite('getNum Tests', () => {
+    suite('Unit Tests - getNum', () => {
         test('#WholeNumber', (done) => {
             let result = convertInputTests('20kg')
             assert.strictEqual(result.initNum, 20)
@@ -39,9 +39,9 @@ suite('Unit Tests', async () => {
         })
     })
 
-    const validUnitsTest = testHandler.units
+    const unitsKeys = Object.keys(testHandler.units)
 
-    suite('getUnit Tests', () => {
+    suite('Unit Tests - getUnit', () => {
         const input = [
             "gal", "l",
             "mi", "km",
@@ -67,26 +67,28 @@ suite('Unit Tests', async () => {
         })
 
         test('#Valid returnUnit', (done) => {
-            validUnitsTest.forEach(unit => {
-                let result = convertInputTests(unit[0])
-                let returnUnit = (unit[0] === 'gal' ? unit[2].toUpperCase() : unit[2])
+            unitsKeys.forEach(key => {
+                let result = convertInputTests(key)
+                let keyPair = testHandler.units[key]
+                let returnUnit = (key === 'gal' ? keyPair[1].toUpperCase() : keyPair[1])
                 assert.strictEqual(result.returnUnit, returnUnit)
             })
             done()
         })
     })
 
-    suite('getUnitName', () => {
+    suite('Unit Tests - getUnitName', () => {
         test('#Each Unit Name', (done) => {
-            validUnitsTest.forEach(unit => {
-                let result = convertInputTests(unit[0])
-                assert.strictEqual(result.unitName, unit[1])
+            unitsKeys.forEach(key => {
+                let result = convertInputTests(key)
+                let keyPair = testHandler.units[key]
+                assert.strictEqual(result.unitName, keyPair[0])
             })
             done()
         })
     })
 
-    suite('convert Tests', () => {
+    suite('Unit Tests - Convert', () => {
         test('#GalToLitter', (done) => {
             let result = convertInputTests('5gal')
             let expected = '18.92705L'
@@ -121,7 +123,7 @@ suite('Unit Tests', async () => {
 
         test('#KgToPound', (done) => {
             let result = convertInputTests('5kg')
-            let expected = '11.0231lbs'
+            let expected = '11.02312lbs'
             assert.approximately(result.returnNum, 11.0231, 0.0001)
             assert.strictEqual(result.returnNum + result.returnUnit, expected)
             done()
@@ -129,7 +131,7 @@ suite('Unit Tests', async () => {
 
         test('#PoundToKg', (done) => {
             let result = convertInputTests('10lbs')
-            let expected = '4.53593kg'
+            let expected = '4.53592kg'
             assert.approximately(result.returnNum, 4.5359, 0.0001)
             assert.strictEqual(result.returnNum + result.returnUnit, expected)
             done()
