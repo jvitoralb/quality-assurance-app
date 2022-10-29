@@ -1,114 +1,138 @@
 const chai = require('chai')
 
-console.log('unit-tests')
+
 suite('Unit Tests', async () => {
     const { ConvertHandler, convertInputTests } = await import('../controllers/convertHandler.js')
     let testHandler = new ConvertHandler()
     let assert = chai.assert
 
-    test('#WholeNumber', (done) => {
-        testHandler.getInput('20kg')
-        assert.strictEqual(testHandler.getValue(), 20)
-        done()
+    suite('getNum Tests', () => {
+        test('#WholeNumber', (done) => {
+            let result = convertInputTests('20kg')
+            assert.strictEqual(result.initNum, 20)
+            done()
+        })
+        test('#DecimalNumber', (done) => {
+            let result = convertInputTests('3.1kg')
+            assert.strictEqual(result.initNum, 3.1)
+            done()
+        })
+        test('#Fraction', (done) => {
+            let result = convertInputTests('1/2kg')
+            assert.strictEqual(result.initNum, 0.5)
+            done()
+        })
+        test('#Fraction With Decimal', (done) => {
+            let result = convertInputTests('10.5/2kg')
+            assert.isNumber(result.initNum)
+            done()
+        })
+        test('#DoubleFraction Error', (done) => {
+            let result = convertInputTests('1/2/2kg')
+            assert.instanceOf(result, Error, 'invalid number')
+            done()
+        })
+        test('#NoNumber defaults 1', (done) => {
+            let result = convertInputTests('kg')
+            assert.isNumber(result.initNum)
+            done()
+        })
     })
-    test('#DecimalNumber', (done) => {
-        testHandler.getInput('3.1kg')
-        assert.strictEqual(testHandler.getValue(), 3.1)
-        done()
-    })
-    test('#Fraction', (done) => {
-        testHandler.getInput('1/2kg')
-        assert.strictEqual(testHandler.getValue(), 0.5)
-        done()
-    })
-    test('#Fraction With Decimal', (done) => {
-        testHandler.getInput('10.5/2kg')
-        assert.isNumber(testHandler.getValue())
-        done()
-    })
-    test('#DoubleFraction Error', (done) => {
-        testHandler.getInput('1/2/2kg')
-        assert.throws(testHandler.getValue, Error, 'invalid number')
-        done()
-    })
-    test('#NoNumber defaults 1', (done) => {
-        testHandler.getInput('kg')
-        assert.isNumber(testHandler.getValue())
-        done()
-    })
-
 
     const validUnitsTest = testHandler.units
 
-    test('#Read Valid Unit', (done) => {
-        validUnitsTest.forEach(unit => {
-            testHandler.getInput(unit[0])
-            if (unit[0] === 'l') {
-                assert.strictEqual(testHandler.getUnit(), unit[0].toUpperCase())
-            } else {
-                assert.strictEqual(testHandler.getUnit(), unit[0])
-            }
+    suite('getUnit Tests', () => {
+        const input = [
+            "gal", "l",
+            "mi", "km",
+            "lbs", "kg",
+            "GAL", "L",
+            "MI", "KM",
+            "LBS", "KG"
+        ]
+    
+        test('#Read Valid Unit', (done) => {
+            input.forEach(unit => {
+                let result = convertInputTests(unit)
+                let unitRes = (['l', 'L'].includes(unit) ? unit.toUpperCase() : unit.toLowerCase())
+                assert.strictEqual(result.initUnit, unitRes)
+            })
+            done()
         })
-        done()
-    })
-        
-    test('#Invalid Unit Error', (done) => {
-        testHandler.inputUnit = ''
-        testHandler.getInput('10ty')
-        assert.throws(testHandler.getUnit, Error, 'invalid unit')
-        done()
-    })
-        
-    test('#Valid returnUnit', (done) => {
-        validUnitsTest.forEach(unit => {
-            let result = convertInputTests(unit[0])
-            if (unit[0] === 'gal') {
-                assert.strictEqual(result.returnUnit, unit[2].toUpperCase())
-            } else {
-                assert.strictEqual(result.returnUnit, unit[2])
-            }
+
+        test('#Invalid Unit Error', (done) => {
+            let result = convertInputTests('10ty')
+            assert.instanceOf(result, Error, 'invalid unit')
+            done()
         })
-        done()
-    })
-        
-    test('#Espelled-out Name', (done) => {
-        validUnitsTest.forEach(unit => {
-            let result = convertInputTests(unit[0])
-            assert.strictEqual(result.unitName, unit[1])
+
+        test('#Valid returnUnit', (done) => {
+            validUnitsTest.forEach(unit => {
+                let result = convertInputTests(unit[0])
+                let returnUnit = (unit[0] === 'gal' ? unit[2].toUpperCase() : unit[2])
+                assert.strictEqual(result.returnUnit, returnUnit)
+            })
+            done()
         })
-        done()
     })
 
-    test('#GalToLitter', (done) => {
-        testHandler.getInput('20gal')
-        assert.strictEqual(testHandler.convert().toUpperCase(), '75.7082L')
-        done()
+    suite('getUnitName', () => {
+        test('#Each Unit Name', (done) => {
+            validUnitsTest.forEach(unit => {
+                let result = convertInputTests(unit[0])
+                assert.strictEqual(result.unitName, unit[1])
+            })
+            done()
+        })
     })
-    test('#LitterToGal', (done) => {
-        testHandler.getInput('75.7L')
-        assert.strictEqual(testHandler.convert(), '19.99783gal')
-        done()
-    })
-    test('#MileToKm', (done) => {
-        testHandler.getInput('6.2mi')
-        let [ kilometers ] = testHandler.convert().split('km', 1)
-        assert.approximately(Number(kilometers), 10, 0.03)
-        done()
-    })
-    test('#KmToMile', (done) => {
-        testHandler.getInput('10km')
-        let [ miles ] = testHandler.convert().split('mi', 1)
-        done()
-        assert.approximately(Number(miles), 6.2, 0.02)
-    })
-    test('#KgToPound', (done) => {
-        testHandler.getInput('10kg')
-        assert.strictEqual(testHandler.convert(), '22.0462lbs')
-        done()
-    })
-    test('#PoundToKg', (done) => {
-        testHandler.getInput('22.0462lbs')
-        assert.strictEqual(testHandler.convert(), '10kg')
-        done()
+
+    suite('convert Tests', () => {
+        test('#GalToLitter', (done) => {
+            let result = convertInputTests('5gal')
+            let expected = '18.92705L'
+            assert.approximately(result.returnNum, 18.9271, 0.0001)
+            assert.strictEqual(result.returnNum + result.returnUnit, expected)
+            done()
+        })
+
+        test('#LitterToGal', (done) => {
+            let result = convertInputTests('20L')
+            let expected = '5.28344gal'
+            assert.approximately(result.returnNum, 5.2834, 0.0001)
+            assert.strictEqual(result.returnNum + result.returnUnit, expected)
+            done()
+        })
+
+        test('#MileToKm', (done) => {
+            let result = convertInputTests('5mi')
+            let expected = '8.0467km'
+            assert.approximately(result.returnNum, 8.0467, 0.0001)
+            assert.strictEqual(result.returnNum + result.returnUnit, expected)
+            done()
+        })
+
+        test('#KmToMile', (done) => {
+            let result = convertInputTests('5km')
+            let expected = '3.10686mi'
+            assert.approximately(result.returnNum, 3.1068, 0.0001)
+            assert.strictEqual(result.returnNum + result.returnUnit, expected)
+            done()
+        })
+
+        test('#KgToPound', (done) => {
+            let result = convertInputTests('5kg')
+            let expected = '11.0231lbs'
+            assert.approximately(result.returnNum, 11.0231, 0.0001)
+            assert.strictEqual(result.returnNum + result.returnUnit, expected)
+            done()
+        })
+
+        test('#PoundToKg', (done) => {
+            let result = convertInputTests('10lbs')
+            let expected = '4.53593kg'
+            assert.approximately(result.returnNum, 4.5359, 0.0001)
+            assert.strictEqual(result.returnNum + result.returnUnit, expected)
+            done()
+        })
     })
 })

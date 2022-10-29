@@ -26,12 +26,6 @@
 */
 
 'use strict';
-// import cors from 'cors'
-// import fs from 'fs'
-// import emitter from '../test-runner.js'
-
-
-// const runner = emitter
 const cors = require('cors');
 const fs = require('fs');
 
