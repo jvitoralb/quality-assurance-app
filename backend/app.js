@@ -1,6 +1,5 @@
 import express from 'express'
 import cors from 'cors'
-import fcctesting from './routes/fcctesting.cjs'
 import notFound from './middleware/notFound.js'
 import imperialConverter from './routes/api.js'
 
@@ -18,9 +17,6 @@ app.get('/', (req, res) => {
 })
 
 app.use('/metric-converter', imperialConverter)
-
-
-fcctesting(app)
 
 app.use(notFound)
 

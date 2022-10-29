@@ -34,12 +34,12 @@
 // const runner = emitter
 const cors = require('cors');
 const fs = require('fs');
-const runner = import('../test-runner.js')
 
 
-// export default function (app) {
-module.exports = function coucou(app) {
-    console.log(__dirname)
+module.exports = async function (app) {
+    const run = await import('../test-runner.js')
+    const runner = run.default
+
     app.route('/_api/server.js')
         .get(function (req, res, next) {
             console.log('requested');

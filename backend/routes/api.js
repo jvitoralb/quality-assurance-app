@@ -1,5 +1,6 @@
 import { Router } from 'express'
-import { convertInput } from '../controllers/convertHandler.js';
+import fcctesting from './fcctesting.cjs'
+import { convertInput } from '../controllers/convertHandler.js'
 
 
 const imperialConverter = Router();
@@ -13,5 +14,7 @@ imperialConverter.get('/', (req, res) => {
 imperialConverter.get('/api/convert', (req, res) => {
     convertInput(req, res)
 })
+
+fcctesting(imperialConverter)
 
 export default imperialConverter
