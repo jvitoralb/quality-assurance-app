@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import ConvertHandler, { convertInput } from '../controllers/convertHandler.js';
+import { convertInput } from '../controllers/convertHandler.js';
 
 
 const imperialConverter = Router();
