@@ -1,8 +1,7 @@
-class ConvertHandler {
+export class ConvertHandler {
     constructor() {
         this.inputValue = '',
         this.inputUnit = '',
-        this.unitName = '',
         this.units = [
             ['kg', 'kilograms', 'lbs'],
             ['lbs', 'pounds', 'kg'],
@@ -63,27 +62,29 @@ class ConvertHandler {
         let result
 
         const convertRate = {
-            'kg': [kgLbs, 'lbs'],
-            'gal': [galL, 'l'],
-            'mi': [miKm, 'km'],
-            'lbs': [kgLbs, 'kg'],
-            'l': [galL, 'gal'],
-            'km': [miKm, 'mi']
+            'kg': kgLbs,
+            'gal': galL,
+            'mi': miKm,
+            'lbs': kgLbs,
+            'l': galL,
+            'km': miKm
         }
 
         if (['kg', 'gal', 'mi'].includes(this.inputUnit)) {
-            result = String(this.inputValue * convertRate[this.inputUnit][0])
+            result = String(this.inputValue * convertRate[this.inputUnit])
         }
-        // Then add a request unit  before calling this
+        // Then add a request unit before calling this
         if (['lbs', 'l', 'km'].includes(this.inputUnit)) {
-            result = String(this.inputValue / convertRate[this.inputUnit][0])
+            result = String(this.inputValue / convertRate[this.inputUnit])
         }
 
         if (result.length > 7) {
             result = result.slice(0, 6)
         }
 
-        return result + (convertRate[this.inputUnit][1] === 'l' ? 'L' : convertRate[this.inputUnit][1])
+        let [ returnUnit ] = this.units.filter(pair => pair[0] === this.inputUnit)
+
+        return result + returnUnit[2]
     }
 }
 
@@ -142,4 +143,4 @@ export const convertInputTests = (input) => {
     }
 }
 
-export default ConvertHandler
+// export default ConvertHandler
