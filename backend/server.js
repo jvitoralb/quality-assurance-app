@@ -1,6 +1,6 @@
 import * as dotenv from 'dotenv'
-import emitter from './test-runner.js'
 import app from './app.js'
+import emitter from './test-runner.js'
 
 dotenv.config()
 
