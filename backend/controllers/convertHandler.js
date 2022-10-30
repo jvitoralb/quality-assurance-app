@@ -132,7 +132,7 @@ export const convertInputTests = (input) => {
         }
     } catch(err) {
         if (!handle.inputValue && !handle.inputUnit) {
-            return err
+            return new Error('invalid number and unit')
         }
         return err
     }
