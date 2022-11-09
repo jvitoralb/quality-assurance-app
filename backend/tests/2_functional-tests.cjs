@@ -8,7 +8,7 @@ chai.use(chaiHttp)
 
 suite('Functional Tests', async () => {
     const app = (await import('../app.js')).default
-    const { convertInputTests } = await import('../controllers/convertHandler.js')
+    const { convertInput } = await import('../controllers/convertHandler.js')
 
     suite('Home Page', () => {
         test('#Check HomePage Status', (done) => {
@@ -25,7 +25,7 @@ suite('Functional Tests', async () => {
         const pathConvertAPI = '/metric-converter/api/convert'
 
         test('#Convert Valid Input', (done) => {
-            let result = convertInputTests('10L')
+            let result = convertInput('10L')
             delete result.unitName
 
             chai.request(app)
@@ -38,7 +38,7 @@ suite('Functional Tests', async () => {
         })
 
         test('#Invalid Input', (done) => {
-            let result = convertInputTests('10g')
+            let result = convertInput('10g')
 
             chai.request(app)
             .get(`${pathConvertAPI}?input=10g`)
@@ -50,7 +50,7 @@ suite('Functional Tests', async () => {
         })
 
         test('#Invalid Number', (done) => {
-            let result = convertInputTests('3/7.2/5kg')
+            let result = convertInput('3/7.2/5kg')
 
             chai.request(app)
             .get(`${pathConvertAPI}?input=3/7.2/5kg`)
@@ -62,7 +62,7 @@ suite('Functional Tests', async () => {
         })
 
         test('#Invalid Number and Unit', (done) => {
-            let result = convertInputTests('3/7.2/5ml')
+            let result = convertInput('3/7.2/5ml')
 
             chai.request(app)
             .get(`${pathConvertAPI}?input=3/7.2/5ml`)
@@ -74,7 +74,7 @@ suite('Functional Tests', async () => {
         })
 
         test('#No Number Convert', (done) => {
-            let result = convertInputTests('kg')
+            let result = convertInput('kg')
             delete result.unitName
 
             chai.request(app)
