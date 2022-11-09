@@ -54,6 +54,12 @@ export class ConvertHandler {
         return unitName
     }
 
+    getAllValues = () => ({
+        num: this.getValue(),
+        unit: this.getUnit(),
+        unitName: this.getUnitName()
+    })
+
     convert = () => {
         // 0.453592,lbs to kg convert rate
         // 3.78541,gal to liter convert rate
@@ -78,57 +84,22 @@ export class ConvertHandler {
     }
 }
 
-export const convertInput = (req, res) => {
-    const { input } = req.query
+export const convertInput = (input) => {
     let handle = new ConvertHandler()
 
     try {
         handle.getInput(input)
-        let initNum = handle.getValue()
-        let initUnit = handle.getUnit()
-        let unitName = handle.getUnitName()
-
+        const initVals = handle.getAllValues()
         handle.getInput(handle.convert())
+        const returnVals = handle.getAllValues()
 
-        let returnNum = handle.getValue()
-        let returnUnit = handle.getUnit()
-        let returnUnitName = handle.getUnitName()
-
-        res.status(200).json({
-            initNum,
-            initUnit,
-            returnNum,
-            returnUnit,
-            string: `${initNum} ${unitName} converts to ${returnNum} ${returnUnitName}`
-        })
-    } catch(err) {
-        if (!handle.inputValue && !handle.inputUnit) {
-            return res.send('invalid number and unit')
-        }
-        res.send(err.message)
-    }
-}
-
-export const convertInputTests = (input) => {
-    let handle = new ConvertHandler()
-
-    try {
-        handle.getInput(input)
-        const init = {
-            initNum: handle.getValue(),
-            initUnit: handle.getUnit(),
-            unitName: handle.getUnitName()
-        }
-        handle.getInput(handle.convert())
-
-        let returnNum = handle.getValue()
-        let returnUnit = handle.getUnit()
-        let returnUnitName = handle.getUnitName()
         return {
-            ...init,
-            returnNum,
-            returnUnit,
-            string: `${init.initNum} ${init.unitName} converts to ${returnNum} ${returnUnitName}`
+            initNum: initVals.num,
+            initUnit: initVals.unit,
+            unitName: initVals.unitName,
+            returnNum: returnVals.num,
+            returnUnit: returnVals.unit,
+            string: `${initVals.num} ${initVals.unitName} converts to ${returnVals.num} ${returnVals.unitName}`
         }
     } catch(err) {
         if (!handle.inputValue && !handle.inputUnit) {
@@ -136,4 +107,19 @@ export const convertInputTests = (input) => {
         }
         return err
     }
+}
+
+export const handleInput = (req, res) => {
+    const { input } = req.query
+    const result = convertInput(input)
+
+    if (result instanceof Error) {
+        return res.status(200).send(result.message)
+    }
+
+    let { unitName, ...rest } = result
+
+    res.status(200).json({
+        ...rest
+    })
 }
