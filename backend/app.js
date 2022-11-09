@@ -2,7 +2,8 @@ import express from 'express'
 import cors from 'cors'
 import pathFrontEnd from './config.js'
 import notFound from './middleware/notFound.js'
-import imperialConverter from './routes/api.js'
+import issueTracker from './routes/tracker.js'
+import imperialConverter from './routes/converter.js'
 
 
 const app = express()
@@ -17,6 +18,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/metric-converter', imperialConverter)
+app.use('/issue-tracker', issueTracker)
 
 app.use(notFound)
 
