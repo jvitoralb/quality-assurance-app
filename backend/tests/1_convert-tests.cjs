@@ -42,20 +42,15 @@ suite('Unit Tests', async () => {
     const unitsKeys = Object.keys(testHandler.units)
 
     suite('Unit Tests - getUnit', () => {
-        const input = [
-            "gal", "l",
-            "mi", "km",
-            "lbs", "kg",
-            "GAL", "L",
-            "MI", "KM",
-            "LBS", "KG"
-        ]
-    
         test('#Read Valid Unit', (done) => {
-            input.forEach(unit => {
-                let result = convertInput(unit)
+            unitsKeys.forEach(unit => {
                 let unitRes = (['l', 'L'].includes(unit) ? unit.toUpperCase() : unit.toLowerCase())
-                assert.strictEqual(result.initUnit, unitRes)
+
+                let inputLowerCase = convertInput(unit)
+                assert.strictEqual(inputLowerCase.initUnit, unitRes)
+
+                let inputUpperCase = convertInput(unit.toUpperCase())
+                assert.strictEqual(inputUpperCase.initUnit, unitRes)
             })
             done()
         })
