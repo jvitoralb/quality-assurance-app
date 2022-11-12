@@ -1,8 +1,12 @@
 import * as dotenv from 'dotenv'
 import app from './app.js'
 import emitter from './test-runner.js'
+import connect from './connection.js'
 
 dotenv.config()
+
+
+connect()
 
 const runner = emitter;
 const PORT = process.env.PORT || 3000
