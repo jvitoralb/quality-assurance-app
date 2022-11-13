@@ -11,15 +11,16 @@ const projectSchema = new Schema({
     issues: [
         {
             type: Schema.Types.ObjectId,
-            ref: 'Issues'
+            ref: 'Issue'
         }
     ]
 })
 
 const issueSchema = new Schema({
+    _id: Schema.Types.ObjectId,
     project: {
         type: Schema.Types.ObjectId,
-        ref: 'Projects',
+        ref: 'Project',
         required: true
     },
     issue_title: {
@@ -35,10 +36,12 @@ const issueSchema = new Schema({
         required: true
     },
     assinged_to: {
-        type: String
+        type: String,
+        default: ''
     },
     status_text: {
-        type: String
+        type: String,
+        default: ''
     }
 })
 
