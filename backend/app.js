@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import pathFrontEnd from './config.js'
 import notFound from './middleware/notFound.js'
+import errorHandler from './middleware/error.js'
 import issueTracker from './routes/tracker.js'
 import imperialConverter from './routes/converter.js'
 
@@ -21,5 +22,6 @@ app.use('/metric-converter', imperialConverter)
 app.use('/issue-tracker', issueTracker)
 
 app.use(notFound)
+app.use(errorHandler)
 
 export default app
