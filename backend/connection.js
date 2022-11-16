@@ -1,5 +1,7 @@
+import * as dotenv from 'dotenv'
 import mongoose from 'mongoose'
 
+dotenv.config()
 
 
 const connect = async () => {
