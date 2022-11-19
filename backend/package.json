@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "test": "mocha ./tests --ui tdd"
+    "test": "mocha ./tests --exit --ui tdd"
   },
   "keywords": [],
   "author": "",
