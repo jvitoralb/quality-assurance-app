@@ -23,11 +23,11 @@ suite('Tracker Functional Tests', async () => {
             })
         })
         const defaultDemo = {
-            issue_title: "Posting data error.",
-            issue_text: "When we post data it has an error.",
-            created_by: "zhuoang",
-            assigned_to: "yaci",
-            status_text: "In QA"
+            issue_title: 'Posting data error.',
+            issue_text: 'When we post data it has an error.',
+            created_by: 'zhuoang',
+            assigned_to: 'yaci',
+            status_text: 'In QA'
         }
 
         test('#Every field', (done) => {
@@ -45,8 +45,8 @@ suite('Tracker Functional Tests', async () => {
         test('#Only required fields', (done) => {
             const thisDemo = {
                 ...defaultDemo,
-                assigned_to: "",
-                status_text: ""
+                assigned_to: '',
+                status_text: ''
             }
 
             chai.request(app)
@@ -64,8 +64,8 @@ suite('Tracker Functional Tests', async () => {
             chai.request(app)
             .post(issuePath)
             .send({
-                issue_text: "Posting data error.",
-                created_by : "zhuoang"
+                issue_text: 'Posting data error.',
+                created_by : 'zhuoang'
             })
             .end((err, res) => {
                 assert.equal(res.status, 400)
@@ -97,7 +97,9 @@ suite('Tracker Functional Tests', async () => {
             .end((err, res) => {
                 assert.equal(res.status, 200)
                 assert.equal(res.type, 'application/json')
-                res.body.forEach(val => assert.deepOwnInclude(val, query, 'Values in response should equals to query request'))
+                res.body.forEach(val =>
+                    assert.deepOwnInclude(val, query, 'Values in response should equals to query request')
+                )
                 done()
             })
         })
@@ -114,9 +116,10 @@ suite('Tracker Functional Tests', async () => {
             })
         })
     })
-    suite('PUT', () => {
-        let issueId
 
+    let issueId = ''
+
+    suite('PUT', () => {
         test('#Get issue _id', (done) => {
             chai.request(app)
             .get(issuePath)
@@ -140,7 +143,7 @@ suite('Tracker Functional Tests', async () => {
             .send(demo)
             .end((err, res) => {
                 delete demo.issue_id
-                assert.equal(res.status, 201)
+                assert.equal(res.status, 200)
                 assert.deepOwnInclude(res.body, { _id: issueId, ...demo }, 'issue_title should be updated')
                 done()
             })
@@ -158,7 +161,8 @@ suite('Tracker Functional Tests', async () => {
             .send(demo)
             .end((err, res) => {
                 delete demo.issue_id
-                assert.equal(res.status, 201)
+                console.log(res.body, issueId, '#Update Multiple Issue Fields')
+                assert.equal(res.status, 200)
                 assert.deepOwnInclude(res.body, { _id: issueId, ...demo }, 'issue_title and issue_text shoudl be upated')
                 done()
             })
@@ -215,21 +219,22 @@ suite('Tracker Functional Tests', async () => {
         test('#Delete Issue', (done) => {
             chai.request(app)
             .delete(issuePath)
-            .send(issueId)
+            .send({ issue_id: issueId })
             .end((err, res) => {
-                assert.equal(res.status, 204)
-                assert.deepEqual(res.body, { delete: 'Success', _id: issueId })
+                assert.equal(res.status, 200)
+                assert.deepEqual(res.body, { result: 'successfully deleted', _id: issueId })
                 done()
             })
         })
         test('#Delete Issue with invalid _id', (done) => {
             let invalidId = '000a000000000c0e00000a00'
+
             chai.request(app)
             .delete(issuePath)
-            .send(invalidId)
+            .send({ issue_id: invalidId })
             .end((err, res) => {
                 assert.equal(res.status, 400)
-                assert.deepEqual(res.body, { delete: 'could not delete issue', _id: invalidId })
+                assert.deepEqual(res.body, { error: 'could not delete', _id: invalidId })
                 done()
             })
         })
