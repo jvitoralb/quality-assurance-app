@@ -1,84 +1,197 @@
 import mongoose from 'mongoose'
 import { ObjectId } from 'mongodb'
 import { Project, Issue } from '../models/tracker.js'
+import CustomError from '../errors/custom.js'
 
 
 class IssuesTracker {
-    constructor(issueBody, project) {
-        this.issueBody = issueBody
+    constructor(issueVals, project) {
+        this.issueVals = issueVals
         this.project = project
     }
 
-    findProject = async () => {
+    issueDelete = async () => {
         try {
-            return await Project.findOne({ name: this.project }).select('-__v')
+            return await Issue.findByIdAndDelete(this.issueVals._id)
         } catch(err) {
-            console.log(err, '<--- findProject error ---')
+            throw err
         }
     }
 
-    updateProjectIssues = async (issueDoc) => {
+    projectFind = async (filters) => {
         try {
-            await Project.findByIdAndUpdate(issueDoc.project, {
+            this.project = await Project.findOne({ name: this.project.name })
+            .select('-__v').populate({
+                path: 'issues',
+                select: '-__v -project',
+                match: filters || null
+            })
+
+            return this.project
+        } catch(err) {
+            throw err
+        }
+    }
+
+    issueFind = async () => {
+        try {
+            return await Issue.findById(this.issueVals._id)
+            .select('-__v')
+        } catch(err) {
+            throw err
+        }
+    }
+
+    projectUpdate = async () => {
+        try {
+            this.project = await Project.findByIdAndUpdate(this.project._id, {
                 $push: {
-                    issues: ObjectId(issueDoc._id)
+                    issues: ObjectId(this.issueVals._id)
                 }
-            })
-            return 'done'
+            }, { new: true })
         } catch(err) {
-            console.log(err, '<--- updateProjectIssues error ---')
+            throw err
         }
     }
 
-    saveIssue = async () => {
-        const { project_name, ...issueProps } = this.issueBody
+    issueUpdate = async () => {
+        const { project_name, ...update } = this.issueVals
 
         try {
-            const { _id } = await this.findProject()
+            this.issueVals = await Issue.findByIdAndUpdate(this.issueVals._id, {
+                $set: {
+                    ...update,
+                    updated_on: new Date()
+                }
+            }, { new: true }).select('-__v')
 
-            const newIssue = new Issue({
-                _id: new mongoose.Types.ObjectId, // test if i really need this
-                project: _id,
-                ...issueProps
-            })
-
-            const savedIssue = await newIssue.save()
-
-            return savedIssue
+            return this.issueVals
         } catch(err) {
-            console.log(err, '<--- saveIssue error ---')
+            if (err.name === 'CastError') {
+                throw new CustomError(`could not update`, 400, { _id: this.issueVals._id })
+            }
+            throw err
         }
     }
 
-    saveProject = async () => {
-        // need to check if project already exists in db
-        const newProject = new Project({
-            name: this.project
+    issueSave = async () => {
+        const newIssue = new Issue({
+            _id: new mongoose.Types.ObjectId,
+            project: this.project._id,
+            created_on: new Date(),
+            updated_on: new Date(),
+            ...this.issueVals
         })
 
         try {
-            const savedProject = await newProject.save()
-            return savedProject
+            this.issueVals = await newIssue.save()
+            await this.projectUpdate()
         } catch(err) {
-            console.log(err, '<--- Save doc error ---')
+            if (err.name === 'ValidationError') {
+                throw new CustomError('required field(s) missing', 400)
+            }
+            throw err
+        }
+    }
+
+    projectSave = async () => {
+        const newProject = new Project({
+            name: this.project.name
+        })
+
+        try {
+            this.project = await newProject.save()
+        } catch(err) {
+            if (err.code === 11000) {
+                await this.projectFind()
+                return
+            }
+            throw err
         }
     }
 }
 
-export const trackerHandler = async (req, res) => {
-    const projectName = req.params.project || req.body.project_name
-    const issue = new IssuesTracker(req.body, projectName)
+export const deleteIssues = async (req, res, next) => {
+    const { params, body: { issue_id, ...rest } } = req
+    const trackerRef = new IssuesTracker({ _id: issue_id, rest }, { name: params.project })
 
     try {
-        const projectSaved = await issue.saveProject()
-        const issueSaved = await issue.saveIssue()
-        await issue.updateProjectIssues(issueSaved)
+        const deleted = await trackerRef.issueDelete()
 
-        res.status(201).json({
-            // projectSaved,
-            issueSaved
+        if (!deleted) {
+            throw new CustomError('could not delete', 400, { _id: issue_id })
+        }
+
+        res.status(200).json({
+            result: 'successfully deleted',
+            _id: deleted._id
         })
     } catch(err) {
-        console.log(err, '<--- issueTrackerHandler error ---')
+        next(err)
+    }
+}
+
+export const updateIssues = async (req, res, next) => {
+    const { params, body: { issue_id, ...rest } } = req
+    const trackerRef = new IssuesTracker({ _id: issue_id, ...rest }, { name: params.project })
+        // if the update field comes undefined it updates 
+        // it should not
+    try {
+        const updated = await trackerRef.issueUpdate()
+        // reset all info stored in trackerRef
+        // First see if it is a problem
+        if (!updated) {
+            throw new CustomError(`could not update`, 400, { _id: issue_id })
+        }
+
+        return res.status(200).json({
+            result: 'successfully updated',
+            _id: updated._id
+        })
+    } catch(err) {
+        next(err)
+    }
+}
+
+export const getAllProjects = async (req, res, next) => {
+    const { body, params } = req
+    const trackerRef = new IssuesTracker(body, { name: params.project })
+
+    try {
+        const docs = await Project.find({})
+        .select('-__v')
+
+        res.status(200).json(docs)
+    } catch(err) {
+        next(err)
+    }
+}
+
+export const getAllIssues = async (req, res, next) => {
+    const { body, params, query } = req
+    const trackerRef = new IssuesTracker(body, { name: params.project })
+
+    try {
+        const { issues } = await trackerRef.projectFind(query)
+
+        res.status(200).json(issues)
+    } catch(err) {
+        next(err)
+    }
+}
+
+export const createIssues = async (req, res, next) => {
+    const { params, body: { project_name, ...rest } } = req
+    const trackerRef = new IssuesTracker(rest, { name: params.project })
+
+    try {
+        await trackerRef.projectSave()
+        await trackerRef.issueSave()
+        const doc = await trackerRef.issueFind()
+        // reset all info stored in trackerRef
+        // First see if it is a problem
+        res.status(201).json(doc)
+    } catch(err) {
+        next(err)
     }
 }
