@@ -139,7 +139,7 @@ const chaiHttp = require('chai-http')
 //2_functional-tests.cjs
 suite('Functional Tests', async () => {
     const app = (await import('../app.js')).default
-    const { convertInput } = await import('../controllers/convertHandler.js')
+    const pathConvertAPI = '/metric-converter/api/convert'
     let assert = chai.assert
 
     chai.use(chaiHttp)
@@ -156,66 +156,64 @@ suite('Functional Tests', async () => {
     })
 
     suite('Conversion - Functional Tests', () => {
-        const pathConvertAPI = '/metric-converter/api/convert'
-
         test('#Convert Valid Input', (done) => {
-            let result = convertInput('10L')
-            delete result.unitName
-
             chai.request(app)
             .get(`${pathConvertAPI}?input=10L`)
             .end((err, res) => {
                 assert.equal(res.status, 200)
-                assert.deepEqual(res.body, result)
+                assert.deepEqual(res.body, {
+                    initNum: 10,
+                    initUnit: 'L',
+                    returnNum: 2.64172,
+                    returnUnit: 'gal',
+                    string: '10 liters converts to 2.64172 gallons'
+                })
                 done()
             })
         })
 
         test('#Invalid Input', (done) => {
-            let result = convertInput('10g')
-
             chai.request(app)
             .get(`${pathConvertAPI}?input=10g`)
             .end((err, res) => {
                 assert.equal(res.status, 200)
-                assert.strictEqual(res.text, result.message)
+                assert.strictEqual(res.text, 'invalid unit')
                 done()
             })
         })
 
         test('#Invalid Number', (done) => {
-            let result = convertInput('3/7.2/5kg')
-
             chai.request(app)
             .get(`${pathConvertAPI}?input=3/7.2/5kg`)
             .end((err, res) => {
                 assert.equal(res.status, 200)
-                assert.strictEqual(res.text, result.message)
+                assert.strictEqual(res.text, 'invalid number')
                 done()
             })
         })
 
         test('#Invalid Number and Unit', (done) => {
-            let result = convertInput('3/7.2/5ml')
-
             chai.request(app)
             .get(`${pathConvertAPI}?input=3/7.2/5ml`)
             .end((err, res) => {
                 assert.equal(res.status, 200)
-                assert.strictEqual(res.text, result.message)
+                assert.strictEqual(res.text, 'invalid number and unit')
                 done()
             })
         })
 
         test('#No Number Convert', (done) => {
-            let result = convertInput('kg')
-            delete result.unitName
-
             chai.request(app)
             .get(`${pathConvertAPI}?input=kg`)
             .end((err, res) => {
                 assert.equal(res.status, 200)
-                assert.deepEqual(res.body, result)
+                assert.deepEqual(res.body, {
+                    initNum: 1,
+                    initUnit: 'kg',
+                    returnNum: 2.20462,
+                    returnUnit: 'lbs',
+                    string: '1 kilograms converts to 2.20462 pounds'
+                })
                 done()
             })
         })
