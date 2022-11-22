@@ -36,9 +36,9 @@ suite('Tracker Functional Tests', async () => {
             .send(defaultDemo)
             .end((err, res) => {
                 assert.equal(res.status, 201)
-                assert.containsAllKeys(res.body, ['_id', 'created_on', 'updated_on', 'open'])
                 assert.equal(res.type, 'application/json')
                 assert.ownInclude(res.body, defaultDemo)
+                assert.containsAllKeys(res.body, ['_id', 'created_on', 'updated_on', 'open'])
                 done()
             })
         })
@@ -55,8 +55,8 @@ suite('Tracker Functional Tests', async () => {
             .end((err, res) => {
                 assert.equal(res.status, 201)
                 assert.equal(res.type, 'application/json')
-                assert.containsAllKeys(res.body, ['_id', 'created_on', 'updated_on', 'open'])
                 assert.ownInclude(res.body, thisDemo)
+                assert.containsAllKeys(res.body, ['_id', 'created_on', 'updated_on', 'open'])
                 done()
             })
         })
@@ -131,51 +131,42 @@ suite('Tracker Functional Tests', async () => {
             })
         })
         test('#Update Issue Field', (done) => {
-            let demo = {
-                issue_id: issueId,
-                issue_title: 'Correcting issue_title',
-                issue_text: 'Log in button is not working',
-                created_by: 'zhuoang'
-            }
-
             chai.request(app)
             .put(issuePath)
-            .send(demo)
+            .send({
+                issue_id: issueId,
+                issue_title: 'Correcting issue_title_1'
+            })
             .end((err, res) => {
-                delete demo.issue_id
                 assert.equal(res.status, 200)
-                assert.deepOwnInclude(res.body, { _id: issueId, ...demo }, 'issue_title should be updated')
+                assert.deepEqual(res.body, {
+                    result: 'successfully updated',
+                    _id: issueId
+                }, 'issue_title should be updated')
                 done()
             })
         })
         test('#Update Multiple Issue Fields', (done) => {
-            let demo = {
-                issue_id: issueId,
-                issue_title: 'Correcting issue_title',
-                issue_text: 'Correcting issue_text',
-                created_by: 'zhuoang'
-            }
-
             chai.request(app)
             .put(issuePath)
-            .send(demo)
+            .send({
+                issue_id: issueId,
+                issue_title: 'Correcting issue_title_2',
+                issue_text: 'Correcting issue_text_1'
+            })
             .end((err, res) => {
-                delete demo.issue_id
-                console.log(res.body, issueId, '#Update Multiple Issue Fields')
                 assert.equal(res.status, 200)
-                assert.deepOwnInclude(res.body, { _id: issueId, ...demo }, 'issue_title and issue_text shoudl be upated')
+                assert.deepEqual(res.body, {
+                    result: 'successfully updated',
+                    _id: issueId
+                }, 'issue_title and issue_text should be upated')
                 done()
             })
         })
         test('#Update Issue with missing _id', (done) => {
             chai.request(app)
             .put(issuePath)
-            .send({
-                issue_id: '',
-                issue_title: 'Posting data error',
-                issue_text: 'New issue text',
-                created_by: 'zhuoang'
-            })
+            .send({ issue_id: '' })
             .end((err, res) => {
                 assert.equal(res.status, 400)
                 assert.deepEqual(res.body, { error: 'missing _id' })
@@ -185,12 +176,7 @@ suite('Tracker Functional Tests', async () => {
         test('#Update Issue with no Fields', (done) => {
             chai.request(app)
             .put(issuePath)
-            .send({
-                issue_id: issueId,
-                issue_title: '',
-                issue_text: '',
-                created_by: ''
-            })
+            .send({ issue_id: issueId })
             .end((err, res) => {
                 assert.equal(res.status, 400)
                 assert.deepEqual(res.body, { error: 'no update field(s) sent', _id: issueId })
@@ -200,9 +186,7 @@ suite('Tracker Functional Tests', async () => {
         test('#Udpate Issue with invalid _id', (done) => {
             let demo = {
                 issue_id: '000a000000000c0e00000a00',
-                issue_title: 'Posting data error',
-                issue_text: 'New issue text',
-                created_by: 'zhuoang'
+                issue_title: 'Update with invalid _id'
             }
 
             chai.request(app)
