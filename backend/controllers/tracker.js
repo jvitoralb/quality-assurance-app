@@ -22,9 +22,9 @@ class IssuesTracker {
         await this.projectUpdate(true)
     }
 
-    projectFind = async (filters) => {
-        let found = await Project.findOne({ name: this.docProject.name })
-        .select('-__v').populate({
+    projectFindIssues = async (filters) => {
+        let found = await Project.findOne({ name: this.docProject.name }, '-__v')
+        .populate({
             path: 'issues',
             select: '-__v -project',
             match: filters || null
@@ -35,6 +35,16 @@ class IssuesTracker {
         }
 
         this.docProject = found
+    }
+
+    projectFindAll = async () => {
+        let allProjects = await Project.find({}, '-__v')
+
+        if (!allProjects.length) {
+            throw new CustomError('no projects found', 200)
+        }
+
+        this.docProject = allProjects
     }
 
     projectUpdate = async (remove) => {
@@ -54,7 +64,7 @@ class IssuesTracker {
                     ...update,
                     updated_on: new Date()
                 }
-            }, { new: true }).select('-__v')
+            }, { new: true, select: '-__v' })
 
             if (!this.docIssue) {
                 // throw new CustomError(`could not update`, 200, { _id })
@@ -93,11 +103,11 @@ class IssuesTracker {
     projectSave = async () => {
         const newProject = new Project(this.docProject)
 
-        try {// see if it is a problem all info stored in class
+        try {
             this.docProject = await newProject.save()
         } catch(err) {
             if (err.code === 11000) {
-                await this.projectFind()
+                await this.projectFindIssues()
                 return
             }
             throw err
@@ -105,8 +115,31 @@ class IssuesTracker {
     }
 }
 
+export const allProjects = async (req, res, next) => {
+    const trackerRef = new IssuesTracker()
+
+    try {
+        await trackerRef.projectFindAll()
+        res.status(200).json(trackerRef.docProject)
+    } catch(err) {
+        next(err)
+    }
+}
+
+export const allIssues = async (req, res, next) => {
+    const { params, query, body: { issue_id, _id, ...rest } } = req
+    const trackerRef = new IssuesTracker({ _id: issue_id || _id, rest }, { name: params.project })
+
+    try { // see if it is a problem all info stored in class
+        await trackerRef.projectFindIssues(query)
+        res.status(200).json(trackerRef.docProject.issues)
+    } catch(err) {
+        next(err)
+    }
+}
+
 export const deleteIssues = async (req, res, next) => {
-    const { params, body: { issue_id, _id, ...rest } } = req
+    const { params, body: { issue_id, _id } } = req
     const trackerRef = new IssuesTracker({ _id: issue_id || _id }, { name: params.project })
 
     try { // see if it is a problem all info stored in class
@@ -130,29 +163,6 @@ export const updateIssues = async (req, res, next) => {
             result: 'successfully updated',
             _id: trackerRef.docIssue._id
         })
-    } catch(err) {
-        next(err)
-    }
-}
-
-export const getAllProjects = async (req, res, next) => {
-    try {
-        const docs = await Project.find({})
-        .select('-__v')
-
-        res.status(200).json(docs)
-    } catch(err) {
-        next(err)
-    }
-}
-
-export const getAllIssues = async (req, res, next) => {
-    const { params, query, body: { issue_id, _id, ...rest } } = req
-    const trackerRef = new IssuesTracker({ _id: issue_id || _id, rest }, { name: params.project })
-
-    try { // see if it is a problem all info stored in class
-        await trackerRef.projectFind(query)
-        res.status(200).json(trackerRef.docProject.issues)
     } catch(err) {
         next(err)
     }
