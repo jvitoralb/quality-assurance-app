@@ -71,11 +71,11 @@ class IssuesTracker {
 
     issueSave = async () => {
         const newIssue = new Issue({
+            ...this.docIssue,
             _id: new mongoose.Types.ObjectId,
             project: this.docProject._id,
             created_on: new Date(),
-            updated_on: new Date(),
-            ...this.docIssue
+            updated_on: new Date()
         })
 
         try {
@@ -147,9 +147,9 @@ export const getAllProjects = async (req, res, next) => {
 }
 
 export const getAllIssues = async (req, res, next) => {
-    const { body, params, query } = req
-    const trackerRef = new IssuesTracker(body, { name: params.project })
-    // issue_id doesnt work here
+    const { params, query, body: { issue_id, _id, ...rest } } = req
+    const trackerRef = new IssuesTracker({ _id: issue_id || _id, rest }, { name: params.project })
+
     try { // see if it is a problem all info stored in class
         await trackerRef.projectFind(query)
         res.status(200).json(trackerRef.docProject.issues)
