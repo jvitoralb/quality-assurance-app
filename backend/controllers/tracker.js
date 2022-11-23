@@ -12,7 +12,10 @@ class IssuesTracker {
 
     issueDelete = async () => {
         try {
-            return await Issue.findByIdAndDelete(this.issueVals._id)
+            this.issueVals = await Issue.findByIdAndDelete(this.issueVals._id)
+            this.projectFind() // this doesnt have a await key because there isn't anything to push
+            this.projectUpdate(true)
+            return this.issueVals
         } catch(err) {
             throw err
         }
@@ -42,10 +45,11 @@ class IssuesTracker {
         }
     }
 
-    projectUpdate = async () => {
+    projectUpdate = async (remove) => {
+        console.log('trying to update')
         try {
-            this.project = await Project.findByIdAndUpdate(this.project._id, {
-                $push: {
+            await Project.findOneAndUpdate({ _id: this.project._id }, {
+                [remove ? '$pull' : '$push']: {
                     issues: ObjectId(this.issueVals._id)
                 }
             }, { new: true })
@@ -112,14 +116,14 @@ class IssuesTracker {
 }
 
 export const deleteIssues = async (req, res, next) => {
-    const { params, body: { issue_id, ...rest } } = req
-    const trackerRef = new IssuesTracker({ _id: issue_id, rest }, { name: params.project })
+    const { params, body: { issue_id, _id, ...rest } } = req
+    const trackerRef = new IssuesTracker({ _id: issue_id || _id }, { name: params.project })
 
     try {
         const deleted = await trackerRef.issueDelete()
 
         if (!deleted) {
-            throw new CustomError('could not delete', 400, { _id: issue_id })
+            throw new CustomError('could not delete', 400, { _id: issue_id || _id })
         }
 
         res.status(200).json({
@@ -132,8 +136,8 @@ export const deleteIssues = async (req, res, next) => {
 }
 
 export const updateIssues = async (req, res, next) => {
-    const { params, body: { issue_id, ...rest } } = req
-    const trackerRef = new IssuesTracker({ _id: issue_id, ...rest }, { name: params.project })
+    const { params, body: { issue_id, _id, ...rest } } = req
+    const trackerRef = new IssuesTracker({ _id: issue_id || _id, rest }, { name: params.project })
         // if the update field comes undefined it updates 
         // it should not
     try {
@@ -141,7 +145,7 @@ export const updateIssues = async (req, res, next) => {
         // reset all info stored in trackerRef
         // First see if it is a problem
         if (!updated) {
-            throw new CustomError(`could not update`, 400, { _id: issue_id })
+            throw new CustomError(`could not update`, 400, { _id: issue_id || _id })
         }
 
         return res.status(200).json({
