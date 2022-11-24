@@ -2,39 +2,39 @@ const chai = require('chai')
 
 //1_unit-tests.cjs
 suite('Unit Tests', async () => {
-    const { ConvertHandler, convertInput } = await import('../controllers/convertHandler.js')
+    const { ConvertHandler } = await import('../controllers/convertHandler.js')
     let testHandler = new ConvertHandler()
     let assert = chai.assert
 
     suite('Unit Tests - getNum', () => {
         test('#WholeNumber', (done) => {
-            let result = convertInput('20kg')
-            assert.strictEqual(result.initNum, 20)
+            testHandler.validateInput('20kg')
+            assert.strictEqual(testHandler.getValue(), 20)
             done()
         })
         test('#DecimalNumber', (done) => {
-            let result = convertInput('3.1kg')
-            assert.strictEqual(result.initNum, 3.1)
+            testHandler.validateInput('3.1kg')
+            assert.strictEqual(testHandler.getValue(), 3.1)
             done()
         })
         test('#Fraction', (done) => {
-            let result = convertInput('1/2kg')
-            assert.strictEqual(result.initNum, 0.5)
+            testHandler.validateInput('1/2kg')
+            assert.strictEqual(testHandler.getValue(), 0.5)
             done()
         })
         test('#Fraction With Decimal', (done) => {
-            let result = convertInput('10.5/2kg')
-            assert.isNumber(result.initNum)
+            testHandler.validateInput('10.5/2kg')
+            assert.isNumber(testHandler.getValue())
             done()
         })
         test('#DoubleFraction Error', (done) => {
-            let result = convertInput('1/2/2kg')
-            assert.instanceOf(result, Error, 'invalid number')
+            testHandler.validateInput('1/2/2kg')
+            assert.Throw(() => testHandler.getValue(), 'invalid number')
             done()
         })
         test('#NoNumber defaults 1', (done) => {
-            let result = convertInput('kg')
-            assert.isNumber(result.initNum)
+            testHandler.validateInput('kg')
+            assert.isNumber(testHandler.getValue())
             done()
         })
     })
@@ -44,29 +44,31 @@ suite('Unit Tests', async () => {
     suite('Unit Tests - getUnit', () => {
         test('#Read Valid Unit', (done) => {
             unitsKeys.forEach(unit => {
-                let unitRes = (['l', 'L'].includes(unit) ? unit.toUpperCase() : unit.toLowerCase())
+                let unitRes = (unit == 'l' ? unit.toUpperCase() : unit.toLowerCase())
 
-                let inputLowerCase = convertInput(unit)
-                assert.strictEqual(inputLowerCase.initUnit, unitRes)
+                testHandler.validateInput(unit)
+                assert.strictEqual(testHandler.getUnit(), unitRes)
 
-                let inputUpperCase = convertInput(unit.toUpperCase())
-                assert.strictEqual(inputUpperCase.initUnit, unitRes)
+                testHandler.validateInput(unit.toUpperCase())
+                assert.strictEqual(testHandler.getUnit(), unitRes)
             })
             done()
         })
 
         test('#Invalid Unit Error', (done) => {
-            let result = convertInput('10ty')
-            assert.instanceOf(result, Error, 'invalid unit')
+            testHandler.validateInput('10ty')
+            assert.Throw(() => console.log(testHandler.getUnit()), 'invalid unit')
             done()
         })
 
         test('#Valid returnUnit', (done) => {
             unitsKeys.forEach(key => {
-                let result = convertInput(key)
-                let keyPair = testHandler.units[key]
-                let returnUnit = (key === 'gal' ? keyPair[1].toUpperCase() : keyPair[1])
-                assert.strictEqual(result.returnUnit, returnUnit)
+                testHandler.validateInput(key)
+                let returnUnit = testHandler.getAllValues().returnUnit
+                let expected = testHandler.units[key][1] == 'l' ?
+                               testHandler.units[key][1].toUpperCase() :
+                               testHandler.units[key][1]
+                assert.strictEqual(returnUnit, expected)
             })
             done()
         })
@@ -75,9 +77,9 @@ suite('Unit Tests', async () => {
     suite('Unit Tests - getUnitName', () => {
         test('#Each Unit Name', (done) => {
             unitsKeys.forEach(key => {
-                let result = convertInput(key)
+                testHandler.validateInput(key)
                 let keyPair = testHandler.units[key]
-                assert.strictEqual(result.unitName, keyPair[0])
+                assert.strictEqual(testHandler.getUnitName(), keyPair[0])
             })
             done()
         })
@@ -85,50 +87,50 @@ suite('Unit Tests', async () => {
 
     suite('Unit Tests - Convert', () => {
         test('#GalToLitter', (done) => {
-            let result = convertInput('5gal')
-            let expected = '18.92705L'
+            testHandler.validateInput('5gal')
+            let result = testHandler.getAllValues()
             assert.approximately(result.returnNum, 18.9271, 0.0001)
-            assert.strictEqual(result.returnNum + result.returnUnit, expected)
+            assert.strictEqual(result.returnNum + result.returnUnit, '18.92705L')
             done()
         })
 
         test('#LitterToGal', (done) => {
-            let result = convertInput('20L')
-            let expected = '5.28344gal'
+            testHandler.validateInput('20L')
+            let result = testHandler.getAllValues()
             assert.approximately(result.returnNum, 5.2834, 0.0001)
-            assert.strictEqual(result.returnNum + result.returnUnit, expected)
+            assert.strictEqual(result.returnNum + result.returnUnit, '5.28344gal')
             done()
         })
 
         test('#MileToKm', (done) => {
-            let result = convertInput('5mi')
-            let expected = '8.0467km'
+            testHandler.validateInput('5mi')
+            let result = testHandler.getAllValues()
             assert.approximately(result.returnNum, 8.0467, 0.0001)
-            assert.strictEqual(result.returnNum + result.returnUnit, expected)
+            assert.strictEqual(result.returnNum + result.returnUnit, '8.0467km')
             done()
         })
 
         test('#KmToMile', (done) => {
-            let result = convertInput('5km')
-            let expected = '3.10686mi'
+            testHandler.validateInput('5km')
+            let result = testHandler.getAllValues()
             assert.approximately(result.returnNum, 3.1068, 0.0001)
-            assert.strictEqual(result.returnNum + result.returnUnit, expected)
+            assert.strictEqual(result.returnNum + result.returnUnit, '3.10686mi')
             done()
         })
 
         test('#KgToPound', (done) => {
-            let result = convertInput('5kg')
-            let expected = '11.02312lbs'
+            testHandler.validateInput('5kg')
+            let result = testHandler.getAllValues()
             assert.approximately(result.returnNum, 11.0231, 0.0001)
-            assert.strictEqual(result.returnNum + result.returnUnit, expected)
+            assert.strictEqual(result.returnNum + result.returnUnit, '11.02312lbs')
             done()
         })
 
         test('#PoundToKg', (done) => {
-            let result = convertInput('10lbs')
-            let expected = '4.53592kg'
+            testHandler.validateInput('10lbs')
+            let result = testHandler.getAllValues()
             assert.approximately(result.returnNum, 4.5359, 0.0001)
-            assert.strictEqual(result.returnNum + result.returnUnit, expected)
+            assert.strictEqual(result.returnNum + result.returnUnit, '4.53592kg')
             done()
         })
     })
@@ -136,7 +138,7 @@ suite('Unit Tests', async () => {
 
 const chaiHttp = require('chai-http')
 
-//2_functional-tests.cjs
+// //2_functional-tests.cjs
 suite('Functional Tests', async () => {
     const app = (await import('../app.js')).default
     const pathConvertAPI = '/metric-converter/api/convert'
@@ -174,7 +176,7 @@ suite('Functional Tests', async () => {
 
         test('#Invalid Input', (done) => {
             chai.request(app)
-            .get(`${pathConvertAPI}?input=10g`)
+            .get(`${pathConvertAPI}?input=5g`)
             .end((err, res) => {
                 assert.equal(res.status, 200)
                 assert.strictEqual(res.text, 'invalid unit')
