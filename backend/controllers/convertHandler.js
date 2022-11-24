@@ -1,7 +1,9 @@
 export class ConvertHandler {
     constructor() {
         this.inputValue = '',
-        this.inputUnit = '',
+        this.inputUnit = null,
+        this.returnValue = '',
+        this.returnUnit = null,
         this.units = {
             kg: ['kilograms', 'lbs', 0.453592],
             lbs: ['pounds', 'kg', 0.453592],
@@ -12,114 +14,105 @@ export class ConvertHandler {
         }
     }
 
-    getInput = (input) => {
+    validateInput = (input) => {
         let unitLower = input.replace(/[\d.\/]+/g, '').toLowerCase()
-
         this.inputValue = input.replace(/[a-z]+/gi, '') || '1'
 
-        Object.keys(this.units).forEach(key => {
+        for(let y = 0; y < Object.keys(this.units).length; y++) {
+            let key = Object.keys(this.units)[y]
             if (unitLower === key) {
                 this.inputUnit = key
+                this.returnUnit = this.units[key][1]
+                return
             }
-        })
+        }
+        this.inputUnit = null
+        this.returnUnit = null
     }
 
     getValue = () => {
-        let result = this.inputValue
-
-        if (result.split('/').length > 2) {
+        if (this.inputValue.split('/').length > 2) {
             this.inputValue = null
             throw new Error('invalid number')
-        } else if (result.includes('/')) {
-            let [ first, second ] = result.split('/')
-            result = (Number(first) / Number(second))
-            this.inputValue = result
+        } else if (this.inputValue.includes('/')) {
+            let [ first, second ] = this.inputValue.split('/')
+            this.inputValue = (Number(first) / Number(second))
         }
 
-        return Number(result)
+        return Number(this.inputValue)
     }
 
     getUnit = () => {
         if (!this.inputUnit) {
-            this.inputUnit = null
             throw new Error('invalid unit')
         }
 
         return this.inputUnit === 'l' ? 'L' : this.inputUnit
     }
 
-    getUnitName = () => {
-        let [ unitName ] = this.units[this.inputUnit]
+    getReturnUnit = () => {
+        if (this.returnUnit == 'l') {
+            return this.returnUnit.toUpperCase()
+        }
 
-        return unitName
+        return this.returnUnit
+    }
+
+    getUnitName = (endUnit) => {
+        if (endUnit) {
+            return this.units[this.returnUnit][0]
+        }
+
+        return this.units[this.inputUnit][0]
+    }
+
+    convert = () => {
+        if (['lbs', 'gal', 'mi'].includes(this.inputUnit)) {
+            this.returnValue = this.inputValue * this.units[this.inputUnit][2]
+        }
+
+        if (['kg', 'l', 'km'].includes(this.inputUnit)) {
+            this.returnValue = this.inputValue / this.units[this.inputUnit][2]
+        }
+
+        if (`${this.returnValue}`.length > 5) {
+            this.returnValue = this.returnValue.toFixed(5)
+        }
+
+        return Number(this.returnValue)
     }
 
     getAllValues = () => ({
-        num: this.getValue(),
-        unit: this.getUnit(),
-        unitName: this.getUnitName()
+        initNum: this.getValue(),
+        initUnit: this.getUnit(),
+        unitName: this.getUnitName(),
+        returnNum: this.convert(),
+        returnUnit: this.getReturnUnit(),
+        returnUnitName: this.getUnitName(true)
     })
-
-    convert = () => {
-        // 0.453592,lbs to kg convert rate
-        // 3.78541,gal to liter convert rate
-        // 1.60934,mile to km convert rate
-        let result
-
-        if (['lbs', 'gal', 'mi'].includes(this.inputUnit)) {
-            result = this.inputValue * this.units[this.inputUnit][2]
-        }
-        // Then add a request unit before calling this
-        if (['kg', 'l', 'km'].includes(this.inputUnit)) {
-            result = this.inputValue / this.units[this.inputUnit][2]
-        }
-
-        if (`${result}`.length > 5) {
-            result = result.toFixed(5)
-        }
-
-        let [ unitName, returnUnit ] = this.units[this.inputUnit]
-
-        return result + returnUnit
-    }
-}
-
-export const convertInput = (input) => {
-    let handle = new ConvertHandler()
-
-    try {
-        handle.getInput(input)
-        const initVals = handle.getAllValues()
-        handle.getInput(handle.convert())
-        const returnVals = handle.getAllValues()
-
-        return {
-            initNum: initVals.num,
-            initUnit: initVals.unit,
-            unitName: initVals.unitName,
-            returnNum: returnVals.num,
-            returnUnit: returnVals.unit,
-            string: `${initVals.num} ${initVals.unitName} converts to ${returnVals.num} ${returnVals.unitName}`
-        }
-    } catch(err) {
-        if (!handle.inputValue && !handle.inputUnit) {
-            return new Error('invalid number and unit')
-        }
-        return err
-    }
 }
 
 export const handleInput = (req, res) => {
     const { input } = req.query
-    const result = convertInput(input)
+    let convertInput = new ConvertHandler()
+    convertInput.validateInput(input)
 
-    if (result instanceof Error) {
-        return res.status(200).send(result.message)
+    try {
+        const {
+            unitName,
+            returnUnitName,
+            ...result
+        } = convertInput.getAllValues()
+
+        res.status(200).json({
+            ...result,
+            string: `${result.initNum} ${unitName} converts to ${result.returnNum} ${returnUnitName}`
+        })
+    } catch(err) {
+        if (!convertInput.inputValue && !convertInput.inputUnit) {
+            res.status(200).send('invalid number and unit')
+            return
+        }
+        res.status(200).send(err.message)
     }
-
-    let { unitName, ...rest } = result
-
-    res.status(200).json({
-        ...rest
-    })
 }
