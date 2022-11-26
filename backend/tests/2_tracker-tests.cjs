@@ -122,25 +122,25 @@ suite('Tracker Functional Tests', async () => {
     suite('PUT', () => {
         test('#Get issue _id', (done) => {
             chai.request(app)
-            // .post(issuePath)
-            // .send({
-            //     issue_title: 'Posting data error.',
-            //     issue_text: 'When we post data it has an error.',
-            //     created_by: 'zhuoang'
-            // })
-            // .end((err, res) => {
-            //     assert.equal(res.status, 201)
-            //     issueId = res.body._id
-            //     assert.strictEqual(issueId, res.body._id, 'issueId should be equal to response _id')
-            //     done()
-            // })
-            .get(issuePath)
+            .post(issuePath)
+            .send({
+                issue_title: 'Posting data error.',
+                issue_text: 'When we post data it has an error.',
+                created_by: 'zhuoang'
+            })
             .end((err, res) => {
-                let responseId = res.body.at(-1)._id
-                issueId = responseId
-                assert.strictEqual(issueId, responseId, 'issueId should be equal to response _id')
+                assert.equal(res.status, 201)
+                issueId = res.body._id
+                assert.strictEqual(issueId, res.body._id, 'issueId should be equal to response _id')
                 done()
             })
+            // .get(issuePath)
+            // .end((err, res) => {
+            //     let responseId = res.body.at(-1)._id
+            //     issueId = responseId
+            //     assert.strictEqual(issueId, responseId, 'issueId should be equal to response _id')
+            //     done()
+            // })
         })
         test('#Update Issue Field', (done) => {
             chai.request(app)
