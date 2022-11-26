@@ -14,8 +14,8 @@ class IssuesTracker {
         let deleted = await Issue.findByIdAndDelete(this.docIssue._id)
 
         if (!deleted) {
-            // throw new CustomError('could not delete', 200, { _id: issue_id || _id })
-            throw new CustomError('could not delete', 400, { _id: this.docIssue._id })
+            throw new CustomError('could not delete', 200, { _id: this.docIssue._id })
+            // throw new CustomError('could not delete', 400, { _id: this.docIssue._id })
         }
 
         this.docIssue = deleted
@@ -53,6 +53,10 @@ class IssuesTracker {
                 issues: ObjectId(this.docIssue._id)
             }
         }, { new: true })
+
+        if (!this.docProject) {
+            throw new CustomError(`could not update project`, 400, { name: this.docProject.name })
+        }
     }
 
     issueUpdate = async () => {
@@ -67,13 +71,13 @@ class IssuesTracker {
             }, { new: true, select: '-__v' })
 
             if (!this.docIssue) {
-                // throw new CustomError(`could not update`, 200, { _id })
-                throw new CustomError(`could not update`, 400, { _id })
+                throw new CustomError(`could not update`, 200, { _id })
+                // throw new CustomError(`could not update issue`, 400, { _id })
             }
         } catch(err) {
             if (err.name === 'CastError') {
-                // throw new CustomError(`could not update`, 200, { _id })
-                throw new CustomError(`could not update`, 400, { _id })
+                throw new CustomError(`could not update`, 200, { _id })
+                // throw new CustomError(`could not update issue`, 400, { _id })
             }
             throw err
         }
@@ -93,8 +97,8 @@ class IssuesTracker {
             await this.projectUpdate()
         } catch(err) {
             if (err.name === 'ValidationError') {
-                // throw new CustomError('required field(s) missing', 200)
-                throw new CustomError('required field(s) missing', 400)
+                throw new CustomError('required field(s) missing', 200)
+                // throw new CustomError('required field(s) missing', 400)
             }
             throw err
         }
@@ -159,7 +163,7 @@ export const updateIssues = async (req, res, next) => {
 
     try { // see if it is a problem all info stored in class
         await trackerRef.issueUpdate()
-        return res.status(200).json({
+        res.status(200).json({
             result: 'successfully updated',
             _id: trackerRef.docIssue._id
         })
