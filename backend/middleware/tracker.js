@@ -21,5 +21,10 @@ export const validateBody = (req, res, next) => {
         throw new CustomError('no update field(s) sent', 400, { _id: issue_id || _id })
     }
 
+    if (req.body._id) {
+        req.body.issue_id = req.body._id
+        delete req.body._id
+    }
+
     next()
 }
