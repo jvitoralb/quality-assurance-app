@@ -14,8 +14,7 @@ class IssuesTracker {
         let deleted = await Issue.findByIdAndDelete(this.docIssue._id)
 
         if (!deleted) {
-            throw new CustomError('could not delete', 200, { _id: this.docIssue._id })
-            // throw new CustomError('could not delete', 400, { _id: this.docIssue._id })
+            throw new CustomError('could not delete', 400, { _id: this.docIssue._id })
         }
 
         this.docIssue = deleted
@@ -71,13 +70,11 @@ class IssuesTracker {
             }, { new: true, select: '-__v' })
 
             if (!this.docIssue) {
-                throw new CustomError(`could not update`, 200, { _id })
-                // throw new CustomError(`could not update issue`, 400, { _id })
+                throw new CustomError(`could not update issue`, 400, { _id })
             }
         } catch(err) {
             if (err.name === 'CastError') {
-                throw new CustomError(`could not update`, 200, { _id })
-                // throw new CustomError(`could not update issue`, 400, { _id })
+                throw new CustomError(`could not update issue`, 400, { _id })
             }
             throw err
         }
@@ -97,8 +94,7 @@ class IssuesTracker {
             await this.projectUpdate()
         } catch(err) {
             if (err.name === 'ValidationError') {
-                throw new CustomError('required field(s) missing', 200)
-                // throw new CustomError('required field(s) missing', 400)
+                throw new CustomError('required field(s) missing', 400)
             }
             throw err
         }
