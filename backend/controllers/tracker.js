@@ -130,7 +130,7 @@ export const allIssues = async (req, res, next) => {
     const { params, query } = req
     const trackerRef = new IssuesTracker({}, { name: params.project })
 
-    try { // see if it is a problem all info stored in class
+    try {
         await trackerRef.projectFindIssues(query)
 
         if (!trackerRef.docProject.issues.length) { // not sure if this should be an error
@@ -147,7 +147,7 @@ export const deleteIssues = async (req, res, next) => {
     const { params, body: { issue_id } } = req
     const trackerRef = new IssuesTracker({ _id: issue_id }, { name: params.project })
 
-    try { // see if it is a problem all info stored in class
+    try {
         await trackerRef.issueDelete()
         res.status(200).json({
             result: 'successfully deleted',
@@ -162,7 +162,7 @@ export const updateIssues = async (req, res, next) => {
     const { params, body: { issue_id, ...rest } } = req
     const trackerRef = new IssuesTracker({ _id: issue_id, ...rest }, { name: params.project })
 
-    try { // see if it is a problem all info stored in class
+    try {
         await trackerRef.issueUpdate()
         res.status(200).json({
             result: 'successfully updated',
@@ -177,7 +177,7 @@ export const createIssues = async (req, res, next) => {
     const { params, body: { project_name, ...rest } } = req
     const trackerRef = new IssuesTracker(rest, { name: params.project })
 
-    try { // see if it is a problem all info stored in class
+    try {
         await trackerRef.projectSave()
         await trackerRef.issueSave()
         const { _doc: { __v, ...rest } } = trackerRef.docIssue
