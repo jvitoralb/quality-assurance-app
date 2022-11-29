@@ -11,6 +11,10 @@ const queryInput = (req, res, next) => {
         throw new CustomError('invalid number and unit', 400)
     }
 
+    if (!Object.keys(new ConvertHandler().units).includes(inputUnit.toLowerCase())) {
+        inputUnit = ''
+    }
+
     req.body = {
         value: inputValue,
         unit: inputUnit

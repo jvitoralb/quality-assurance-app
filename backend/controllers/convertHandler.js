@@ -1,7 +1,10 @@
+import CustomError from '../errors/custom.js'
+
+
 export class ConvertHandler {
-    constructor() {
-        this.inputValue = '',
-        this.inputUnit = null,
+    constructor(value, unit) {
+        this.inputValue = value || '1',
+        this.inputUnit = unit,
         this.returnValue = '',
         this.returnUnit = null,
         this.units = {
@@ -14,26 +17,10 @@ export class ConvertHandler {
         }
     }
 
-    validateInput = (input) => {
-        let unitLower = input.replace(/[\d.\/]+/g, '').toLowerCase()
-        this.inputValue = input.replace(/[a-z]+/gi, '') || '1'
-
-        for(let y = 0; y < Object.keys(this.units).length; y++) {
-            let key = Object.keys(this.units)[y]
-            if (unitLower === key) {
-                this.inputUnit = key
-                this.returnUnit = this.units[key][1]
-                return
-            }
-        }
-        this.inputUnit = null
-        this.returnUnit = null
-    }
-
     getValue = () => {
         if (this.inputValue.split('/').length > 2) {
             this.inputValue = null
-            throw new Error('invalid number')
+            throw new CustomError('invalid number', 400)
         } else if (this.inputValue.includes('/')) {
             let [ first, second ] = this.inputValue.split('/')
             this.inputValue = (Number(first) / Number(second))
@@ -43,14 +30,24 @@ export class ConvertHandler {
     }
 
     getUnit = () => {
-        if (!this.inputUnit) {
-            throw new Error('invalid unit')
+        this.inputUnit = this.inputUnit.toLowerCase()
+
+        if (!Object.keys(this.units).includes(this.inputUnit)) {
+            throw new CustomError('invalid unit', 400)
         }
 
         return this.inputUnit === 'l' ? 'L' : this.inputUnit
     }
 
     getReturnUnit = () => {
+        for(let y = 0; y < Object.keys(this.units).length; y++) {
+            let key = Object.keys(this.units)[y]
+            if (this.inputUnit === key) {
+                this.returnUnit = this.units[key][1]
+                break
+            }
+        }
+
         if (this.returnUnit == 'l') {
             return this.returnUnit.toUpperCase()
         }
@@ -92,10 +89,9 @@ export class ConvertHandler {
     })
 }
 
-export const handleInput = (req, res) => {
-    const { input } = req.query
-    let convertInput = new ConvertHandler()
-    convertInput.validateInput(input)
+export const handleInput = (req, res, next) => {
+    const { value, unit } = req.body
+    let convertInput = new ConvertHandler(value, unit)
 
     try {
         const {
@@ -109,10 +105,11 @@ export const handleInput = (req, res) => {
             string: `${result.initNum} ${unitName} converts to ${result.returnNum} ${returnUnitName}`
         })
     } catch(err) {
-        if (!convertInput.inputValue && !convertInput.inputUnit) {
-            res.status(200).send('invalid number and unit')
-            return
+        if (!convertInput.inputUnit && !convertInput.inputValue) {
+            //I don't like that this happens twice
+            // Also don't like the fact that unit are check in middleware and values are not
+            throw new CustomError('invalid number and unit', 400)
         }
-        res.status(200).send(err.message)
+        next(err)
     }
 }
