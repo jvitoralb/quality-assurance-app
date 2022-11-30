@@ -2,7 +2,7 @@ const chai = require('chai')
 
 //1_unit-tests.cjs
 suite('Unit Tests', async () => {
-    const { ConvertHandler } = await import('../controllers/convertHandler.js')
+    const { ConvertHandler } = await import('../controllers/converter.js')
     let assert = chai.assert
 
     suite('Unit Tests - getNum', () => {

@@ -6,7 +6,7 @@ export class ConvertHandler {
         this.inputValue = value || '1',
         this.inputUnit = unit,
         this.returnValue = '',
-        this.returnUnit = null,
+        this.returnUnit = '',
         this.units = {
             kg: ['kilograms', 'lbs', 0.453592],
             lbs: ['pounds', 'kg', 0.453592],

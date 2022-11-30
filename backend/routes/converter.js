@@ -3,7 +3,7 @@ import { join } from 'path'
 import pathFrontEnd from '../config.js'
 import fcctesting from './fcctesting.cjs'
 import queryInput from '../middleware/converter.js'
-import { handleInput } from '../controllers/convertHandler.js'
+import { handleInput } from '../controllers/converter.js'
 
 
 const imperialConverter = Router();

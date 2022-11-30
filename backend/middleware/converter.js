@@ -1,4 +1,4 @@
-import { ConvertHandler } from '../controllers/convertHandler.js'
+import { ConvertHandler } from '../controllers/converter.js'
 import CustomError from '../errors/custom.js'
 
 
