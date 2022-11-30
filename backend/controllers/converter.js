@@ -106,8 +106,6 @@ export const handleInput = (req, res, next) => {
         })
     } catch(err) {
         if (!convertInput.inputUnit && !convertInput.inputValue) {
-            //I don't like that this happens twice
-            // Also don't like the fact that unit are check in middleware and values are not
             throw new CustomError('invalid number and unit', 400)
         }
         next(err)
