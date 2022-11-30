@@ -4,14 +4,15 @@ import CustomError from '../errors/custom.js'
 
 const queryInput = (req, res, next) => {
     const { input } = req.query
-    let inputUnit = input.replace(/[\d.\/]+/g, '')
-    let inputValue = input.replace(/[a-z]+/gi, '')
+    const { units } = new ConvertHandler()
+    let inputUnit = input.replace(/[\d.\/]+/g, '').trim()
+    let inputValue = input.replace(/[a-z]+/gi, '').trim()
 
     if (!inputUnit && !inputValue) {
         throw new CustomError('invalid number and unit', 400)
     }
 
-    if (!Object.keys(new ConvertHandler().units).includes(inputUnit.toLowerCase())) {
+    if (!Object.keys(units).includes(inputUnit.toLowerCase())) {
         inputUnit = ''
     }
 
