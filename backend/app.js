@@ -5,6 +5,7 @@ import notFound from './middleware/notFound.js'
 import errorHandler from './middleware/error.js'
 import issueTracker from './routes/tracker.js'
 import imperialConverter from './routes/converter.js'
+import personalLibrary from './routes/library.js'
 
 
 const app = express()
@@ -20,6 +21,7 @@ app.get('/', (req, res) => {
 
 app.use('/metric-converter', imperialConverter)
 app.use('/issue-tracker', issueTracker)
+app.use('/personal-library', personalLibrary)
 
 app.use(notFound)
 app.use(errorHandler)
