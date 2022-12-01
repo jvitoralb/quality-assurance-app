@@ -4,14 +4,8 @@ const displayResult = document.querySelector('#result')
 
 // Set up for a submit without value
 const handleError = (err) => {
-    let errorStr = err.split('"')[1]
-
-    if (err.includes('...')) {
-        errorStr = 'invalid number and unit'
-    }
-
-    displayJson.textContent = errorStr
-    displayResult.textContent = errorStr
+    displayJson.textContent = JSON.stringify(err)
+    displayResult.textContent = err.error
 }
 
 const displayValues = (data) => {
@@ -28,10 +22,12 @@ const getData = async () => {
     try {
         const data = await fetch('/metric-converter/api/convert?' + params)
         const result = await data.json()
+        if (result.error) {
+            throw result
+        }
         displayValues(result)
     } catch(err) {
-        // console.error(err.message);
-        handleError(err.message)
+        handleError(err)
     }
 }
 
