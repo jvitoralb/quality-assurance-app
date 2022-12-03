@@ -2,7 +2,7 @@ const form = document.querySelector('#convertForm')
 const displayJson = document.querySelector('#jsonResult')
 const displayResult = document.querySelector('#result')
 
-// Set up for a submit without value
+
 const handleError = (err) => {
     displayJson.textContent = JSON.stringify(err)
     displayResult.textContent = err.error
@@ -33,6 +33,5 @@ const getData = async () => {
 
 form.addEventListener('submit', (e) => {
     e.preventDefault()
-    displayValues('')
     getData()
 })
