@@ -7,6 +7,10 @@ const bookSchema = new Schema({
         required: true,
         trim: true
     },
+    commentcount: {
+        type: Number,
+        default: 0
+    },
     comments: [{
         type: Schema.Types.ObjectId,
         ref: 'Comments'
