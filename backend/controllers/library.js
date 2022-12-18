@@ -1,80 +1,106 @@
-class Books {
+import { ObjectId } from 'mongodb'
+import { Book, Comment } from '../models/library.js'
+
+
+export class Books {
     constructor(bookId, title) {
         this._id = bookId
         this.title = title
         this.comments
+        this.commentcount
     }
 
-    deleteBooks = () => {
-        // setup deletion for all books and single books
+    deleteBooks = async () => {
+        const deleteThis = {}
+        let resultMessage = { message: 'complete delete successful' }
+
         if (this._id) {
-            console.log({ message: 'book deleted', _id: this._id, title: this.title })
-            return { message: 'book deleted', _id: this._id, title: this.title }
-        }
-        console.log({ message: 'all books deleted' })
-        return { message: 'all books deleted' }
-    }
-
-    findBooks = () => {
-        // setup find single book, all books and filters
-        if (this._id) {//or use -> this._id || this.title
-            return this
+            deleteThis._id = this._id
+            resultMessage = { message: 'delete successful', _id: this._id }
         }
 
-        return [
-            {title: 'book 1', _id: '02f312c3fc12sa3ljy'},
-            {title: 'book 2', _id: '10dsfd12as3fc12asa'},
-            ' ... ',
-            {title: 'book n', _id: 'nnnnnnnnnnnnn'},
-        ]
+        const { deletedCount } = await Book.deleteMany(deleteThis)
+
+        return { ...resultMessage, deletedCount }
     }
 
-    createBooks = () => {
-        console.log(this.title, 'created')
+    findBooks = async () => {
+        let options = {}
+        let getMatch = {}
+        let getSelect = { __v: 0, comments: 0 }
+
+        if (this._id) {
+            getMatch._id = this._id
+            delete getSelect.comments
+            options.populate = { path: 'comments', select: '-__v -book_id' }
+        }
+
+        return await Book.find(getMatch, getSelect, options)
+    }
+
+    createBooks = async () => {
+        const saveTitle = new Book(this)
+
+        const { _id, title } = await saveTitle.save()
+        this._id = _id
+        this.title = title
     }
 }
 
 class Comments  {
-    constructor(text, bookId) {
-        this._id
+    constructor(text, bookId, textId) {
+        this._id = textId
         this.book_id = bookId
         this.text = text
-        this.created_on
-        //creatd_by
+        this.created_by = 'Ursinho Pooh!'
     }
 
-    commentsAndBooks = (option) => {
-        //book.findAndUpdate($push || $pull -> this._id)
-        console.log(`Comment ${this._id} ${option}ed ${option == '$pull' ? 'out of' : 'in'} book ${this.book_id}`)
+    countComments = async () => {
+        return await Comment.countDocuments({ book_id: this.book_id })
     }
 
-    deleteComments = (singleComment) => {
-        // setup deletion for all Comments and single Comments
-        if (singleComment) {
-            console.log({ message: 'comment deleted', _id: this._id, book_id: this.book_id })
-            this.commentsAndBooks('$pull')
-            return { message: 'comment deleted', _id: this._id, book_id: this.book_id, comment: this.text }
-        }
+    commentsOnBooks = async (option) => {
+        const count = await this.countComments()
+        await Book.findOneAndUpdate({ _id: this.book_id }, {
+            [option]: {
+                comments: ObjectId(this._id)
+            },
+            $set: {
+                commentcount: count
+            }
+        })
+    }
+
+    deleteComments = async (singleComment) => {
+        const delMatch = {}
+        let resultMessage = { message: 'all comments deleted' }
 
         if (this.book_id) {
-            console.log({ message: 'all comments deleted', book_id: this.book_id })
-            return { message: 'all comments deleted', book_id: this.book_id }
+            delMatch.book_id = this.book_id
+            resultMessage.book_id = this.book_id
         }
 
-        console.log({ message: 'all comments deleted' })
-        return { message: 'all comments deleted' }
+        if (singleComment) {
+            delMatch._id = this._id
+            resultMessage = { message: 'comment deleted', _id: this._id }
+        }
+
+        const { deletedCount } = await Comment.deleteMany(delMatch)
+
+        return { ...resultMessage, deletedCount}
     }
 
-    // findComments = () => {
-    //     // setup find single Comment, all Comments and filters
-    //     console.log(this.text, 'found')
-    // }
-
-    createComments = () => {// need to push the created comment to book.comments[]
-        this.created_on = new Date()
-        console.log(this.text, 'created')
-        this.commentsAndBooks('$push')
-        return this
+    createComments = async () => {
+        const saveComment = new Comment({
+            ...this,
+            created_on: new Date()
+        })
+        try {
+            const { _id } = await saveComment.save()
+            this._id = _id
+        } catch(err) {
+            console.log(err)
+        }
     }
 }
 
@@ -82,7 +108,7 @@ export const libraryHandleGet = async (req, res, next) => {
     const refBook = new Books(req.params._id)
 
     try {
-        const result = refBook.findBooks()
+        const result = await refBook.findBooks()
         res.send(result)
     } catch(err) {
         next(err)
@@ -95,14 +121,15 @@ export const libraryHandlePost = async (req, res, next) => {
 
     try {
         if (req.params._id) {
-            const resultC = refComment.createComments()
-            //insert comment in book.comments[]
-            res.json(resultC) //due to multiple responses inside same controller - must create handler
+            await refComment.createComments()
+            await refComment.commentsOnBooks('$push')
+            let result = await refBook.findBooks()
+            res.status(201).json(result) //due to multiple responses inside same controller - must create handler
             return
         }
 
-        const resultB = refBook.createBooks()
-        res.json(resultB) //due to multiple responses inside same controller - must create handler
+        await refBook.createBooks()
+        res.status(201).json(refBook) //due to multiple responses inside same controller - must create handler
     } catch(err) {
         next(err)
     }
@@ -110,20 +137,19 @@ export const libraryHandlePost = async (req, res, next) => {
 
 export const libraryHandleDelete = async (req, res, next) => {
     const refBook = new Books(req.params._id)
-    const refComment = new Comments(null, req.params._id)
+    const refComment = new Comments(null, req.params._id, req.query.comment)
 
     try {
         if (req.query.comment) {
-            // to delete a singleComment on a book - fcc does not require this
-            const deletedCommentId = refComment.deleteComments(true)
-            //pull comment out of book.comments[]
-            res.json({ deletedCommentId, _id: 'pipipipopopo'}) //due to multiple responses inside same controller - must create handler
+            const delComment = await refComment.deleteComments(true)
+            await refComment.commentsOnBooks('$pull')
+            res.json(delComment) //due to multiple responses inside same controller - must create handler
             return
         }
 
-        const commentResult = refComment.deleteComments()
-        const bookResult = refBook.deleteBooks()
-        res.json({ message: 'successful deletion', commentResult, bookResult }) //due to multiple responses inside same controller - must create handler
+        const delMessage = await refBook.deleteBooks()
+        await refComment.deleteComments()
+        res.json(delMessage) //due to multiple responses inside same controller - must create handler
     } catch(err) {
         next(err)
     }
