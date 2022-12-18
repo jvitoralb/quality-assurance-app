@@ -1,16 +1,11 @@
-// require('dotenv').config()
 const chai = require('chai')
 const chaiHttp = require('chai-http')
 
-
-// if(process.env.PROJECT_TEST !== 'library') return
 
 chai.use(chaiHttp)
 
 suite('Library Functional Tests', async () => {
     const app = (await import('../app.js')).default
-    const dbConnection = (await import('../connection.js')).default
-    dbConnection()
     let assert = chai.assert
 
     suite('Routing tests', () => {
@@ -55,8 +50,10 @@ suite('Library Functional Tests', async () => {
                 .send({ text: 'This book is really good!' })
                 .end((err, res) => {
                     assert.strictEqual(res.status, 201)
-                    assert.containsAllKeys(res.body[0], ['_id', 'title', 'comments'])
-                    assert.strictEqual(res.body[0].comments.at(-1).text, 'This book is really good!')
+                    assert.containsAllKeys(res.body, ['_id', 'title', 'comments'])
+                    assert.strictEqual(res.body.comments.at(-1).text, 'This book is really good!')
+                    // assert.containsAllKeys(res.body[0], ['_id', 'title', 'comments'])
+                    // assert.strictEqual(res.body[0].comments.at(-1).text, 'This book is really good!')
                     done()
                 })
             })
@@ -84,31 +81,8 @@ suite('Library Functional Tests', async () => {
             })
         })
         suite('GET', () => {
-            test('#All Books', (done) => {
-                chai.request(app)
-                .get('/personal-library/api/books')
-                .end((err, res) => {
-                    assert.strictEqual(res.status, 200)
-                    assert.strictEqual(res.type, 'application/json')
-                    assert.isArray(res.body, 'Response should be an array')
-                    res.body.forEach(val => {
-                        assert.isObject(val, 'All values in should be objects')
-                        assert.containsAllKeys(val, ['_id', 'title', 'commentcount'])
-                    })
-                    done()
-                })
-            })
-            test('#Book With Invalid _id', (done) => {
-                chai.request(app)
-                .get('/personal-library/api/books/invalid_id')
-                .end((err, res) => {
-                    assert.strictEqual(res.status, 200)// FCC
-                    // assert.deepEqual(res.body, { error: 'no book exists', _id: 'invalid_id' })
-                    assert.strictEqual(res.text, 'no book exists')
-                    done()
-                })
-            })
             let validId = ''
+
             test('#Post The getter - A book', (done) => {
                 chai.request(app)
                 .post('/personal-library/api/books')
@@ -125,8 +99,32 @@ suite('Library Functional Tests', async () => {
                 .get('/personal-library/api/books/' + validId)
                 .end((err, res) => {
                     assert.strictEqual(res.status, 200)
-                    assert.containsAllKeys(res.body[0], ['_id', 'title', 'comments'])
-                    assert.isArray(res.body[0].comments)
+                    assert.containsAllKeys(res.body, ['_id', 'title', 'comments'])
+                    // assert.isArray(res.body[0].comments)
+                    done()
+                })
+            })
+            test('#Book With Invalid _id', (done) => {
+                chai.request(app)
+                .get('/personal-library/api/books/invalid_id')
+                .end((err, res) => {
+                    assert.strictEqual(res.status, 200)// FCC
+                    // assert.deepEqual(res.body, { error: 'no book exists', _id: 'invalid_id' })
+                    assert.strictEqual(res.text, 'no book exists')
+                    done()
+                })
+            })
+            test('#All Books', (done) => {
+                chai.request(app)
+                .get('/personal-library/api/books')
+                .end((err, res) => {
+                    assert.strictEqual(res.status, 200)
+                    assert.strictEqual(res.type, 'application/json')
+                    assert.isArray(res.body, 'Response should be an array')
+                    res.body.forEach(val => {
+                        assert.isObject(val, 'All values in should be objects')
+                        assert.containsAllKeys(val, ['_id', 'title', 'commentcount'])
+                    })
                     done()
                 })
             })
@@ -149,9 +147,10 @@ suite('Library Functional Tests', async () => {
                 .delete('/personal-library/api/books/' + deleteId)
                 .end((err, res) => {
                     assert.strictEqual(res.status, 200)
-                    assert.strictEqual(res.body.message, 'delete successful')
-                    assert.strictEqual(res.body._id, deleteId)
-                    assert.hasAllDeepKeys(res.body, ['message', '_id', 'deletedCount'])
+                    assert.strictEqual(res.text, 'delete successful')
+                    // assert.strictEqual(res.body.message, 'delete successful')
+                    // assert.strictEqual(res.body._id, deleteId)
+                    // assert.hasAllDeepKeys(res.body, ['message', '_id', 'deletedCount'])
                     done()
                 })
             })
@@ -170,8 +169,9 @@ suite('Library Functional Tests', async () => {
                 .delete('/personal-library/api/books')
                 .end((err, res) => {
                     assert.strictEqual(res.status, 200)
-                    assert.strictEqual(res.body.message, 'complete delete successful')
-                    assert.hasAllDeepKeys(res.body, ['message', 'deletedCount'])
+                    assert.strictEqual(res.text, 'complete delete successful')
+                    // assert.strictEqual(res.body.message, 'complete delete successful')
+                    // assert.hasAllDeepKeys(res.body, ['message', 'deletedCount'])
                     done()
                 })
             })

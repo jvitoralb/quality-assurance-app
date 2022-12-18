@@ -104,12 +104,22 @@ class Comments  {
     }
 }
 
+/**
+ * multiple responses inside same controller
+**/
+
 export const libraryHandleGet = async (req, res, next) => {
     const refBook = new Books(req.params._id)
 
     try {
-        const result = await refBook.findBooks()
-        res.send(result)
+        let result
+        if (req.params._id) {
+            const [ book ] = await refBook.findBooks()
+            result = book
+        } else {
+            result = await refBook.findBooks()
+        }
+        res.status(200).send(result)
     } catch(err) {
         next(err)
     }
@@ -123,13 +133,13 @@ export const libraryHandlePost = async (req, res, next) => {
         if (req.params._id) {
             await refComment.createComments()
             await refComment.commentsOnBooks('$push')
-            let result = await refBook.findBooks()
-            res.status(201).json(result) //due to multiple responses inside same controller - must create handler
+            let [ book ] = await refBook.findBooks()
+            res.status(201).json(book)
             return
         }
 
         await refBook.createBooks()
-        res.status(201).json(refBook) //due to multiple responses inside same controller - must create handler
+        res.status(201).json(refBook)
     } catch(err) {
         next(err)
     }
@@ -143,13 +153,14 @@ export const libraryHandleDelete = async (req, res, next) => {
         if (req.query.comment) {
             const delComment = await refComment.deleteComments(true)
             await refComment.commentsOnBooks('$pull')
-            res.json(delComment) //due to multiple responses inside same controller - must create handler
+            res.status(200).json(delComment)
             return
         }
 
         const delMessage = await refBook.deleteBooks()
         await refComment.deleteComments()
-        res.json(delMessage) //due to multiple responses inside same controller - must create handler
+        res.status(200).send(delMessage.message)
+        // res.status(200).json(delMessage)
     } catch(err) {
         next(err)
     }
