@@ -23,6 +23,9 @@ export const checkOnBooks = async (req, res, next) => {
 }
 
 export const checkText = (req, res, next) => {
+    if (req.body.comment) {
+        req.body.text = req.body.comment.trim()
+    }
     if (!req.body.text.trim()) {
         res.status(200).send('missing required field comment')
         // throw new CustomError('missing required field comment', 200) // FCC
