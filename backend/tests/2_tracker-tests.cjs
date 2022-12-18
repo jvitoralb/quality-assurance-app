@@ -4,13 +4,11 @@ const chaiHttp = require('chai-http')
 
 suite('Tracker Functional Tests', async () => {
     const app = (await import('../app.js')).default
-    const dbConnection = (await import('../connection.js')).default
 
     const issuePath = '/issue-tracker/api/issues/tests-project-21'
     let assert = chai.assert
 
     chai.use(chaiHttp)
-    dbConnection()
 
     suite('POST', () => {
         test('#Issue Tracker Home', (done) => {
