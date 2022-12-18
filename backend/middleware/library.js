@@ -17,22 +17,25 @@ export const checkOnBooks = async (req, res, next) => {
         if (err.kind == 'ObjectId') {
             err = new CustomError('no book exists', 200, { _id }) // FCC
         }
-        next(err)
+        res.status(200).send(err.message)
+        // next(err)
     }
 }
 
 export const checkText = (req, res, next) => {
     if (!req.body.text.trim()) {
-        throw new CustomError('missing required field comment', 200) // FCC
+        res.status(200).send('missing required field comment')
+        // throw new CustomError('missing required field comment', 200) // FCC
+    } else {
+        next()
     }
-
-    next()
 }
 
 export const checkTitle = (req, res, next) => {
     if (!req.body.title) {
-        throw new CustomError('missing required field title', 200) // FCC
+        res.status(200).send('missing required field title')
+        // throw new CustomError('missing required field title', 200) // FCC
+    } else {
+        next()
     }
-
-    next()
 }

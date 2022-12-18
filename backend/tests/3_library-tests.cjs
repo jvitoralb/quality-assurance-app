@@ -9,8 +9,8 @@ chai.use(chaiHttp)
 
 suite('Library Functional Tests', async () => {
     const app = (await import('../app.js')).default
-    // const dbConnection = (await import('../connection.js')).default
-    // dbConnection()
+    const dbConnection = (await import('../connection.js')).default
+    dbConnection()
     let assert = chai.assert
 
     suite('Routing tests', () => {
@@ -44,7 +44,8 @@ suite('Library Functional Tests', async () => {
                 .send({ })
                 .end((err, res) => {
                     assert.strictEqual(res.status, 200)// FCC
-                    assert.deepEqual(res.body, { error: 'missing required field title' }) //separate whats missing from error
+                    // assert.deepEqual(res.body, { error: 'missing required field', field: 'title' })
+                    assert.strictEqual(res.text, 'missing required field title')
                     done()
                 })
             })
@@ -65,7 +66,8 @@ suite('Library Functional Tests', async () => {
                 .send({ text: '' })
                 .end((err, res) => {
                     assert.strictEqual(res.status, 200)// FCC
-                    assert.deepEqual(res.body, { error: 'missing required field comment'})
+                    // assert.deepEqual(res.body, { error: 'missing required field', field: 'comment })
+                    assert.strictEqual(res.text, 'missing required field comment')
                     done()
                 })
             })
@@ -75,7 +77,8 @@ suite('Library Functional Tests', async () => {
                 .send({ text: 'This book is amazing!!' })
                 .end((err, res) => {
                     assert.strictEqual(res.status, 200)// FCC
-                    assert.deepEqual(res.body, { error: 'no book exists', _id: 'invalid_id' })
+                    // assert.deepEqual(res.body, { error: 'no book exists', _id: 'invalid_id' })
+                    assert.strictEqual(res.text, 'no book exists')
                     done()
                 })
             })
@@ -100,7 +103,8 @@ suite('Library Functional Tests', async () => {
                 .get('/personal-library/api/books/invalid_id')
                 .end((err, res) => {
                     assert.strictEqual(res.status, 200)// FCC
-                    assert.deepEqual(res.body, { error: 'no book exists', _id: 'invalid_id' })
+                    // assert.deepEqual(res.body, { error: 'no book exists', _id: 'invalid_id' })
+                    assert.strictEqual(res.text, 'no book exists')
                     done()
                 })
             })
@@ -156,7 +160,8 @@ suite('Library Functional Tests', async () => {
                 .delete('/personal-library/api/books/invalid_id')
                 .end((err, res) => {
                     assert.strictEqual(res.status, 200)// FCC
-                    assert.deepEqual(res.body, { error: 'no book exists', _id: 'invalid_id' })
+                    // assert.deepEqual(res.body, { error: 'no book exists', _id: 'invalid_id' })
+                    assert.strictEqual(res.text, 'no book exists')
                     done()
                 })
             })
