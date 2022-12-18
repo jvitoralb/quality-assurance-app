@@ -133,8 +133,11 @@ export const libraryHandlePost = async (req, res, next) => {
         if (req.params._id) {
             await refComment.createComments()
             await refComment.commentsOnBooks('$push')
-            let [ book ] = await refBook.findBooks()
-            res.status(201).json(book)
+            let [ { _doc } ] = await refBook.findBooks()
+            res.status(201).json({
+                ..._doc,
+                comments: _doc.comments.map(obj => obj.text)
+            })
             return
         }
 
