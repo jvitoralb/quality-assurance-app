@@ -1,6 +1,9 @@
+require('dotenv').config()
 const chai = require('chai')
 const chaiHttp = require('chai-http')
 
+
+if (process.env.PROJECT_TEST !== 'tracker') return
 
 suite('Tracker Functional Tests', async () => {
     const app = (await import('../app.js')).default

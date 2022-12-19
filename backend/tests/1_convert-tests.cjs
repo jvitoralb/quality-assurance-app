@@ -1,4 +1,8 @@
+require('dotenv').config()
 const chai = require('chai')
+
+
+if (process.env.PROJECT_TEST !== 'convert') return
 
 //1_unit-tests.cjs
 suite('Unit Tests', async () => {
