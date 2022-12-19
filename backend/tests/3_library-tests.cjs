@@ -51,7 +51,7 @@ suite('Library Functional Tests', async () => {
                 .end((err, res) => {
                     assert.strictEqual(res.status, 201)
                     assert.containsAllKeys(res.body, ['_id', 'title', 'comments'])
-                    assert.strictEqual(res.body.comments.at(-1), 'This book is really good!')
+                    assert.strictEqual(res.body.comments[res.body.comments.length - 1], 'This book is really good!')
                     // assert.containsAllKeys(res.body[0], ['_id', 'title', 'comments'])
                     // assert.strictEqual(res.body[0].comments.at(-1).text, 'This book is really good!')
                     done()
