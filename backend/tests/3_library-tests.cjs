@@ -41,9 +41,8 @@ suite('Library Functional Tests', async () => {
                 .post('/personal-library/api/books')
                 .send({ })
                 .end((err, res) => {
-                    assert.strictEqual(res.status, 200)// FCC
-                    // assert.deepEqual(res.body, { error: 'missing required field', field: 'title' })
-                    assert.strictEqual(res.text, 'missing required field title')
+                    assert.strictEqual(res.status, 400)
+                    assert.deepEqual(res.body, { error: 'missing required field', field: 'title' })
                     done()
                 })
             })
@@ -53,10 +52,8 @@ suite('Library Functional Tests', async () => {
                 .send({ text: 'This book is really good!' })
                 .end((err, res) => {
                     assert.strictEqual(res.status, 201)
-                    assert.containsAllKeys(res.body, ['_id', 'title', 'comments'])
-                    assert.strictEqual(res.body.comments[res.body.comments.length - 1], 'This book is really good!')
-                    // assert.containsAllKeys(res.body[0], ['_id', 'title', 'comments'])
-                    // assert.strictEqual(res.body[0].comments.at(-1).text, 'This book is really good!')
+                    assert.containsAllKeys(res.body[0], ['_id', 'title', 'comments'])
+                    assert.strictEqual(res.body[0].comments.at(-1).text, 'This book is really good!')
                     done()
                 })
             })
@@ -65,9 +62,8 @@ suite('Library Functional Tests', async () => {
                 .post('/personal-library/api/books/' + validId)
                 .send({ text: '' })
                 .end((err, res) => {
-                    assert.strictEqual(res.status, 200)// FCC
-                    // assert.deepEqual(res.body, { error: 'missing required field', field: 'comment })
-                    assert.strictEqual(res.text, 'missing required field comment')
+                    assert.strictEqual(res.status, 400)
+                    assert.deepEqual(res.body, { error: 'missing required field', field: 'text' })
                     done()
                 })
             })
@@ -76,9 +72,8 @@ suite('Library Functional Tests', async () => {
                 .post('/personal-library/api/books/invalid_id')
                 .send({ text: 'This book is amazing!!' })
                 .end((err, res) => {
-                    assert.strictEqual(res.status, 200)// FCC
-                    // assert.deepEqual(res.body, { error: 'no book exists', _id: 'invalid_id' })
-                    assert.strictEqual(res.text, 'no book exists')
+                    assert.strictEqual(res.status, 400)
+                    assert.deepEqual(res.body, { error: 'no book exists', _id: 'invalid_id' })
                     done()
                 })
             })
@@ -102,8 +97,8 @@ suite('Library Functional Tests', async () => {
                 .get('/personal-library/api/books/' + validId)
                 .end((err, res) => {
                     assert.strictEqual(res.status, 200)
-                    assert.containsAllKeys(res.body, ['_id', 'title', 'comments'])
-                    // assert.isArray(res.body[0].comments)
+                    assert.containsAllKeys(res.body[0], ['_id', 'title', 'comments'])
+                    assert.isArray(res.body[0].comments)
                     done()
                 })
             })
@@ -111,9 +106,8 @@ suite('Library Functional Tests', async () => {
                 chai.request(app)
                 .get('/personal-library/api/books/invalid_id')
                 .end((err, res) => {
-                    assert.strictEqual(res.status, 200)// FCC
-                    // assert.deepEqual(res.body, { error: 'no book exists', _id: 'invalid_id' })
-                    assert.strictEqual(res.text, 'no book exists')
+                    assert.strictEqual(res.status, 400)
+                    assert.deepEqual(res.body, { error: 'no book exists', _id: 'invalid_id' })
                     done()
                 })
             })
@@ -139,7 +133,7 @@ suite('Library Functional Tests', async () => {
                 .post('/personal-library/api/books')
                 .send({ title: 'The book - Deletion' })
                 .end((err, res) => {
-                    assert.strictEqual(res.status, 201, 'Book to delete created!')
+                    assert.strictEqual(res.status, 201)
                     deleteId = res.body._id
                     assert.strictEqual(res.body._id, deleteId, 'deleteId should equal body._id')
                     done()
@@ -150,10 +144,9 @@ suite('Library Functional Tests', async () => {
                 .delete('/personal-library/api/books/' + deleteId)
                 .end((err, res) => {
                     assert.strictEqual(res.status, 200)
-                    assert.strictEqual(res.text, 'delete successful')
-                    // assert.strictEqual(res.body.message, 'delete successful')
-                    // assert.strictEqual(res.body._id, deleteId)
-                    // assert.hasAllDeepKeys(res.body, ['message', '_id', 'deletedCount'])
+                    assert.strictEqual(res.body.message, 'book delete successful')
+                    assert.strictEqual(res.body._id, deleteId)
+                    assert.hasAllDeepKeys(res.body, ['message', '_id', 'deletedCount', 'comments'])
                     done()
                 })
             })
@@ -161,9 +154,8 @@ suite('Library Functional Tests', async () => {
                 chai.request(app)
                 .delete('/personal-library/api/books/invalid_id')
                 .end((err, res) => {
-                    assert.strictEqual(res.status, 200)// FCC
-                    // assert.deepEqual(res.body, { error: 'no book exists', _id: 'invalid_id' })
-                    assert.strictEqual(res.text, 'no book exists')
+                    assert.strictEqual(res.status, 400)
+                    assert.deepEqual(res.body, { error: 'no book exists', _id: 'invalid_id' })
                     done()
                 })
             })
@@ -172,9 +164,8 @@ suite('Library Functional Tests', async () => {
                 .delete('/personal-library/api/books')
                 .end((err, res) => {
                     assert.strictEqual(res.status, 200)
-                    assert.strictEqual(res.text, 'complete delete successful')
-                    // assert.strictEqual(res.body.message, 'complete delete successful')
-                    // assert.hasAllDeepKeys(res.body, ['message', 'deletedCount'])
+                    assert.strictEqual(res.body.message, 'complete delete successful')
+                    assert.hasAllDeepKeys(res.body, ['message', 'deletedCount', 'comments'])
                     done()
                 })
             })
