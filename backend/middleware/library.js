@@ -9,36 +9,30 @@ export const checkOnBooks = async (req, res, next) => {
         const report = await Book.exists({ _id })
 
         if (report === null) {
-            throw new CustomError('no book exists', 200, { _id }) // FCC
+            throw new CustomError('no book exists', 400, { _id })
         }
 
         next()
     } catch(err) {
         if (err.kind == 'ObjectId') {
-            err = new CustomError('no book exists', 200, { _id }) // FCC
+            err = new CustomError('no book exists', 400, { _id })
         }
-        res.status(200).send(err.message)
-        // next(err)
+        next(err)
     }
 }
 
 export const checkText = (req, res, next) => {
-    if (req.body.comment) {
-        req.body.text = req.body.comment.trim()
+    if (!req.body.text || !req.body.text.trim()) {
+        throw new CustomError('missing required field', 400, { field: 'text' })
     }
-    if (!req.body.text && (!req.body.comment || !req.body.text.trim())) {
-        res.status(200).send('missing required field comment')
-        // throw new CustomError('missing required field comment', 200) // FCC
-    } else {
-        next()
-    }
+
+    next()
 }
 
 export const checkTitle = (req, res, next) => {
     if (!req.body.title) {
-        res.status(200).send('missing required field title')
-        // throw new CustomError('missing required field title', 200) // FCC
-    } else {
-        next()
+        throw new CustomError('missing required field', 400, { field: 'title' })
     }
+
+    next()
 }
