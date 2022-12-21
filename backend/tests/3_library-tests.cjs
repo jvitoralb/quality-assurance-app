@@ -139,6 +139,28 @@ suite('Library Functional Tests', async () => {
                     done()
                 })
             })
+            let commentId = ''
+            test('#Create comment to delete', (done) => {
+                chai.request(app)
+                .post('/personal-library/api/books/' + deleteId)
+                .send({ text: 'This comment should be deleted' })
+                .end((err, res) => {
+                    assert.strictEqual(res.status, 201)
+                    assert.strictEqual(res.body[0].comments.at(-1).text, 'This comment should be deleted')
+                    commentId = res.body[0].comments.at(-1)._id
+                    done()
+                })
+            })
+            test('#Delete Comment', (done) => {
+                chai.request(app)
+                .delete('/personal-library/api/books/' + deleteId + '?comment=' + commentId)
+                .end((err, res) => {
+                    assert.strictEqual(res.status, 200)
+                    assert.strictEqual(res.body.message, 'comment deleted')
+                    assert.strictEqual(res.body._id, commentId)
+                    done()
+                })
+            })
             test('#Book With Valid _id', (done) => {
                 chai.request(app)
                 .delete('/personal-library/api/books/' + deleteId)
