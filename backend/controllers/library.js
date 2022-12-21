@@ -16,7 +16,7 @@ export class Books {
 
         if (this._id) {
             deleteThis._id = this._id
-            resultMessage = { message: 'delete successful', _id: this._id }
+            resultMessage = { message: 'book delete successful', _id: this._id }
         }
 
         const { deletedCount } = await Book.deleteMany(deleteThis)
@@ -104,67 +104,71 @@ class Comments  {
     }
 }
 
-/**
- * multiple responses inside same controller
-**/
-
-export const libraryHandleGet = async (req, res, next) => {
-    const refBook = new Books(req.params._id)
-
+const handleGet = async (refBook, next) => {
     try {
-        let result
-        if (req.params._id) {
-            const [ book ] = await refBook.findBooks()
-            result = book
-        } else {
-            result = await refBook.findBooks()
-        }
-        res.status(200).send(result)
+        return { answer: await refBook.findBooks() }
     } catch(err) {
         next(err)
     }
 }
 
-export const libraryHandlePost = async (req, res, next) => {
-    const refBook = new Books(req.params._id, req.body.title)
-    const refComment = new Comments(req.body.text, req.params._id)
+const handlePost = async (refBook, refComment, next) => {
+    let result = { statusCode: 201 }
 
     try {
-        if (req.params._id) {
+        if (refBook._id) {
             await refComment.createComments()
             await refComment.commentsOnBooks('$push')
-            let [ { _doc } ] = await refBook.findBooks()
-            res.status(201).json({
-                ..._doc,
-                comments: _doc.comments.map(obj => obj.text)
-            })
-            return
+            result.answer = await refBook.findBooks()
+        } else {
+            await refBook.createBooks()
+            result.answer = refBook
         }
 
-        await refBook.createBooks()
-        res.status(201).json(refBook)
+        return result
     } catch(err) {
         next(err)
     }
 }
 
-export const libraryHandleDelete = async (req, res, next) => {
-    const refBook = new Books(req.params._id)
-    const refComment = new Comments(null, req.params._id, req.query.comment)
+const handleDelete = async (refBook, refComment, next) => {
+    let message = {}
 
     try {
-        if (req.query.comment) {
-            const delComment = await refComment.deleteComments(true)
+        if (refComment._id) {
+            message = await refComment.deleteComments(true)
             await refComment.commentsOnBooks('$pull')
-            res.status(200).json(delComment)
-            return
+        } else {
+            message = await refBook.deleteBooks()
+            message.comments = await refComment.deleteComments()
         }
 
-        const delMessage = await refBook.deleteBooks()
-        await refComment.deleteComments()
-        res.status(200).send(delMessage.message)
-        // res.status(200).json(delMessage)
+        return { answer: message }
     } catch(err) {
         next(err)
     }
 }
+
+const libraryHandler = async (req, res, next) => {
+    const refBook = new Books(req.params._id, req.body.title)
+    const refComment = new Comments(req.body.text, req.params._id, req.query.comment)
+
+    const sendResponse = (answer, statusCode = 200) => {
+        res.status(statusCode).json(answer)
+    }
+
+    const controllers = {
+        'GET': () => handleGet(refBook, next),
+        'POST': () => handlePost(refBook, refComment, next),
+        'DELETE': () => handleDelete(refBook, refComment, next)
+    }
+
+    if (controllers[req.method]) {
+        let { answer, statusCode } = await controllers[req.method]()
+        sendResponse(answer, statusCode)
+    } else {
+        next()
+    }
+}
+
+export default libraryHandler
