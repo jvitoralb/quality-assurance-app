@@ -1,4 +1,5 @@
 import { ObjectId } from 'mongodb'
+import CustomError from '../errors/custom.js'
 import { Book, Comment } from '../models/library.js'
 
 
@@ -87,7 +88,7 @@ class Comments  {
 
         const { deletedCount } = await Comment.deleteMany(delMatch)
 
-        return { ...resultMessage, deletedCount}
+        return { ...resultMessage, deletedCount }
     }
 
     createComments = async () => {
@@ -95,21 +96,19 @@ class Comments  {
             ...this,
             created_on: new Date()
         })
-        try {
-            const { _id } = await saveComment.save()
-            this._id = _id
-        } catch(err) {
-            console.log(err)
-        }
+        const { _id } = await saveComment.save()
+        this._id = _id
     }
 }
 
 const handleGet = async (refBook, next) => {
+    let answer
     try {
-        return { answer: await refBook.findBooks() }
+        answer = await refBook.findBooks()
     } catch(err) {
         next(err)
     }
+    return { answer }
 }
 
 const handlePost = async (refBook, refComment, next) => {
@@ -124,11 +123,11 @@ const handlePost = async (refBook, refComment, next) => {
             await refBook.createBooks()
             result.answer = refBook
         }
-
-        return result
     } catch(err) {
         next(err)
     }
+
+    return result
 }
 
 const handleDelete = async (refBook, refComment, next) => {
@@ -142,11 +141,11 @@ const handleDelete = async (refBook, refComment, next) => {
             message = await refBook.deleteBooks()
             message.comments = await refComment.deleteComments()
         }
-
-        return { answer: message }
     } catch(err) {
         next(err)
     }
+
+    return { answer: message }
 }
 
 const libraryHandler = async (req, res, next) => {
