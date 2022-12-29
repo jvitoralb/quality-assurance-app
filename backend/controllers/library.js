@@ -1,5 +1,4 @@
 import { ObjectId } from 'mongodb'
-import CustomError from '../errors/custom.js'
 import { Book, Comment } from '../models/library.js'
 
 
