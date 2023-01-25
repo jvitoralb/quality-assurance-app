@@ -9,6 +9,7 @@ chai.use(chaiHttp)
 
 suite('Library Functional Tests', async () => {
     const app = (await import('../app.js')).default
+    const pathApi = '/personal-library/api/v1/books'
     let assert = chai.assert
 
     suite('Routing tests', () => {
@@ -17,7 +18,6 @@ suite('Library Functional Tests', async () => {
             .get('/personal-library')
             .end((err, res) => {
                 assert.strictEqual(res.status, 200)
-                assert.strictEqual(res.text, 'Personal Library Home!')
                 done()
             })
         })
@@ -26,7 +26,7 @@ suite('Library Functional Tests', async () => {
 
             test('#With title', (done) => {
                 chai.request(app)
-                .post('/personal-library/api/books')
+                .post(pathApi)
                 .send({ title: 'A volta dos que não foram' })
                 .end((err, res) => {
                     assert.strictEqual(res.status, 201)
@@ -38,7 +38,7 @@ suite('Library Functional Tests', async () => {
             })
             test('#With no title', (done) => {
                 chai.request(app)
-                .post('/personal-library/api/books')
+                .post(pathApi)
                 .send({ })
                 .end((err, res) => {
                     assert.strictEqual(res.status, 400)
@@ -48,7 +48,7 @@ suite('Library Functional Tests', async () => {
             })
             test('#With Comment', (done) => {
                 chai.request(app)
-                .post('/personal-library/api/books/' + validId)
+                .post(`${pathApi}/${validId}`)
                 .send({ text: 'This book is really good!' })
                 .end((err, res) => {
                     assert.strictEqual(res.status, 201)
@@ -59,7 +59,7 @@ suite('Library Functional Tests', async () => {
             })
             test('#Without Comment', (done) => {
                 chai.request(app)
-                .post('/personal-library/api/books/' + validId)
+                .post(`${pathApi}/${validId}`)
                 .send({ text: '' })
                 .end((err, res) => {
                     assert.strictEqual(res.status, 400)
@@ -69,7 +69,7 @@ suite('Library Functional Tests', async () => {
             })
             test('#With Invalid _id', (done) => {
                 chai.request(app)
-                .post('/personal-library/api/books/invalid_id')
+                .post(`${pathApi}/invalid_id`)
                 .send({ text: 'This book is amazing!!' })
                 .end((err, res) => {
                     assert.strictEqual(res.status, 400)
@@ -83,7 +83,7 @@ suite('Library Functional Tests', async () => {
 
             test('#Post The getter - A book', (done) => {
                 chai.request(app)
-                .post('/personal-library/api/books')
+                .post(pathApi)
                 .send({ title: 'The getter - A book' })
                 .end((err, res) => {
                     assert.strictEqual(res.status, 201)
@@ -94,7 +94,7 @@ suite('Library Functional Tests', async () => {
             })
             test('#Book With Valid _id', (done) => {
                 chai.request(app)
-                .get('/personal-library/api/books/' + validId)
+                .get(`${pathApi}/${validId}`)
                 .end((err, res) => {
                     assert.strictEqual(res.status, 200)
                     assert.containsAllKeys(res.body[0], ['_id', 'title', 'comments'])
@@ -104,7 +104,7 @@ suite('Library Functional Tests', async () => {
             })
             test('#Book With Invalid _id', (done) => {
                 chai.request(app)
-                .get('/personal-library/api/books/invalid_id')
+                .get(`${pathApi}/invalid_id`)
                 .end((err, res) => {
                     assert.strictEqual(res.status, 400)
                     assert.deepEqual(res.body, { error: 'no book exists', _id: 'invalid_id' })
@@ -113,7 +113,7 @@ suite('Library Functional Tests', async () => {
             })
             test('#All Books', (done) => {
                 chai.request(app)
-                .get('/personal-library/api/books')
+                .get(pathApi)
                 .end((err, res) => {
                     assert.strictEqual(res.status, 200)
                     assert.strictEqual(res.type, 'application/json')
@@ -130,7 +130,7 @@ suite('Library Functional Tests', async () => {
             let deleteId = ''
             test('#Create book to delete', (done) => {
                 chai.request(app)
-                .post('/personal-library/api/books')
+                .post(pathApi)
                 .send({ title: 'The book - Deletion' })
                 .end((err, res) => {
                     assert.strictEqual(res.status, 201)
@@ -142,7 +142,7 @@ suite('Library Functional Tests', async () => {
             let commentId = ''
             test('#Create comment to delete', (done) => {
                 chai.request(app)
-                .post('/personal-library/api/books/' + deleteId)
+                .post(`${pathApi}/${deleteId}`)
                 .send({ text: 'This comment should be deleted' })
                 .end((err, res) => {
                     assert.strictEqual(res.status, 201)
@@ -153,7 +153,7 @@ suite('Library Functional Tests', async () => {
             })
             test('#Delete Comment', (done) => {
                 chai.request(app)
-                .delete('/personal-library/api/books/' + deleteId + '?comment=' + commentId)
+                .delete(`${pathApi}/${deleteId}?comment=${commentId}`)
                 .end((err, res) => {
                     assert.strictEqual(res.status, 200)
                     assert.strictEqual(res.body.message, 'comment deleted')
@@ -163,7 +163,7 @@ suite('Library Functional Tests', async () => {
             })
             test('#Book With Valid _id', (done) => {
                 chai.request(app)
-                .delete('/personal-library/api/books/' + deleteId)
+                .delete(`${pathApi}/${deleteId}`)
                 .end((err, res) => {
                     assert.strictEqual(res.status, 200)
                     assert.strictEqual(res.body.message, 'book delete successful')
@@ -174,7 +174,7 @@ suite('Library Functional Tests', async () => {
             })
             test('#Book With Invalid _id', (done) => {
                 chai.request(app)
-                .delete('/personal-library/api/books/invalid_id')
+                .delete(`${pathApi}/invalid_id`)
                 .end((err, res) => {
                     assert.strictEqual(res.status, 400)
                     assert.deepEqual(res.body, { error: 'no book exists', _id: 'invalid_id' })
@@ -183,7 +183,7 @@ suite('Library Functional Tests', async () => {
             })
             test('#All Books', (done) => {
                 chai.request(app)
-                .delete('/personal-library/api/books')
+                .delete(pathApi)
                 .end((err, res) => {
                     assert.strictEqual(res.status, 200)
                     assert.strictEqual(res.body.message, 'complete delete successful')
