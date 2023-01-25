@@ -51,11 +51,11 @@ suite('Library Functional Tests', async () => {
                 .post(`${pathApi}/${validId}`)
                 .send({ text: 'This book is really good!' })
                 .end((err, res) => {
-                    let comments = res.body[0].comments
+                    let book = res.body[0]
                     assert.strictEqual(res.status, 201)
-                    assert.hasAllDeepKeys(res.body[0], ['_id', 'title', 'comments', 'commentcount'])
-                    assert.strictEqual(res.body[0]._id, validId)
-                    assert.strictEqual(comments[comments.length - 1].text, 'This book is really good!')
+                    assert.hasAllDeepKeys(book, ['_id', 'title', 'comments', 'commentcount'])
+                    assert.strictEqual(book._id, validId)
+                    assert.strictEqual(book.comments[book.comments.length - 1].text, 'This book is really good!')
                     done()
                 })
             })
@@ -147,9 +147,10 @@ suite('Library Functional Tests', async () => {
                 .post(`${pathApi}/${deleteId}`)
                 .send({ text: 'This comment should be deleted' })
                 .end((err, res) => {
+                    let comments = res.body[0].comments
                     assert.strictEqual(res.status, 201)
-                    assert.strictEqual(res.body[0].comments.at(-1).text, 'This comment should be deleted')
-                    commentId = res.body[0].comments.at(-1)._id
+                    assert.strictEqual(comments[comments.length - 1].text, 'This comment should be deleted')
+                    commentId = comments[comments.length - 1]._id
                     done()
                 })
             })
