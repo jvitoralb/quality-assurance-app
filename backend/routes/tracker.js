@@ -1,25 +1,34 @@
-import { Router } from 'express'
-import fcctesting from './fcctesting.cjs'
-import { validateBody, validateQueries } from '../middleware/tracker.js'
-import { allIssues, allProjects, createIssues, updateIssues, deleteIssues } from '../controllers/tracker.js'
+import { Router } from 'express';
+import fcctesting from './fcctesting.cjs';
+import { validateBody, validateQueries } from '../middleware/tracker.js';
+import {
+    getTrackerHome,
+    getAllIssues,
+    getAllProjects,
+    createIssues,
+    updateIssues,
+    deleteIssues,
+    deleteProject
+} from '../controllers/tracker.js';
 
 
 const issueTracker = Router();
 
-issueTracker.get('/', (req, res) => {
-    res.status(200).send('Hello Issue Tracker')
-})
+issueTracker.route('/')
+.get(getTrackerHome);
 
-issueTracker.get('/api/projects', allProjects)
+issueTracker.route('/api/v1/projects')
+.get(getAllProjects);
 
-issueTracker.get('/api/issues/:project', validateQueries, allIssues)
+issueTracker.route('/api/v1/projects/:project')
+.delete(deleteProject);
 
-issueTracker.post('/api/issues/:project', createIssues)
+issueTracker.route('/api/v1/issues/:project')
+.get(validateQueries, getAllIssues)
+.post(createIssues)
+.put(validateBody, updateIssues)
+.delete(validateBody, deleteIssues);
 
-issueTracker.put('/api/issues/:project', validateBody, updateIssues)
+fcctesting(issueTracker);
 
-issueTracker.delete('/api/issues/:project', validateBody, deleteIssues)
-
-fcctesting(issueTracker)
-
-export default issueTracker
+export default issueTracker;

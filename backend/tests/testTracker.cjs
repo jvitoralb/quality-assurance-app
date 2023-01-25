@@ -7,8 +7,8 @@ if (process.env.PROJECT_TEST !== 'tracker') return
 
 suite('Tracker Functional Tests', async () => {
     const app = (await import('../app.js')).default
-
-    const issuePath = '/issue-tracker/api/issues/tests-project-21'
+    const issuePath = '/issue-tracker/api/v1/issues/tests-project-21'
+    const projectPath = '/issue-tracker/api/v1/projects'
     let assert = chai.assert
 
     chai.use(chaiHttp)
@@ -19,7 +19,6 @@ suite('Tracker Functional Tests', async () => {
             .get('/issue-tracker')
             .end((err, res) => {
                 assert.equal(res.status, 200)
-                assert.equal(res.text, 'Hello Issue Tracker')
                 done()
             })
         })
@@ -82,8 +81,7 @@ suite('Tracker Functional Tests', async () => {
             .end((err, res) => {
                 assert.equal(res.status, 200)
                 assert.equal(res.type, 'application/json')
-                assert.isArray(res.body, 'Response should be an Array')
-                res.body.forEach(val => {
+                res.body.issues.forEach(val => {
                     assert.isObject(val, 'All values in response should be objects')
                     assert.containsAllKeys(val, ['_id', 'issue_title', 'issue_text', 'created_by'])
                 })
@@ -98,7 +96,7 @@ suite('Tracker Functional Tests', async () => {
             .end((err, res) => {
                 assert.equal(res.status, 200)
                 assert.equal(res.type, 'application/json')
-                res.body.forEach(val =>
+                res.body.issues.forEach(val =>
                     assert.deepOwnInclude(val, query, 'Values in response should equals to query request')
                 )
                 done()
@@ -112,7 +110,9 @@ suite('Tracker Functional Tests', async () => {
             .end((err, res) => {
                 assert.equal(res.status, 200)
                 assert.equal(res.type, 'application/json')
-                res.body.forEach(val => assert.deepOwnInclude(val, query, 'Values in response should equals to query request'))
+                res.body.issues.forEach(val => 
+                    assert.deepOwnInclude(val, query, 'Values in response should equals to query request')
+                )
                 done()
             })
         })
@@ -235,6 +235,15 @@ suite('Tracker Functional Tests', async () => {
             .end((err, res) => {
                 assert.equal(res.status, 400)
                 assert.deepEqual(res.body, { error: 'missing _id' })
+                done()
+            })
+        })
+        test('#Delete Project', (done) => {
+            chai.request(app)
+            .delete(`${projectPath}/tests-project-21`)
+            .end((err, res) => {
+                assert.equal(res.status, 200)
+                assert.deepEqual(res.body, { result: 'successfully deleted', name: 'tests-project-21' })
                 done()
             })
         })

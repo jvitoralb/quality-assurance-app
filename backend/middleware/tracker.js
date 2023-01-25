@@ -11,19 +11,14 @@ export const validateQueries = (req, res, next) => {
 }
 
 export const validateBody = (req, res, next) => {
-    let { project_name, issue_id, _id, ...update } = req.body
+    let { project_name, issue_id, ...update } = req.body
 
-    if (!issue_id && !_id) {
+    if (!issue_id) {
         throw new CustomError('missing _id', 400)
     }
 
     if (req.method === 'PUT' && Object.values(update).every(val => !val)) {
-        throw new CustomError('no update field(s) sent', 400, { _id: issue_id || _id })
-    }
-
-    if (req.body._id) {
-        req.body.issue_id = req.body._id
-        delete req.body._id
+        throw new CustomError('no update field(s) sent', 400, { _id: issue_id })
     }
 
     next()
