@@ -1,22 +1,14 @@
-import { Router } from 'express'
-import { join } from 'path'
-import pathFrontEnd from '../config.js'
-import fcctesting from './fcctesting.cjs'
-import queryInput from '../middleware/converter.js'
-import { handleInput } from '../controllers/converter.js'
+import { Router } from 'express';
+import fcctesting from './fcctesting.cjs';
+import queryInput from '../middleware/converter.js';
+import { handleConversion, converterHome } from '../controllers/converter.js';
 
 
 const imperialConverter = Router();
 
-imperialConverter.get('/', (req, res) => {
-    res.status(200)
-    .sendFile(
-        join(pathFrontEnd, '/public/converter.html')
-    )
-})
+imperialConverter.get('/', converterHome);
+imperialConverter.get('/api/v1/convert', queryInput, handleConversion);
 
-imperialConverter.get('/api/convert', queryInput, handleInput)
+fcctesting(imperialConverter);
 
-fcctesting(imperialConverter)
-
-export default imperialConverter
+export default imperialConverter;

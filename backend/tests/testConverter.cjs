@@ -1,12 +1,12 @@
 require('dotenv').config()
 const chai = require('chai')
+const chaiHttp = require('chai-http')
 
 
-if (process.env.PROJECT_TEST !== 'convert') return
+if (process.env.PROJECT_TEST !== 'converter') return
 
-//1_unit-tests.cjs
 suite('Unit Tests', async () => {
-    const { ConvertHandler } = await import('../controllers/converter.js')
+    const ConvertHandler = (await import('../services/converter.js')).default
     let assert = chai.assert
 
     suite('Unit Tests - getNum', () => {
@@ -132,12 +132,9 @@ suite('Unit Tests', async () => {
     })
 })
 
-const chaiHttp = require('chai-http')
-
-// //2_functional-tests.cjs
 suite('Functional Tests', async () => {
     const app = (await import('../app.js')).default
-    const pathConvertAPI = '/metric-converter/api/convert'
+    const pathConvertAPI = '/metric-converter/api/v1/convert'
     let assert = chai.assert
 
     chai.use(chaiHttp)
