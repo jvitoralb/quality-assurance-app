@@ -269,7 +269,7 @@ export class SudokuSolver {
         }
 
         return {
-            // message: 'Puzzle solved',
+            message: 'Puzzle solved',
             solution: this.puzzle
         }
     }

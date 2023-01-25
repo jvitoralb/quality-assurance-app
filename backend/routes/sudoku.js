@@ -8,14 +8,10 @@ const sudokuSolver = Router();
 
 sudokuSolver.get('/', homeSudoku);
 
-//fcc tests
-sudokuSolver.post('/api/check', checkPuzzle, checkSudoku);
-sudokuSolver.post('/api/solve', validatePuzzle, solveSudoku);
+sudokuSolver.use(validatePuzzle);
 
-// sudokuSolver.use(validatePuzzle);
-
-// sudokuSolver.post('/api/v1/check', checkPuzzle, checkSudoku);
-// sudokuSolver.post('/api/v1/solve', solveSudoku);
+sudokuSolver.post('/api/v1/check', checkPuzzle, checkSudoku);
+sudokuSolver.post('/api/v1/solve', solveSudoku);
 
 fcctesting(sudokuSolver);
 

@@ -117,8 +117,7 @@ chai.use(chaiHttp)
 
 suite('Functional Tests', async function() {
     const app = (await import('../app.js')).default
-    const pathApi = '/sudoku-solver/api'
-    // const pathApi = '/sudoku-solver/api/v1'
+    const pathApi = '/sudoku-solver/api/v1'
 
     suite('Homepage', function() {
         test('#Get Homepage', function(done) {
@@ -130,7 +129,7 @@ suite('Functional Tests', async function() {
             })
         })
     })
-    suite('Functional Tests - Post to /api/check', function() {
+    suite('Post to /api/check', function() {
         test('#All Fields', function(done) {
             chai.request(app)
             .post(`${pathApi}/check`)
@@ -176,10 +175,8 @@ suite('Functional Tests', async function() {
             .post(`${pathApi}/check`)
             .send({ puzzle: puzzlesAndSolutions[3][0], coordinate: 'D5', value: '' })
             .end(function(err, res) {
-                // assert.strictEqual(res.status, 400)
-                assert.strictEqual(res.status, 200)
-                assert.deepEqual(res.body, { error: 'Required field(s) missing' })
-                // assert.deepEqual(res.body, { error: 'Required field(s) missing', field: 'value' })
+                assert.strictEqual(res.status, 400)
+                assert.deepEqual(res.body, { error: 'Required field(s) missing', field: 'value' })
                 done()
             })
         })
@@ -192,8 +189,7 @@ suite('Functional Tests', async function() {
                 value: 3
             })
             .end(function(err, res) {
-                assert.strictEqual(res.status, 200)
-                // // assert.strictEqual(res.status, 400)
+                assert.strictEqual(res.status, 400)
                 assert.deepEqual(res.body, { error: 'Invalid characters in puzzle' })
                 done()
             })
@@ -207,8 +203,7 @@ suite('Functional Tests', async function() {
                 value: 5
             })
             .end(function(err, res) {
-                // assert.strictEqual(res.status, 400)
-                assert.strictEqual(res.status, 200)
+                assert.strictEqual(res.status, 400)
                 assert.deepEqual(res.body, { error: 'Expected puzzle to be 81 characters long' })
                 done()
             })
@@ -218,8 +213,7 @@ suite('Functional Tests', async function() {
             .post(`${pathApi}/check`)
             .send({ puzzle: puzzlesAndSolutions[4][0], coordinate: 'P4', value: 8 })
             .end(function(err, res) {
-                // assert.strictEqual(res.status, 400)
-                assert.strictEqual(res.status, 200)
+                assert.strictEqual(res.status, 400)
                 assert.deepEqual(res.body, { error: 'Invalid coordinate' })
                 done()
             })
@@ -229,14 +223,13 @@ suite('Functional Tests', async function() {
             .post(`${pathApi}/check`)
             .send({ puzzle: puzzlesAndSolutions[4][0], coordinate: 'P4', value: 22 })
             .end(function(err, res) {
-                // assert.strictEqual(res.status, 400)
-                assert.strictEqual(res.status, 200)
+                assert.strictEqual(res.status, 400)
                 assert.deepEqual(res.body, { error: 'Invalid value' })
                 done()
             })
         })
     })
-    suite('Functional Tests - Post to /api/solve', function() {
+    suite('Post to /api/solve', function() {
         test('#Valid Puzzle String', function(done) {
             chai.request(app)
             .post(`${pathApi}/solve`)
@@ -252,10 +245,8 @@ suite('Functional Tests', async function() {
             .post(`${pathApi}/solve`)
             .send({ puzzle: '' })
             .end(function(err, res) {
-                assert.strictEqual(res.status, 200)
-                assert.deepEqual(res.body, { error: 'Required field missing' })
-                // assert.strictEqual(res.status, 400)
-                // assert.deepEqual(res.body, { error: 'Required field missing', field: 'puzzle' })
+                assert.strictEqual(res.status, 400)
+                assert.deepEqual(res.body, { error: 'Required field missing', field: 'puzzle' })
                 done()
             })
         })
@@ -264,8 +255,7 @@ suite('Functional Tests', async function() {
             .post(`${pathApi}/solve`)
             .send({ puzzle: 'a.b..c.d4..63.12.7.2..5,,,,.9..1,,,,d.d.gggg.3.7.2..9.ee...8..1..16,,,,wwssad.37.' })
             .end(function(err, res) {
-                // assert.strictEqual(res.status, 400)
-                assert.strictEqual(res.status, 200)
+                assert.strictEqual(res.status, 400)
                 assert.deepEqual(res.body, { error: 'Invalid characters in puzzle' })
                 done()
             })
@@ -275,8 +265,7 @@ suite('Functional Tests', async function() {
             .post(`${pathApi}/solve`)
             .send({ puzzle: '.7.89.....5....3.4.2..4..1.5689..472...6.....1.7.5.63873.' })
             .end(function(err, res) {
-                // assert.strictEqual(res.status, 400)
-                assert.strictEqual(res.status, 200)
+                assert.strictEqual(res.status, 400)
                 assert.deepEqual(res.body, { error: 'Expected puzzle to be 81 characters long' })
                 done()
             })
