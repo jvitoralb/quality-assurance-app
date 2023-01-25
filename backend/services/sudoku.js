@@ -115,6 +115,12 @@ export class Cell {
         }
     }
 
+    notSolvable = () => {
+        if (!this.possibilities.length && !this.solved) {
+            throw { message: 'Puzzle cannot be solved' }
+        }
+    }
+
     updateValue = () => {
         if (!this.check().valid && this.currentValue < this.possibilities.length - 1) {
             this.currentValue++;
@@ -146,6 +152,7 @@ export class Cell {
 
         this.resetValues();
         this.isCellSolved();
+        this.notSolvable()
     }
 }
 
@@ -226,10 +233,6 @@ export class SudokuSolver {
     }
 
     solve = () => {
-        if (!this.cellsList[this.cellIndex].possibilities.length && !this.cellsList[this.cellIndex].solved) {
-            throw { message: 'Puzzle cannot be solved' }
-        }
-
         this.forward();
         this.setCell();
         this.changeCell();
@@ -238,7 +241,7 @@ export class SudokuSolver {
         if (this.puzzle.includes('.')) {
             return this.solve();
         }
-        return { message: 'Puzzle solved', puzzle: this.puzzle }
+        return { message: 'Puzzle solved' }
     }
 
     setCellsList = () => {
@@ -266,7 +269,7 @@ export class SudokuSolver {
         }
 
         return {
-            // message: 'puzzle solved',
+            // message: 'Puzzle solved',
             solution: this.puzzle
         }
     }
