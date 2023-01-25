@@ -266,8 +266,8 @@ export class SudokuSolver {
         }
 
         return {
-            message: 'puzzle solved',
-            puzzle: this.puzzle
+            // message: 'puzzle solved',
+            solution: this.puzzle
         }
     }
 }

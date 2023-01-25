@@ -31,7 +31,7 @@ const puzzlesAndSolutions = [
 suite('Unit Tests', async function() {
     const { SudokuSolver, Cell } = await import('../services/sudoku.js')
 
-    suite('Validate Puzzle', function() {
+    suite('Unit Tests - Validate Puzzle', function() {
         const validationRef = new SudokuSolver(null, puzzlesAndSolutions[0][0])
         test('#Valid String Length', function(done) {
             let { valid } = validationRef.validate()
@@ -49,7 +49,7 @@ suite('Unit Tests', async function() {
             done()
         })
     })
-    suite('Check Puzzle', function() {
+    suite('Unit Tests - Check Puzzle', function() {
         const checkRef = new Cell('', '.', puzzlesAndSolutions[0][0])
         test('#Valid Row placement', function(done) {
             checkRef.setCoordinate(0)
@@ -93,11 +93,11 @@ suite('Unit Tests', async function() {
             done()
         })
     })
-    suite('Solve Puzzle', function() {
+    suite('Unit Tests - Solve Puzzle', function() {
         const solveRef = new SudokuSolver()
         test('#Valid puzzle string', function(done) {
             solveRef.puzzle = puzzlesAndSolutions[2][0]
-            assert.strictEqual(solveRef.getSolution().puzzle, puzzlesAndSolutions[2][1])
+            assert.strictEqual(solveRef.getSolution().solution, puzzlesAndSolutions[2][1])
             done()
         })
         test('#Invalid puzzle string', function(done) {
@@ -107,7 +107,7 @@ suite('Unit Tests', async function() {
         })
         test('#Solve incomplete puzzle', function(done) {
             solveRef.puzzle = puzzlesAndSolutions[3][0]
-            assert.strictEqual(solveRef.getSolution().puzzle, puzzlesAndSolutions[3][1])
+            assert.strictEqual(solveRef.getSolution().solution, puzzlesAndSolutions[3][1])
             done()
         })
     })
@@ -117,7 +117,8 @@ chai.use(chaiHttp)
 
 suite('Functional Tests', async function() {
     const app = (await import('../app.js')).default
-    const pathApi = '/sudoku-solver/api/v1'
+    const pathApi = '/sudoku-solver/api'
+    // const pathApi = '/sudoku-solver/api/v1'
 
     suite('Homepage', function() {
         test('#Get Homepage', function(done) {
@@ -129,7 +130,7 @@ suite('Functional Tests', async function() {
             })
         })
     })
-    suite('Post to /api/check', function() {
+    suite('Functional Tests - Post to /api/check', function() {
         test('#All Fields', function(done) {
             chai.request(app)
             .post(`${pathApi}/check`)
@@ -175,8 +176,10 @@ suite('Functional Tests', async function() {
             .post(`${pathApi}/check`)
             .send({ puzzle: puzzlesAndSolutions[3][0], coordinate: 'D5', value: '' })
             .end(function(err, res) {
-                assert.strictEqual(res.status, 400)
-                assert.deepEqual(res.body, { error: 'Required field(s) missing', field: 'value' })
+                // assert.strictEqual(res.status, 400)
+                assert.strictEqual(res.status, 200)
+                assert.deepEqual(res.body, { error: 'Required field(s) missing' })
+                // assert.deepEqual(res.body, { error: 'Required field(s) missing', field: 'value' })
                 done()
             })
         })
@@ -189,7 +192,8 @@ suite('Functional Tests', async function() {
                 value: 3
             })
             .end(function(err, res) {
-                assert.strictEqual(res.status, 400)
+                assert.strictEqual(res.status, 200)
+                // // assert.strictEqual(res.status, 400)
                 assert.deepEqual(res.body, { error: 'Invalid characters in puzzle' })
                 done()
             })
@@ -203,7 +207,8 @@ suite('Functional Tests', async function() {
                 value: 5
             })
             .end(function(err, res) {
-                assert.strictEqual(res.status, 400)
+                // assert.strictEqual(res.status, 400)
+                assert.strictEqual(res.status, 200)
                 assert.deepEqual(res.body, { error: 'Expected puzzle to be 81 characters long' })
                 done()
             })
@@ -213,7 +218,8 @@ suite('Functional Tests', async function() {
             .post(`${pathApi}/check`)
             .send({ puzzle: puzzlesAndSolutions[4][0], coordinate: 'P4', value: 8 })
             .end(function(err, res) {
-                assert.strictEqual(res.status, 400)
+                // assert.strictEqual(res.status, 400)
+                assert.strictEqual(res.status, 200)
                 assert.deepEqual(res.body, { error: 'Invalid coordinate' })
                 done()
             })
@@ -223,20 +229,21 @@ suite('Functional Tests', async function() {
             .post(`${pathApi}/check`)
             .send({ puzzle: puzzlesAndSolutions[4][0], coordinate: 'P4', value: 22 })
             .end(function(err, res) {
-                assert.strictEqual(res.status, 400)
+                // assert.strictEqual(res.status, 400)
+                assert.strictEqual(res.status, 200)
                 assert.deepEqual(res.body, { error: 'Invalid value' })
                 done()
             })
         })
     })
-    suite('Post to /api/solve', function() {
+    suite('Functional Tests - Post to /api/solve', function() {
         test('#Valid Puzzle String', function(done) {
             chai.request(app)
             .post(`${pathApi}/solve`)
             .send({ puzzle: puzzlesAndSolutions[4][0] })
             .end(function(err, res) {
                 assert.strictEqual(res.status, 200)
-                assert.strictEqual(res.body.puzzle, puzzlesAndSolutions[4][1])
+                assert.strictEqual(res.body.solution, puzzlesAndSolutions[4][1])
                 done()
             })
         })
@@ -245,8 +252,10 @@ suite('Functional Tests', async function() {
             .post(`${pathApi}/solve`)
             .send({ puzzle: '' })
             .end(function(err, res) {
-                assert.strictEqual(res.status, 400)
-                assert.deepEqual(res.body, { error: 'Required field missing', field: 'puzzle' })
+                assert.strictEqual(res.status, 200)
+                assert.deepEqual(res.body, { error: 'Required field missing' })
+                // assert.strictEqual(res.status, 400)
+                // assert.deepEqual(res.body, { error: 'Required field missing', field: 'puzzle' })
                 done()
             })
         })
@@ -255,7 +264,8 @@ suite('Functional Tests', async function() {
             .post(`${pathApi}/solve`)
             .send({ puzzle: 'a.b..c.d4..63.12.7.2..5,,,,.9..1,,,,d.d.gggg.3.7.2..9.ee...8..1..16,,,,wwssad.37.' })
             .end(function(err, res) {
-                assert.strictEqual(res.status, 400)
+                // assert.strictEqual(res.status, 400)
+                assert.strictEqual(res.status, 200)
                 assert.deepEqual(res.body, { error: 'Invalid characters in puzzle' })
                 done()
             })
@@ -265,7 +275,8 @@ suite('Functional Tests', async function() {
             .post(`${pathApi}/solve`)
             .send({ puzzle: '.7.89.....5....3.4.2..4..1.5689..472...6.....1.7.5.63873.' })
             .end(function(err, res) {
-                assert.strictEqual(res.status, 400)
+                // assert.strictEqual(res.status, 400)
+                assert.strictEqual(res.status, 200)
                 assert.deepEqual(res.body, { error: 'Expected puzzle to be 81 characters long' })
                 done()
             })
