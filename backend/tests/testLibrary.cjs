@@ -52,7 +52,9 @@ suite('Library Functional Tests', async () => {
                 .send({ text: 'This book is really good!' })
                 .end((err, res) => {
                     assert.strictEqual(res.status, 201)
-                    assert.containsAllKeys(res.body[0], ['_id', 'title', 'comments'])
+                    assert.strictEqual(res.body[0]._id, validId)
+                    assert.hasAllDeepKeys(res.body[0], ['_id', 'title', 'comments', 'commentcount'])
+                    // assert.containsAllKeys(res.body[0], ['_id', 'title', 'comments'])
                     assert.strictEqual(res.body[0].comments.at(-1).text, 'This book is really good!')
                     done()
                 })
@@ -151,12 +153,21 @@ suite('Library Functional Tests', async () => {
                     done()
                 })
             })
+            test('#Book With Invalid _id', (done) => {
+                chai.request(app)
+                .delete(`${pathApi}/invalid_id`)
+                .end((err, res) => {
+                    assert.strictEqual(res.status, 400)
+                    assert.deepEqual(res.body, { error: 'no book exists', _id: 'invalid_id' })
+                    done()
+                })
+            })
             test('#Delete Comment', (done) => {
                 chai.request(app)
                 .delete(`${pathApi}/${deleteId}?comment=${commentId}`)
                 .end((err, res) => {
                     assert.strictEqual(res.status, 200)
-                    assert.strictEqual(res.body.message, 'comment deleted')
+                    assert.strictEqual(res.body.message, 'comment delete successful')
                     assert.strictEqual(res.body._id, commentId)
                     done()
                 })
@@ -168,16 +179,7 @@ suite('Library Functional Tests', async () => {
                     assert.strictEqual(res.status, 200)
                     assert.strictEqual(res.body.message, 'book delete successful')
                     assert.strictEqual(res.body._id, deleteId)
-                    assert.hasAllDeepKeys(res.body, ['message', '_id', 'deletedCount', 'comments'])
-                    done()
-                })
-            })
-            test('#Book With Invalid _id', (done) => {
-                chai.request(app)
-                .delete(`${pathApi}/invalid_id`)
-                .end((err, res) => {
-                    assert.strictEqual(res.status, 400)
-                    assert.deepEqual(res.body, { error: 'no book exists', _id: 'invalid_id' })
+                    assert.hasAllDeepKeys(res.body, ['message', '_id', 'comments'])
                     done()
                 })
             })
@@ -187,7 +189,7 @@ suite('Library Functional Tests', async () => {
                 .end((err, res) => {
                     assert.strictEqual(res.status, 200)
                     assert.strictEqual(res.body.message, 'complete delete successful')
-                    assert.hasAllDeepKeys(res.body, ['message', 'deletedCount', 'comments'])
+                    assert.hasAllDeepKeys(res.body, ['message', 'comments'])
                     done()
                 })
             })

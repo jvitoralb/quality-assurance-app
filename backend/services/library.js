@@ -19,9 +19,9 @@ export class Books {
             resultMessage = { message: 'book delete successful', _id: this._id }
         }
 
-        const { deletedCount } = await Book.deleteMany(deleteThis)
+        await Book.deleteMany(deleteThis)
 
-        return { ...resultMessage, deletedCount }
+        return resultMessage
     }
 
     findBooks = async () => {
@@ -82,12 +82,12 @@ export class Comments  {
 
         if (singleComment) {
             delMatch._id = this._id
-            resultMessage = { message: 'comment deleted', _id: this._id }
+            resultMessage = { message: 'comment delete successful', _id: this._id }
         }
 
-        const { deletedCount } = await Comment.deleteMany(delMatch)
+        await Comment.deleteMany(delMatch)
 
-        return { ...resultMessage, deletedCount }
+        return resultMessage
     }
 
     createComments = async () => {
