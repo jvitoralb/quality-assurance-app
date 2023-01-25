@@ -51,11 +51,11 @@ suite('Library Functional Tests', async () => {
                 .post(`${pathApi}/${validId}`)
                 .send({ text: 'This book is really good!' })
                 .end((err, res) => {
+                    let comments = res.body[0].comments
                     assert.strictEqual(res.status, 201)
-                    assert.strictEqual(res.body[0]._id, validId)
                     assert.hasAllDeepKeys(res.body[0], ['_id', 'title', 'comments', 'commentcount'])
-                    // assert.containsAllKeys(res.body[0], ['_id', 'title', 'comments'])
-                    assert.strictEqual(res.body[0].comments.at(-1).text, 'This book is really good!')
+                    assert.strictEqual(res.body[0]._id, validId)
+                    assert.strictEqual(comments[comments.length - 1].text, 'This book is really good!')
                     done()
                 })
             })
