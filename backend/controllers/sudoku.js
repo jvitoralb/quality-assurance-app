@@ -1,6 +1,10 @@
 import { SudokuSolver, Cell } from '../services/sudoku.js';
 
 
+export const homeSudoku = (req, res, next) => {
+    res.status(200).send('Hello Sudoku Solver!')
+}
+
 export const solveSudoku = (req, res, next) => {
     const { puzzle } = req.body;
     const solverRef = new SudokuSolver(null, puzzle);

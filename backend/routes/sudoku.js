@@ -1,21 +1,18 @@
-import { Router } from 'express'
-import fcctesting from './fcctesting.cjs'
-import { checkSudoku, solveSudoku } from '../controllers/sudoku.js'
-import { checkPuzzle, validatePuzzle } from '../middleware/sudoku.js'
+import { Router } from 'express';
+import fcctesting from './fcctesting.cjs';
+import { checkPuzzle, validatePuzzle } from '../middleware/sudoku.js';
+import { homeSudoku, checkSudoku, solveSudoku } from '../controllers/sudoku.js';
 
 
-const sudokuSolver = Router()
+const sudokuSolver = Router();
 
-sudokuSolver.get('/', (req, res, next) => {
-    res.status(200).send('Hello Sudoku Solver!')
-})
+sudokuSolver.get('/', homeSudoku);
 
-sudokuSolver.use(validatePuzzle)
+sudokuSolver.use(validatePuzzle);
 
-sudokuSolver.post('/api/v1/check', checkPuzzle, checkSudoku)
+sudokuSolver.post('/api/v1/check', checkPuzzle, checkSudoku);
+sudokuSolver.post('/api/v1/solve', solveSudoku);
 
-sudokuSolver.post('/api/v1/solve', solveSudoku)
+fcctesting(sudokuSolver);
 
-fcctesting(sudokuSolver)
-
-export default sudokuSolver
+export default sudokuSolver;
