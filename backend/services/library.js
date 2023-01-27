@@ -1,4 +1,5 @@
 import { ObjectId } from 'mongodb'
+import connect from '../connection.js'
 import { Book, Comment } from '../models/library.js'
 
 
@@ -102,6 +103,7 @@ export class Comments  {
 
 export const handleGet = async (bookStats) => {
     const refBook = new Books(bookStats._id, bookStats.title)
+    await connect()
     return await refBook.findBooks()
 }
 
@@ -109,6 +111,8 @@ export const handlePost = async (bookStats, commentStats) => {
     const refBook = new Books(bookStats._id, bookStats.title)
     const refComment = new Comments(commentStats.text, commentStats._id, commentStats.comment)
     let result
+
+    await connect()
 
     if (refBook._id) {
         await refComment.createComments()
@@ -126,6 +130,8 @@ export const handleDelete = async (bookStats, commentStats) => {
     const refBook = new Books(bookStats._id, bookStats.title)
     const refComment = new Comments(commentStats.text, commentStats._id, commentStats.comment)
     let message = {}
+
+    await connect()
 
     if (refComment._id) {
         message = await refComment.deleteComments(true)
