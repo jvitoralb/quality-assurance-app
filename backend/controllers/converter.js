@@ -1,12 +1,12 @@
 import { join } from 'path'
-import pathFrontEnd from '../config.js'
+import pathFrontend from '../config.js'
 import CustomError from '../errors/custom.js'
 import ConvertHandler from '../services/converter.js'
 
 
 export const converterHome = (req, res, next) => {
     res.status(200).sendFile(
-        join(pathFrontEnd, '/public/converter.html')
+        join(pathFrontend, '/public/converter.html')
     )
 }
 
