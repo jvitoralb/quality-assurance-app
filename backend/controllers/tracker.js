@@ -1,6 +1,6 @@
 import IssuesTracker from '../services/tracker.js'
 import CustomError from '../errors/custom.js'
-import connect from '../connection.js'
+import connect from '../utils/connection.js'
 
 
 export const getTrackerHome = (req, res, next) => {

@@ -1,6 +1,6 @@
 import express from 'express'
 import cors from 'cors'
-import pathFrontend from './config.js'
+import pathFrontend from './utils/config.js'
 import notFound from './middleware/notFound.js'
 import errorHandler from './middleware/error.js'
 import issueTracker from './routes/tracker.js'

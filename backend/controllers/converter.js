@@ -1,5 +1,5 @@
 import { join } from 'path'
-import pathFrontend from '../config.js'
+import pathFrontend from '../utils/config.js'
 import CustomError from '../errors/custom.js'
 import ConvertHandler from '../services/converter.js'
 
