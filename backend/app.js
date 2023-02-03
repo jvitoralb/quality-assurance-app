@@ -7,6 +7,7 @@ import issueTracker from './routes/tracker.js'
 import imperialConverter from './routes/converter.js'
 import personalLibrary from './routes/library.js'
 import sudokuSolver from './routes/sudoku.js'
+import translator from './routes/translator.js'
 
 
 const app = express()
@@ -24,6 +25,7 @@ app.use('/metric-converter', imperialConverter)
 app.use('/issue-tracker', issueTracker)
 app.use('/personal-library', personalLibrary)
 app.use('/sudoku-solver', sudokuSolver)
+app.use('/english-translator', translator)
 
 app.use(notFound)
 app.use(errorHandler)
