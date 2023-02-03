@@ -5,7 +5,7 @@ export const validateBody = (req, res, next) => {
     const { body } = req;
 
     if (!body.locale || body.text === undefined) {
-        throw new CustomError('Required field(s) missing', 200);
+        throw new CustomError('Required field(s) missing', 400);
     }
 
     if (body.text === '') {
@@ -13,7 +13,7 @@ export const validateBody = (req, res, next) => {
     }
 
     if (!body.locale.match(/\w+-to-\w+/)) {
-        throw new CustomError('Invalid value for locale field', 200);
+        throw new CustomError('Invalid value for locale field', 400);
     }
 
     next();

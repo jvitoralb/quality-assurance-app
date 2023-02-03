@@ -9,8 +9,6 @@ const translator = Router();
 translator.get('/', homeTranslator);
 translator.post('/api/v1/translate', validateBody, getTranslation);
 
-translator.post('/api/translate', validateBody, getTranslation);
-
 fcctesting(translator);
 
 export default translator;

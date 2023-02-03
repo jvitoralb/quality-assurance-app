@@ -203,7 +203,6 @@ suite('Unit Tests', async function() {
 suite('Functional Tests', async function() {
     const app = (await import('../app.js')).default
     const pathAPI = '/english-translator/api/v1/translate'
-    // const pathAPI = '/api/translate' //fcc
 
     chai.use(chaiHttp)
 
@@ -227,8 +226,7 @@ suite('Functional Tests', async function() {
             .post(pathAPI)
             .send({ text: 'Mangoes are my favorite fruit.', locale: 'british' })
             .end(function(err, res) {
-                assert.deepStrictEqual(res.status, 200)
-                // assert.deepStrictEqual(res.status, 400)
+                assert.deepStrictEqual(res.status, 400)
                 assert.deepEqual(res.body, { error: 'Invalid value for locale field' })
                 done()
             })
@@ -238,8 +236,7 @@ suite('Functional Tests', async function() {
             .post(pathAPI)
             .send({ locale: 'american-to-british' })
             .end(function(err, res) {
-                assert.deepStrictEqual(res.status,200)
-                // assert.deepStrictEqual(res.status, 400)
+                assert.deepStrictEqual(res.status, 400)
                 assert.deepEqual(res.body, { error: 'Required field(s) missing' })
                 done()
             })
@@ -249,8 +246,7 @@ suite('Functional Tests', async function() {
             .post(pathAPI)
             .send({ text: 'Mangoes are my favorite fruit.' })
             .end(function(err, res) {
-                assert.deepStrictEqual(res.status, 200)
-                // assert.deepStrictEqual(res.status, 400)
+                assert.deepStrictEqual(res.status, 400)
                 assert.deepEqual(res.body, { error: 'Required field(s) missing' })
                 done()
             })
