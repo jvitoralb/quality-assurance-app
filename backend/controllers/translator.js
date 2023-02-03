@@ -9,10 +9,8 @@ export const homeTranslator = (req, res, next) => {
 export const getTranslation = (req, res, next) => {
     const refTranslator = new Translator(req.body.locale, req.body.text);
     try {
-        let answer = refTranslator.getTranslation();
-        res.status(200).json(answer);
+        res.status(200).json(refTranslator.getTranslation());
     } catch(err) {
         throw new CustomError(err.error, 200);
     }
-
 }
