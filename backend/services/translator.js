@@ -6,7 +6,9 @@ import titles from '../utils/translator/titlesAmericanBritish.js';
 
 class WordUtility {
     constructor() {
-        this.word = ''
+        this.word = '';
+        this.specialChar = '';
+        this.charStatus = false;
     }
     upperCase = () => {
         this.word = this.word.slice(0, 1).toUpperCase() + this.word.slice(1);
@@ -14,13 +16,31 @@ class WordUtility {
     addSpan = () => {
         return `<span class="highlight">${this.word}</span>`;
     }
+    getSpecialChar = () => {
+        if (this.charStatus) {
+            this.charStatus = false;
+            return this.specialChar;
+        }
+        return '';
+    }
+    treatWord = () => {
+        let specialChars = '?!,.;';
+
+        for(let j = 0; j < specialChars.length; j++) {
+            if (this.word[this.word.length - 1] === specialChars[j]) {
+                this.charStatus = true;
+                this.specialChar = specialChars[j];
+                this.word = this.word.slice(0, this.word.length - 1);
+            }
+        }
+    }
 }
 
 class American extends WordUtility {
     constructor(text) {
         super();
         this.text = text;
-        this.wordIndex = '';
+        this.wordIndex = null;
         this.translation = '';
     }
     checkTitle = () => {
@@ -53,8 +73,10 @@ class American extends WordUtility {
 
         for(let i = 0; i < splitText.length; i++) {
             this.word = splitText[i];
+            this.treatWord();
             this.wordIndex = britihSpelling.indexOf(this.word);
             this.translation += this.getSpelling();
+            this.translation += this.getSpecialChar();
 
             if (i + 1 < splitText.length) {
                 this.translation += ' ';
@@ -63,6 +85,7 @@ class American extends WordUtility {
     }
     checkWord = () => {
         let britishWords = Object.keys(british);
+
         for (let i = 0; i < britishWords.length; i++) {
             let target = new RegExp(`\\b${britishWords[i]}\\b`, 'i');
             let validMatch = this.translation.match(target);
@@ -86,7 +109,6 @@ class American extends WordUtility {
         this.checkWord();
         this.timePattern();
         this.checkTitle();
-        return this.translation;
     }
 }
 
@@ -121,7 +143,9 @@ class British extends WordUtility {
 
         for (let i = 0; i < splitText.length; i++) {
             this.word = splitText[i];
+            this.treatWord();
             this.translation += this.getSpelling();
+            this.translation += this.getSpecialChar();
 
             if (i + 1 < splitText.length) {
                 this.translation += ' ';
@@ -153,55 +177,31 @@ class British extends WordUtility {
         this.checkWord();
         this.timePattern();
         this.checkTitle();
-        return this.translation;
     }
 }
 
 export default class Translator {
     constructor(locale, textInput) {
-        this.textInput = textInput;
         this.locale = locale;
-        this.translation = '';
-        this.specialChar = '';
-    }
-    checkSpecialChars = () => {
-        // just works for special the chars [ ?!.; ] at the end of the string
-        if (this.specialChar.length) {
-            this.translation += this.specialChar;
-            this.textInput += this.specialChar;
+        this.textInput = textInput;
+        this.english;
+        this.languages = {
+            'american-to-british': (text) => new British(text),
+            'british-to-american': (text) => new American(text)
         }
     }
-    treatText = () => {
-        // just works for special the chars [ ?!.; ] at the end of the string
-        let specialChars = '?!.;';
-
-        for(let j = 0; j < specialChars.length; j++) {
-            if (this.textInput[this.textInput.length - 1] === specialChars[j]) {
-                this.specialChar = this.textInput[this.textInput.length - 1];
-                this.textInput = this.textInput.slice(0, this.textInput.length - 1);
-            }
-        }
-    }
-    defineEnglish = () => {
-        /**
-         *  Tem que arrumar isso.
-         *  - Talvez usar Independecy Injection;
-        **/
-        if (this.locale === 'american-to-british') {
-            let ref = new British(this.textInput);
-            this.translation = ref.translate();
-        } else if (this.locale === 'british-to-american') {
-            let ref = new American(this.textInput);
-            this.translation = ref.translate();
+    setEnglish = () => {
+        if (this.languages[this.locale]) {
+            this.english = this.languages[this.locale](this.textInput);
         } else {
             throw { error: 'Invalid value for locale field' }
         }
     }
     getTranslation = () => {
-        this.treatText();
-        this.defineEnglish();
-        this.checkSpecialChars();
-        if (this.translation === this.textInput) {
+        this.setEnglish();
+        this.english.translate();
+
+        if (this.english.translation === this.textInput) {
             return {
                 text: this.textInput,
                 translation: 'Everything looks good to me!'
@@ -209,7 +209,7 @@ export default class Translator {
         }
         return {
             text: this.textInput,
-            translation: this.translation
+            translation: this.english.translation
         }
     }
 }
