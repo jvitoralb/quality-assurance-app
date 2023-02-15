@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
-    <title>QA Projects - Imperial Converter</title>
+    <title>QA Projects - Sudoku Solver</title>
 </head>
 
 <body>
@@ -24,7 +24,7 @@
 
             <ul class="collapse navbar-collapse navbar-nav" id="navbarSupportedContent">
                 <li class="nav-item">
-                    <a class="nav-link active" href="/metric-converter">Metric Converter</a>
+                    <a class="nav-link" href="/metric-converter">Metric Converter</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/issue-tracker">Issues Tracker</a>
@@ -33,7 +33,7 @@
                     <a class="nav-link" href="/personal-library">Library</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/sudoku-solver">Sudoku</a>
+                    <a class="nav-link active" href="/sudoku-solver">Sudoku</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/english-translator">Translator</a>
@@ -43,41 +43,7 @@
     </header>
 
     <main id="main" class="p-3 container-md">
-        <section id="metric-converter-section" class="my-3 py-3 row bg-light">
-            <h3 title="Metric/Imperial Converter" class="text-start">Metric Converter</h3>
-            <form id="convert-form" class="col-sm-6 d-flex py-2 flex-column align-items-center">
-                <input
-                    type="text" id="value-field" name="input-value" placeholder="Value"
-                    class="my-1 form-control w-25" autocomplete="off" pattern="[0-9]+[.]*[0-9]*"
-                />
-                <input
-                    class="my-1 form-control w-25" id="unit-field" list="units-list" placeholder="Unit"
-                    pattern="[a-zA-Z]+" autocomplete="off"
-                />
-                <datalist id="units-list">
-                    <option value="Kilograms">
-                    <option value="Pounds">
-                    <option value="Liters">
-                    <option value="Gallons">
-                    <option value="Kilometers">
-                    <option value="Miles">
-                </datalist>
-                <button id="convert-button" title="Submit value to Conversion" class="my-3 btn btn-primary">Convert!</button>
-            </form>
-            <div class="col-sm-6 d-flex py-2 flex-column align-items-center">
-                <p id="result" class="fst-italic">Your Result will appear here</p>
-                <h6>API Response</h6>
-                <code id="json-result" class="w-75">{"message":"your result will apper here"}</code>
-            </div>
-        </section>
 
-        <section id="api-usage-section" class="my-3 py-3 d-flex flex-column bg-light">
-            <h3 title="API Example usage">API Usage</h3>
-            <code>/api/convert?input=4gal</code>
-            <code>/api/convert?input=1/2km</code>
-            <code>/api/convert?input=5.4/3lbs</code>
-            <code>/api/convert?input=kg</code>
-        </section>
     </main>
 
     <footer id="footer" class="container-fluid bg-primary text-white text-center">
@@ -97,7 +63,6 @@
     </footer>
 
 
-    <script src="../src/js/converter/converter.js"></script>
     <script src="https://kit.fontawesome.com/2e440afa55.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 </body>
