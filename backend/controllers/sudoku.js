@@ -1,8 +1,9 @@
+import pathFrontend from '../utils/config.js';
 import { SudokuSolver, Cell } from '../services/sudoku.js';
 
 
 export const homeSudoku = (req, res, next) => {
-    res.status(200).send('Hello Sudoku Solver!')
+    res.status(200).sendFile(`${pathFrontend}/public/sudoku.html`);
 }
 
 export const solveSudoku = (req, res, next) => {

@@ -1,8 +1,9 @@
+import pathFrontend from '../utils/config.js'
 import { handleGet, handlePost, handleDelete } from '../services/library.js'
 
 
 export const libraryHome = (req, res, next) => {
-    res.status(200).send('Personal Library Home!')
+    res.status(200).sendFile(`${pathFrontend}/public/library.html`)
 }
 
 export const libraryHandler = async (req, res, next) => {

@@ -1,9 +1,10 @@
 import CustomError from '../errors/custom.js';
+import pathFrontend from '../utils/config.js';
 import Translator from '../services/translator.js';
 
 
 export const homeTranslator = (req, res, next) => {
-    res.status(200).send('Hello Translator Home');
+    res.status(200).sendFile(`${pathFrontend}/public/translator.html`);
 }
 
 export const getTranslation = (req, res, next) => {
