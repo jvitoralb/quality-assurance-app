@@ -1,12 +1,15 @@
+import { displayModal } from './tracker.js';
 import createHTMLElem from './trackerUtils.js';
 
 const createIssue = document.querySelector('#create-issue-form');
 const searchIssue = document.querySelector('#search-issue-form');
 const updateIssue = document.querySelector('#update-issue-form');
 const deleteIssue = document.querySelector('#delete-issue-form');
+const allProjectsBtn = document.querySelector('#all-projects-btn');
 const deleteProject = document.querySelector('#delete-project-form');
 const updateFormSelect = document.querySelector('#update-add-field');
 const searchFormSelect = document.querySelector('#search-add-field');
+
 
 export const allForms = [
     createIssue,
@@ -113,7 +116,6 @@ export const clearForm = (targetID) => {
             break;
         }
     }
-
     for(let j = 0; j < form.childNodes.length; j++) {
         if (form.childNodes[j].value) {
             form.childNodes[j].value = '';
@@ -128,13 +130,19 @@ export const clearForm = (targetID) => {
 const initFormsEvents = (apiCallBack) => {
     const handleSubmit = (e) => {
         e.preventDefault();
-        let formData = getFormData(e.target);
-        apiCallBack(e.target.id, formData);
+        displayModal(null, null, 'loading');
+        apiCallBack(e.target.id, getFormData(e.target));
     }
 
     allForms.forEach(form => {
         form.addEventListener('submit', handleSubmit);
         form.addEventListener('hidden.bs.collapse', (e) => clearForm(e.target.id));
+    });
+
+    allProjectsBtn.addEventListener('click', (e) => {
+        // Since the 'See All projects' section lacks a form this triggers its API call
+        displayModal(null, null, 'loading');
+        apiCallBack(e.target.id);
     });
 
     [ updateFormSelect, searchFormSelect ].forEach(select => {
