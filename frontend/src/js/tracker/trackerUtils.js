@@ -53,6 +53,12 @@ const createHTMLElem = {
         div.setAttribute('class', classAttr);
         div.setAttribute('id', customId);
         return div;
+    },
+    span: (classAttr = 'd-flex', text) => {
+        let span = document.createElement('span');
+        span.setAttribute('class', classAttr);
+        span.textContent = text;
+        return span;
     }
 }
 export default createHTMLElem;
