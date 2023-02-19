@@ -4,24 +4,41 @@ import createHTMLElem from './trackerUtils.js';
 const myModal = document.querySelector('#project-issues-modal');
 const modalTitle = document.querySelector('#heading-project-issues');
 const modalBody = document.querySelector('#project-issues-body');
-const allProjectsBtn = document.querySelector('#all-projects-btn');
 
 
 const upperCaseWord = (word) => word.slice(0, 1).toUpperCase() + word.slice(1);
 
-const displayModal = (source, childNodes) => {
-    const projectIssueModal = new bootstrap.Modal(myModal);
+const createSpinner = () => {
+    let div = createHTMLElem['div']('spinner-border text-primary', 'spinner-id');
+    div.setAttribute('role', 'status');
+    div.appendChild(createHTMLElem['span']('visually-hidden'));
+    return div;
+}
 
+const projectIssueModal = new bootstrap.Modal(myModal);
+
+export const displayModal = (source, childNodes, action) => {
     modalTitle.textContent = (() => {
+        if (action === 'loading') {
+            return 'Loading...';
+        }
         let [word1, word2] = source.split('-').map(word => upperCaseWord(word));
         return `${word1} ${word2}`;
     })();
 
+    if (action === 'loading') {
+        // should add spinner everytime the modal is called because when modal is hidden
+        // it deletes every childNode
+        modalBody.appendChild(createSpinner());
+        projectIssueModal.show();
+        return;
+    }
+
+    modalBody.removeChild(document.querySelector('#spinner-id'));
+
     for(let i = 0; i < childNodes.length; i++) {
         modalBody.appendChild(childNodes[i]);
     }
-
-    projectIssueModal.show();
 }
 
 const handleAPIAnswer = (source, trackerAnswer) => {
@@ -36,7 +53,9 @@ const handleAPIAnswer = (source, trackerAnswer) => {
         name: 'Project Name',
         _id: (trackerAnswer.issues ? 'Project ID' : 'Issue ID'),
         project: 'Project ID',
-        result: ''
+        result: trackerAnswer['result']
+        // when delete or put are called the answer = { result: 'success..', ... }
+        // this makes so the result prop text is replaced by its value - a string message
     }
     const childNodes = [];
 
@@ -69,6 +88,9 @@ const handleAPIAnswer = (source, trackerAnswer) => {
             if (trackerAnswer[prop] === '') continue;
             let updatePropText = upperCaseWord(customPropName[prop] || prop);
             let propValueText = (() => {
+                // the prop result shouldn't appear in the UI
+                if (prop === 'result') return '';
+
                 if (prop === 'created_on' || prop === 'updated_on') {
                     return convertDate(trackerAnswer[prop]);
                 }
@@ -91,12 +113,12 @@ const handleAPIAnswer = (source, trackerAnswer) => {
         }
     }
 
-    displayModal(source, childNodes);
+    displayModal(source, childNodes, 'show data');
 }
 
 const handleAPIError = (source, answer) => {
     let textAnswer = createHTMLElem['paragraph'](upperCaseWord(answer.error));
-    displayModal(source, [textAnswer]);
+    displayModal(source, [textAnswer], 'show data');
 }
 
 const handleAPICalls = (eventSource, inputData) => {
@@ -192,11 +214,7 @@ window.addEventListener('load', () => {
     initFormsEvents(handleAPICalls);
     myModal.addEventListener('hide.bs.modal', () => {
         while(modalBody.firstChild) {
-            modalBody.removeChild(modalBody.firstChild)
+            modalBody.removeChild(modalBody.firstChild);
         }
-    });
-    allProjectsBtn.addEventListener('click', (e) => {
-        // Since the See All projects section lacks a form this triggers its API call
-        handleAPICalls(e.target.id);
     });
 });
