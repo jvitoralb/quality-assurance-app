@@ -1,5 +1,5 @@
 import initFormsEvents, { clearForm } from './trackerForms.js';
-import createHTMLElem from './trackerUtils.js';
+import createHTMLElem from '../utils/domElements.js';
 
 const myModal = document.querySelector('#project-issues-modal');
 const modalTitle = document.querySelector('#heading-project-issues');

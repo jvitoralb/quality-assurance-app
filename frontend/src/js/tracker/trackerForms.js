@@ -1,5 +1,5 @@
 import { displayModal } from './tracker.js';
-import createHTMLElem from './trackerUtils.js';
+import createHTMLElem from '../utils/domElements.js';
 
 const createIssue = document.querySelector('#create-issue-form');
 const searchIssue = document.querySelector('#search-issue-form');
