@@ -9,7 +9,8 @@ export const libraryHome = (req, res, next) => {
 export const libraryHandler = async (req, res, next) => {
     const bookStats = {
         _id: req.params._id,
-        title: req.body.title
+        title: req.body.title,
+        author: req.body.author
     }
     const commentStats = {
         _id: req.params._id,

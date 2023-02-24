@@ -4,9 +4,10 @@ import { Book, Comment } from '../models/library.js'
 
 
 export class Books {
-    constructor(bookId, title) {
+    constructor(bookId, title, author) {
         this._id = bookId
         this.title = title
+        this.author = author
         this.comments
         this.commentcount
     }
@@ -42,9 +43,10 @@ export class Books {
     createBooks = async () => {
         const saveTitle = new Book(this)
 
-        const { _id, title } = await saveTitle.save()
+        const { _id, title, author } = await saveTitle.save()
         this._id = _id
         this.title = title
+        this.author = author
     }
 }
 
@@ -108,7 +110,7 @@ export const handleGet = async (bookStats) => {
 }
 
 export const handlePost = async (bookStats, commentStats) => {
-    const refBook = new Books(bookStats._id, bookStats.title)
+    const refBook = new Books(bookStats._id, bookStats.title, bookStats.author)
     const refComment = new Comments(commentStats.text, commentStats._id, commentStats.comment)
     let result
 

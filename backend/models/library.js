@@ -7,6 +7,11 @@ const bookSchema = new Schema({
         required: true,
         trim: true
     },
+    author: {
+        type: String,
+        default: 'Unknown',
+        trim: true
+    },
     commentcount: {
         type: Number,
         default: 0
