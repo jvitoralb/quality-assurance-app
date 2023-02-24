@@ -31,7 +31,20 @@ suite('Library Functional Tests', async () => {
                 .end((err, res) => {
                     assert.strictEqual(res.status, 201)
                     assert.strictEqual(res.body.title, 'A volta dos que não foram')
-                    assert.hasAllKeys(res.body, [ 'title', '_id' ], 'Response should have _id and title')
+                    assert.hasAllKeys(res.body, [ 'title', '_id', 'author' ], 'Response should have _id and title')
+                    validId = res.body._id
+                    done()
+                })
+            })
+            test('#With title and Author', (done) => {
+                chai.request(app)
+                .post(pathApi)
+                .send({ title: 'A volta dos que não foram', author: 'Ninguém' })
+                .end((err, res) => {
+                    assert.strictEqual(res.status, 201)
+                    assert.deepEqual(res.body.title, 'A volta dos que não foram')
+                    assert.deepEqual(res.body.author, 'Ninguém')
+                    assert.hasAllKeys(res.body, [ 'title', '_id', 'author' ], 'Response should have _id and title')
                     validId = res.body._id
                     done()
                 })
@@ -53,7 +66,7 @@ suite('Library Functional Tests', async () => {
                 .end((err, res) => {
                     let book = res.body[0]
                     assert.strictEqual(res.status, 201)
-                    assert.hasAllDeepKeys(book, ['_id', 'title', 'comments', 'commentcount'])
+                    assert.hasAllDeepKeys(book, ['_id', 'title', 'author', 'comments', 'commentcount'])
                     assert.strictEqual(book._id, validId)
                     assert.strictEqual(book.comments[book.comments.length - 1].text, 'This book is really good!')
                     done()
