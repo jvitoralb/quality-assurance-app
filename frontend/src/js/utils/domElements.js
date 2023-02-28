@@ -42,13 +42,14 @@ const createHTMLElem = {
         ul.setAttribute('class', classAttr);
         return ul;
     },
-    listItems: (itemText, classAttr = 'list-group-item mx-1') => {
+    listItems: (itemText, classAttr = 'list-group-item mx-1', customId) => {
         let li = document.createElement('li');
+        customId && li.setAttribute('id', customId);
         li.setAttribute('class', classAttr);
         li.textContent = itemText;
         return li;
     },
-    div: (classAttr = 'd-flex', customId = undefined) => {
+    div: (classAttr = 'd-flex', customId = 'div-container') => {
         let div = document.createElement('div');
         div.setAttribute('class', classAttr);
         div.setAttribute('id', customId);
@@ -59,6 +60,21 @@ const createHTMLElem = {
         span.setAttribute('class', classAttr);
         span.textContent = text;
         return span;
+    },
+    anchor: (classAttr = 'p-2', href) => {
+        let a = document.createElement('a');
+        a.setAttribute('class', classAttr);
+        a.setAttribute('href', href);
+        return a;
+    },
+    image: (classAttr, source, alt, width, height) => {
+        let img = document.createElement('img');
+        img.setAttribute('class', classAttr);
+        img.setAttribute('src', source);
+        img.setAttribute('alt', alt);
+        width && img.setAttribute('width', width);
+        height && img.setAttribute('height', height);
+        return img;
     }
 }
 export default createHTMLElem;
