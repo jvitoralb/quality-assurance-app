@@ -43,7 +43,80 @@
     </header>
 
     <main id="main" class="p-3 container-md">
+        <section id="library-section" class="my-3 py-3 row bg-light">
+            <header id="library-section-header" class="col-sm-12">
+                <h2>Personal Library</h2>
+            </header>
+            <section id="books-section" class="m-3 p-3 col border bg-white">
+                <header id="books-section-header" class="px-2 d-flex justify-content-between border-bottom">
+                    <h3>Books</h3>
+                    <button id="add-book-btn" type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#add-book-modal">Add Book</button>
+                </header>
 
+                <div id="add-book-modal" class="modal fade" tabindex="-1" aria-labelledby="heading-add-book-modal" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <section id="add-book-modal-sec" class="modal-content">
+                            <header class="modal-header">
+                                <h3 class="modal-title fs-5" id="heading-add-book-modal">Add Book</h3>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </header>
+                            <form id="add-book-form" class="modal-body row mx-2 gy-1">
+                                <label for="book-name" class="p-0">Book Title</label>
+                                <input id="add-book-title" name="title" type="text" class="form-control" placeholder="Alice" required>
+                                <label for="book-author" class="p-0">Book Author</label>
+                                <input id="add-book-author" name="author" type="text" class="form-control" placeholder="Lewis Carroll">
+                                <button type="submit" class="btn btn-primary mt-2">Submit</button>
+                            </form>
+                            <span id="add-book-error-message" class="text-center fs-6 m-1 text-danger"></span>
+                            <footer class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </footer>
+                        </section>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="book-info-modal" tabindex="-1" aria-labelledby="title-book-info" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-scrollable">
+                        <section id="book-info-modal-sec" class="modal-content">
+                            <header class="modal-header">
+                                <h3 id="heading-modal-header" class="modal-title">Book</h3>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </header>
+                            <section class="modal-body">
+                                <h3 id="title-book-info" class="modal-title"></h3>
+                                <h3 id="author-book-info" class="modal-title fs-6"></h3>
+                                <form id="add-comment-form" class="row mx-3 pt-3 pb-1 gy-2">
+                                    <textarea id="add-comment" name="text" class="form-control" placeholder="comment"></textarea>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </form>
+                                <span id="book-info-error-message" class="text-center fs-6 m-1 text-danger"></span>
+                                <ul id="book-modal-comments" class="list-group list-group-flush m-1">
+                                    <div id="spinner-container-book-info" class="col text-center">
+                                        <div id="spinner-id" class="spinner-border text-primary"  role="status">
+                                            <span class="visually-hidden"></span>
+                                        </div>
+                                    </div>
+                                </ul>
+                            </section>
+                        </section>
+                    </div>
+                </div>
+
+                <div id="books-container" class="p-2 row">
+                    <div id="spinner-container-all-books" class="col text-center">
+                        <div id="spinner-id" class="spinner-border text-primary"  role="status">
+                            <span class="visually-hidden"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <section id="api-usage-section" class="my-3 py-3 row bg-light">
+            <header id="api-usage-header">
+                <h2>API Usage</h2>
+            </header>
+        </section>
     </main>
 
     <footer id="footer" class="container-fluid bg-primary text-white text-center">
@@ -65,6 +138,7 @@
 
     <script src="https://kit.fontawesome.com/2e440afa55.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+    <script type="module" src="../src/js/library/library.js"></script>
 </body>
 
 </html>
