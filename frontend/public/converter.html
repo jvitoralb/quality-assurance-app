@@ -44,7 +44,12 @@
 
     <main id="main" class="p-3 container-md">
         <section id="metric-converter-section" class="my-3 py-3 row bg-light">
-            <h3 title="Metric/Imperial Converter" class="text-start">Metric Converter</h3>
+            <header id="converter-section-header">
+                <h3 id="heading-converter-section" title="Metric/Imperial Converter" class="text-start">
+                    Metric Converter
+                </h3>
+            </header>
+
             <form id="convert-form" class="col-sm-6 d-flex py-2 flex-column align-items-center">
                 <input
                     type="text" id="value-field" name="input-value" placeholder="Value"
@@ -71,13 +76,78 @@
             </div>
         </section>
 
-        <section id="api-usage-section" class="my-3 py-3 row d-flex flex-column bg-light">
-            <h3 title="API Example usage">API Usage</h3>
-            <code>/api/convert?input=4gal</code>
-            <code>/api/convert?input=1/2km</code>
-            <code>/api/convert?input=5.4/3lbs</code>
-            <code>/api/convert?input=kg</code>
-        </section>
+        <article id="metric-imperial-converter" class="p-3 row bg-light">
+            <section id="introduction" class="my-2">
+                <header id="introduction-sec-header">
+                    <h3 id="heading-introduction-sec" title="Introduction to the API usage">Introduction</h3>
+                </header>
+                <p>A simple metric-imperial converter with only 3 basic units of measurement: Length, Mass, Volume.</p>
+                <ul class="list-group m-2">
+                    <li class="list-group-item">Length: we can convert Kilometers to Miles and vice-versa.</li>
+                    <li class="list-group-item">Mass: we can convert Kilograms to Pounds and vice-versa.</li>
+                    <li class="list-group-item">Volume: we can convert Liters to Gallons and vice-versa.</li>
+                </ul>
+            </section>
+
+            <section id="usage" class="my-2">
+                <header id="usage-sec-header">
+                    <h3 id="heading-usage-sec" title="API Usage">Usage</h3>
+                </header>
+                <p>
+                    To convert any value, you must send the value and unit as value to an <code>input</code> key encoded in the URL. 
+                    This means that to convert 10 kilograms to pounds <code>?input=10kg</code> should be added to the URL. 
+                    All endpoints use <code>/api/v1</code>, so, in this case, the URL is <code>/metric-converter/api/v1/convert?input=4kg</code>. 
+                </p>
+                <p class="m-0">The answer to that call will be an object with 5 key-value pairs:</p>
+                <code>
+                    {
+                        "initNum":10,
+                        "initUnit":"kg",
+                        "returnNum":22.04624,
+                        "returnUnit":"lbs",
+                        "string":"10 kilograms converts to 22.04624 pounds"
+                    }
+                </code>
+                <p class="my-3">
+                    The init keys are the value and unit sent for conversion,
+                    and the return keys are the value and unit converted,
+                    and there's a `string` key that is a message saying it.
+                </p>
+            </section>
+
+            <section id="notes-section" class="my-2">
+                <header id="notes-section-header" >
+                    <h3 id="heading-notes-section" title="Notes on the API Usage">Notes</h3>
+                </header>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        The API does not accept the name of the unit.
+                        This means you can't send <code>input=10kilometers</code>, you have to use <code>Km</code>.
+                    </li>
+                    <li class="list-group-item">
+                        To be aware of the accepted abbreviations (not case sensitive):
+                        <ul class="list-group list-group w-50 text-center my-2">
+                            <li class="list-group-item">Kilometers - Km</li>
+                            <li class="list-group-item">Kilograms - Kg</li>
+                            <li class="list-group-item">Liters - L</li>
+                            <li class="list-group-item">Miles - Mi</li>
+                            <li class="list-group-item">Pounds - Lbs</li>
+                            <li class="list-group-item">Gallons - Gal</li>
+                        </ul>
+                    </li>
+                    <li class="list-group-item">
+                        If only the unit is sent <code>input=kg</code> it infers that the value is 1.
+                        So it will be converted from 1kg to pounds.
+                    </li>
+                    <li class="list-group-item">
+                        If no unit is sent the answer will be an error message.
+                    </li>
+                    <li class="list-group-item">
+                        If no unit and no value are sent, the answer will be an error message.
+                    </li>
+                </ul>
+            </section>
+        </article>
     </main>
 
     <footer id="footer" class="container-fluid bg-primary text-white text-center">
@@ -93,7 +163,7 @@
                 </a>
             </div>
         </section>
-        <p title="by jvitoralb">by jvitoralb</p>
+        <p title="by jvitoralb" class="m-0 p-0">by jvitoralb</p>
     </footer>
 
 
