@@ -1,6 +1,8 @@
 # Quality Assurance App
 
-This is an end-to-end app with five different projects built mainly with JavaScript. The main goal for the app was to practice Test Driven Development. This project is part of the freeCodeCamp curriculum.
+This is an end-to-end app with five different projects built mainly with JavaScript. The main goal for the app was to practice Test Driven Development. This project is part of the freeCodeCamp curriculum. To see the app live [click here](https://quality-assurance-app.onrender.com/).
+
+To see the app live [click here](https://quality-assurance-app.onrender.com/).
 
 - [Metric Converter](#metric-imperial-converter)
 - [Issue Tracker](#issue-tracker)
@@ -50,6 +52,7 @@ Starting from the fact that the game is a larger area of `9X9` - that gives us `
 ## [English Translator](backend/README.md#english-translator)
 As the name implies this project work as a translator between british english and north american english.
 
+### [Live App](https://quality-assurance-app.onrender.com/)
 
 ## Conclusion
 Overall this is not a big project, but I can say I did my best here to write some good code. I had to work with some conditions because this is part of the freeCodeCamp curriculum, and I had to pass all the tests they asked for.  

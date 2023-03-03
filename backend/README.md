@@ -6,7 +6,7 @@
 - [English Translator](#english-translator)
 
 
-## [Metric-Imperial Converter]()
+## [Metric-Imperial Converter](https://quality-assurance-app.onrender.com/metric-converter)
 A simple metric-imperial converter with only 3 basic units of measurement:
 - Length: we can convert Kilometers to Miles and vice-versa.
 - Mass: we can convert Kilograms to Pounds and vice-versa.
@@ -40,7 +40,7 @@ The init keys are the value and unit sent for conversion, and the return keys ar
 - If no unit is sent the answer will be an error message.
 - If no unit and no value are sent, the answer will be an error message.
 
-## [Issue Tracker]()
+## [Issue Tracker](https://quality-assurance-app.onrender.com/issue-tracker)
 The idea behind this project was to create a tool to track issues on a project.
 
 ###### Create
@@ -140,7 +140,7 @@ In this case, the answer will be an object with 2 key-value pairs:
 **Note:**
 - When a project is deleted, all of its issues are deleted as well.
 
-## [Personal Library]()
+## [Personal Library](https://quality-assurance-app.onrender.com/personal-library)
 A simple library project in which we can store books and keep track of comments on all books.
 
 ###### Create
@@ -263,7 +263,7 @@ The answer will be:
 }
 ```
 
-## [Sudoku Solver]()
+## [Sudoku Solver](https://quality-assurance-app.onrender.com/sudoku-solver)
 This is a simple project, and as the name implies is a sudoku solver but can also be used to check if a number is valid to be used in a given coordinate - we use coordinates to track all squares in a puzzle.
 
 The game is divided into rows, columns, and areas.
@@ -326,7 +326,7 @@ In this case, the answer will be an object:
 }
 ```
 
-## [English Translator]()
+## [English Translator](https://quality-assurance-app.onrender.com/english-translator)
 As the name implies this project work as a translator between british english and north american english.
 
 **To translate text from british english**, you must send a POST request with a body to `/english-translator/api/v1/translate`.  
