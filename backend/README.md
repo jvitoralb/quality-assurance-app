@@ -12,9 +12,9 @@ A simple metric-imperial converter with only 3 basic units of measurement:
 - Mass: we can convert Kilograms to Pounds and vice-versa.
 - Volume: we can convert Liters to Gallons and vice-versa.
 
-To convert any value, you must send value and unit as value to a `input` key encoded in the URL.  
+To convert any value, you must send the value and unit as value to an `input` key encoded in the URL.  
 This means that to convert 10 kilograms to pounds `?input=10kg` should be added to the URL.  
-All endpoints uses `/api/v1`, so in this case the URL is `/metric-converter/api/v1/convert?input=4kg`.  
+All endpoints use `/api/v1`, so, in this case, the URL is `/metric-converter/api/v1/convert?input=4kg`.  
 The answer to that call will be an object with 5 key-value pairs:
 ```
 {
@@ -25,7 +25,7 @@ The answer to that call will be an object with 5 key-value pairs:
     "string":"10 kilograms converts to 22.04624 pounds"
 }
 ```
-The init keys are the value and unit sent for conversion and the return keys are the value and unit converted and there's a `string` key that is a message saying it.
+The init keys are the value and unit sent for conversion, and the return keys are the value and unit converted, and there's a `string` key that is a message saying it.
 
 **NOTE:**
 - The API does not accept the name of the unit. This means you can't send `input=10kilometers`, you have to use `km`.
@@ -36,9 +36,9 @@ The init keys are the value and unit sent for conversion and the return keys are
   - `Miles- mi`
   - `Pounds - lbs`
   - `Gallons - gal`
-- If only the unit is sent - `input=kg` - it infers that the value is 1. So will be converted from 1kg to pounds.
+- If only the unit is sent - `input=kg` - it infers that the value is 1. So it will be converted from 1kg to pounds.
 - If no unit is sent the answer will be an error message.
-- If no unit and no value are sent the answer will be an error message.
+- If no unit and no value are sent, the answer will be an error message.
 
 ## [Issue Tracker]()
 The idea behind this project was to create a tool to track issues on a project.
@@ -53,7 +53,7 @@ To create an issue, the model needs 6 pieces of information, some of which are r
 - Assigned to *optional*
 - Status text *optional*
 All this info must be sent as a body in a POST request to `/issue-tracker/api/v1/issues/{project name}`.  
-In this case the answer will be a object with 10 key-value pairs:
+In this case, the answer will be an object with 10 key-value pairs:
 ```
 {
 	"_id": "Issue id String",
@@ -74,8 +74,8 @@ In this case the answer will be a object with 10 key-value pairs:
 - The project name is unique.
 
 ###### Read
-**To retrieve all projects**, you just need to send a GET request to `/issue-tracker/api/v1/projects`.  
-The answer will be an Array with all projects and each project will have 3 key-value pairs:
+**To retrieve all projects**, you must send a GET request to `/issue-tracker/api/v1/projects`.  
+The answer will be an Array with all projects, and each project will have 3 key-value pairs:
 ```
 [
     {
@@ -86,8 +86,8 @@ The answer will be an Array with all projects and each project will have 3 key-v
 ]
 ```
 
-**To search a project issues**, you just need its name and send a GET request to `/issue-tracker/api/v1/issues/{project name}`.  
-In this case the answer will be an object with 3 key-value pairs:
+**To search project issues**, you need its name and send a GET request to `/issue-tracker/api/v1/issues/{project name}`.  
+In this case, the answer will be an object with 3 key-value pairs:
 ```
 {
     "_id": "Project _id String"
@@ -104,12 +104,12 @@ In this case the answer will be an object with 3 key-value pairs:
 - Open
 
 **Note:**
-- The query keys must be all in small letters and the spaces must be replaced by `_` - *e.g.*: `issue_id`, `issue_title`, `created_by`.
+- The query keys must be all in small letters, and the spaces must be replaced by `_` - *e.g.*: `issue_id`, `issue_title`, `created_by`.
 
 ###### Update
-**To update a project issue**, you need to send a PUT request to `/issue-tracker/api/v1/issues/{project name}`.  
-The request must have a body with project name, issue id, and the fields to update.  
-In this case the answer will be an object with 2 key-value pairs:
+**To update a project issue**, you must send a PUT request to `/issue-tracker/api/v1/issues/{project name}`.  
+The request must have a body with the project name, issue id, and the fields to update.  
+In this case, the answer will be an object with 2 key-value pairs:
 ```
 {
 	"result": "successfully updated",
@@ -118,9 +118,9 @@ In this case the answer will be an object with 2 key-value pairs:
 ```
 
 ###### Delete
-**To delete a project issue**, you need to send a DELETE request to `/issue-tracker/api/v1/issues/{project name}`.  
-The request must have a body with issue id.  
-In this case the answer will be an object with 2 key-value pairs:
+**To delete a project issue**, you must send a DELETE request to `/issue-tracker/api/v1/issues/{project name}`.  
+The request must have a body with the issue id.  
+In this case, the answer will be an object with 2 key-value pairs:
 ```
 {
 	"result": "successfully deleted",
@@ -128,8 +128,8 @@ In this case the answer will be an object with 2 key-value pairs:
 }
 ```
 
-**To delete a project**, you need to send a DELETE request to `/issue-tracker/api/v1/projects/{project name}`.  
-In this case the answer will be an object with 2 key-value pairs:
+**To delete a project**, you must send a DELETE request to `/issue-tracker/api/v1/projects/{project name}`.  
+In this case, the answer will be an object with 2 key-value pairs:
 ```
 {
 	"result": "successfully deleted",
@@ -138,10 +138,10 @@ In this case the answer will be an object with 2 key-value pairs:
 ```
 
 **Note:**
-- When a project is deleted, all of its issues are deleted too.
+- When a project is deleted, all of its issues are deleted as well.
 
 ## [Personal Library]()
-A simple library project in which we can store books and keep track of comments in all books.
+A simple library project in which we can store books and keep track of comments on all books.
 
 ###### Create
 **Storing a book** requires:
@@ -149,7 +149,7 @@ A simple library project in which we can store books and keep track of comments 
 - Author name ***optional***
 
 This info must be sent as a body in a POST request to `/personal-library/api/v1/books`.  
-In this case the answer will be an object with 3 key-value pairs:
+In this case, the answer will be an object with 3 key-value pairs:
 ```
 {
 	"_id": "Book id String",
@@ -166,7 +166,7 @@ In this case the answer will be an object with 3 key-value pairs:
 - Text
 
 This info must be sent as a body in a POST request to `/personal-library/api/v1/books/{book id}`.
-In this case the answer will be an array with the book object in it:
+In this case, the answer will be an array with the book object in it:
 ```
 [
 	{
@@ -187,11 +187,11 @@ In this case the answer will be an array with the book object in it:
 ```
 
 **Note:**
-- Book id presence in the body is indiferent but I advise to avoid it.
+- Book id presence in the body is indifferent, but I advise avoiding it.
 - Comment created_by has ***Ursinho Pooh!*** as default value.
 
 ###### Read
-**To retrieve all books**, you need to send a GET request to `/personal-library/api/v1/books`.  
+**To retrieve all books**, you must send a GET request to `/personal-library/api/v1/books`.  
 The answer will be an Array with all books objects:
 ```
 [
@@ -205,7 +205,7 @@ The answer will be an Array with all books objects:
 ```
 
 **To search a specific book**, you need the book id and send a GET request to `/personal-library/api/v1/books/{book id}`.  
-In this case the answer will be an Array with a book object and all of its comments:
+In this case, the answer will be an Array with a book object and all of its comments:
 ```
 [
 	{
@@ -226,7 +226,7 @@ In this case the answer will be an Array with a book object and all of its comme
 ```
 
 ###### Delete
-**To delete a book**, you need to send a DELETE request to `/personal-library/api/v1/books/{book id}`.  
+**To delete a book**, you must send a DELETE request to `/personal-library/api/v1/books/{book id}`.  
 The answer will be: 
 ```
 {
@@ -242,7 +242,7 @@ The answer will be:
 - Deleting a book also deletes all of its comments.
 
 
-**To delete all books**, you just need to send a DELETE request to `/personal-library/api/v1/books`.  
+**To delete all books**, you must send a DELETE request to `/personal-library/api/v1/books`.  
 The answer will be: 
 ```
 {
@@ -254,7 +254,7 @@ The answer will be:
 ```
 
 **To delete a comment**, you must send the comment's id as value to a `comment` key encoded in the URL.  
-So in this case the DELETE request URL should be `/personal-library/api/v1/books/{book id}?comment={comment id}`.  
+So, in this case, the DELETE request URL should be `/personal-library/api/v1/books/{book id}?comment={comment id}`.  
 The answer will be:
 ```
 {
@@ -269,21 +269,31 @@ This is a simple project, and as the name implies is a sudoku solver but can als
 The game is divided into rows, columns, and areas.
 Starting from the fact that the game is a larger area of `9X9` - that gives us `81 squares` to work with:
 - Each `row` is composed of 9 squares, as well as each `column` and each `area` - in `3x3` format.
-- Each `row` receives a letter from `A to I` as a coordinate being the first line - top - the letter `A` and the last line - base - the letter `I`.
+- Each `row` receives a letter from `A to I` as a coordinate is the first line - top - the letter `A` and the last line - base - the letter `I`.
 - Each `column` receives as a coordinate a number from `1 to 9`, the first column - left, column `1`, and the last column - right - column `9`.
 
-![Image explaining the sudoku grid coordinates](../frontend/public/images/sudoku-solver-usage.png)
+<p align="center">
+    <img
+        src="./frontend/public/images/sudoku-solver-usage.png"
+        alt="Image explaining the sudoku grid coordinates"
+    >
+</p>
 
 **To get the puzzle solved**, you must send a POST request with a body to `/sudoku-solver/api/v1/solve`.  
-The body should be a object with an `puzzle` key and the value should be an string with all the numbers from the puzzle.
+The body should be an object with a `puzzle` key and the value should be a string with all the numbers from the puzzle.
 
 ***Note: blank spaces should be replaced with `.`***
 
-The following game should have an puzzle string that looks like this: `.7.89.....5....3.4.2..4..1.5689..472...6.....1.7.5.63873.1.2.8.6..47.1..2.9.387.6`.
+The following game should have a puzzle string that looks like this: `.7.89.....5....3.4.2..4..1.5689..472...6.....1.7.5.63873.1.2.8.6..47.1..2.9.387.6`.
 
-![Image sudoku puzzle](./frontend/public/images/full-sudoku-solver-img.png)
+<p align="center">
+    <img
+        src="../frontend/public/images/full-sudoku-solver-img.png"
+        alt="Image explaining the sudoku grid coordinates"
+    >
+</p>
 
-In this case the answer will be an object that looks like this:
+In this case, the answer will be an object that looks like this:
 ```
 {
 	"message": "Puzzle solved",
@@ -295,16 +305,16 @@ In this case the answer will be an object that looks like this:
 - The string must be `81 characteres long`.
 
 **To validate a given value in a given coordinate in the puzzle**, you must send a POST request with a body to `/sudoku-solver/api/v1/check`.  
-The body must have a 3 key-value pairs: puzzle, coordinate, value.
+The body must have 3 key-value pairs: puzzle, coordinate, and value.
 
 **Note:**
-- The puzzle must be `81 characteres long`.
-- Coordinate should be 2 chacteres long composed by a letter and a number: e.g `A3`.
+- The puzzle must be `81 characters long`.
+- Coordinate should be 2 characters long composed of a letter and a number: e.g `A3`.
 - The value must be a `number`.
 
-In this case the answer will be a object:
-- If theres no conflicts: `{ "valid": true }`.
-- If theres one or more conflicts:
+In this case, the answer will be an object:
+- If there are no conflicts: `{ "valid": true }`.
+- If there are one or more conflicts:
 ```
 {
 	"valid": false,
@@ -321,16 +331,16 @@ As the name implies this project work as a translator between british english an
 
 **To translate text from british english**, you must send a POST request with a body to `/english-translator/api/v1/translate`.  
 The body should have 2 key-value pairs: text and locale.  
-To set up the locale option is really simple, if you wish the translation of a british text to american english use: `british-to-american` or `american-to-british` if you want to translate from american to british.
+To set up the locale option is simple, if you wish the translation of a british text to american english use: `british-to-american` or `american-to-british` if you want to translate from american to british.
 
-For example to translate `Mangoes are my favorite fruit.` to american english, the post request body must be:
+For example, to translate `Mangoes are my favorite fruit.` to american english, the post request body must be:
 ```
 {
 	text: 'Mangoes are my favorite fruit.',
 	locale: 'american-to-british'
 }
 ```
-In this case the answer will be an object with 2 key-value pairs: text and translation. The translation value is a string with the translated word wrapped with a HTML `span` element.
+In this case, the answer will be an object with 2 key-value pairs: text and translation. The translation value is a string with the translated word wrapped with an HTML `span` element.
 ```
 {
 	text: 'Mangoes are my favorite fruit.',
@@ -338,4 +348,4 @@ In this case the answer will be an object with 2 key-value pairs: text and trans
 }
 ```
 **Note:**
-- In case the text sent is in british english and was requested a british translation by the locale, the answer will still be a object with the keys `text` and `translation` but the translation value will be: `Everything looks good to me!`.
+- In case the text sent is in british english and was requested a british translation by the locale, the answer will still be an object with the keys `text` and `translation` but the translation value will be: `Everything looks good to me!`.
