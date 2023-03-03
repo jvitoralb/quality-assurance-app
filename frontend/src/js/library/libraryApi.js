@@ -1,14 +1,9 @@
 import { clearInputs } from './libraryForms.js';
+import { answerHandler, errorHandler } from './library.js';
 
 
-const handleAPICalls = (eventSource, data, callback) => {
+const handleAPICalls = (eventSource, data) => {
     const readAllBooks = async () => {
-        const handleError = (answer) => {
-            let text = createHTMLElem['paragraph'](answer.error, 'm-1 text-center');
-            text.setAttribute('id', 'no-books-text');
-            bookContainer.removeChild(document.querySelector('#spinner-container-all-books'));
-            bookContainer.appendChild(text);
-        }
         try {
             const reqBooks = await fetch('/personal-library/api/v1/books');
             const answer = await reqBooks.json();
@@ -20,21 +15,13 @@ const handleAPICalls = (eventSource, data, callback) => {
             if (!answer.length) {
                 throw { error: 'No Books found!' }
             }
-
-            callback(answer);
+            answerHandler(answer, eventSource);
         } catch(err) {
-            handleError(err);
+            errorHandler(err, eventSource);
         }
     }
 
     const readBook = async ({ bookID }) => {
-        const handleBookError = (errorAnswer) => {
-            displayBookInfo({
-                bookTitle: errorAnswer.error,
-                bookAuthor: '',
-                commentNodes: []
-            });
-        }
         try {
             const reqBook = await fetch(`/personal-library/api/v1/books/${bookID}`);
             const answer = await reqBook.json();
@@ -42,31 +29,13 @@ const handleAPICalls = (eventSource, data, callback) => {
             if (reqBook.status === 400) {
                 throw answer;
             }
-
-            callback(answer);
+            answerHandler(answer, eventSource);
         } catch(err) {
-            handleBookError(err);
+            errorHandler(err, eventSource);
         }
     }
 
     const createBookComment = async ({ formData, bookID }) => {
-        const handleCreateError = (answer, source) => {
-            const errorMessageBook = document.querySelector('#add-book-error-message');
-            const errorMessageComment = document.querySelector('#book-info-error-message');
-
-            if (source === 'add-book-form') {
-                const dismissMessageBook = () => errorMessageBook.textContent = '';
-
-                errorMessageBook.textContent = answer.error.slice(0, 1).toUpperCase() + answer.error.slice(1) + '!';
-                addBookModalElem.addEventListener('click', dismissMessageBook);
-            } else {
-                const dismissMessageComment = () => errorMessageComment.textContent = '';
-
-                errorMessageComment.textContent = answer.error.slice(0, 1).toUpperCase() + answer.error.slice(1) + '!';
-                bookInfoModalElem.addEventListener('click', dismissMessageComment);
-            }
-        }
-
         const apis = {
             'add-book-form': '/personal-library/api/v1/books',
             'add-comment-form': `/personal-library/api/v1/books/${bookID}`
@@ -88,9 +57,9 @@ const handleAPICalls = (eventSource, data, callback) => {
             }
 
             clearInputs(eventSource);
-            callback(answer);
+            answerHandler(answer, eventSource);
         } catch(err) {
-            handleCreateError(err, eventSource);
+            errorHandler(err, eventSource);
         }
     }
 

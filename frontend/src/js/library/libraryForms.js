@@ -1,5 +1,3 @@
-import { addBookAnswer, addCommentAnswer } from './library.js';
-
 const addBookForm = document.querySelector('#add-book-form');
 const addCommentForm = document.querySelector('#add-comment-form');
 
@@ -8,6 +6,9 @@ const forms = [
     addCommentForm
 ];
 
+/**
+ *  Manage Inputs
+**/
 export const clearInputs = (targetID) => {
     let form = undefined;
     for(let i = 0; i < forms.length; i++) {
@@ -33,20 +34,17 @@ const getData = (targetForm) => {
     return formInputData;
 }
 
+/**
+ * Start()
+**/
 const initFormsListeners = (apiCallsHandler) => {
     const submitHandler = (e) => {
         e.preventDefault();
 
-        const targetForm = e.target.getAttribute('id');
-        const submitCallbacks = {
-            'add-book-form': addBookAnswer, 
-            'add-comment-form': addCommentAnswer
-        }
-
-        apiCallsHandler(targetForm, {
+        apiCallsHandler(e.target.getAttribute('id'), {
             formData: getData(e.target),
             bookID: e.target.getAttribute('action')
-        }, submitCallbacks[targetForm]);
+        });
     }
 
     forms.forEach((form) => {
