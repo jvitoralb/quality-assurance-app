@@ -274,7 +274,7 @@ Starting from the fact that the game is a larger area of `9X9` - that gives us `
 
 <p align="center">
     <img
-        src="./frontend/public/images/sudoku-solver-usage.png"
+        src="../frontend/public/images/sudoku-solver-usage.png"
         alt="Image explaining the sudoku grid coordinates"
     >
 </p>
