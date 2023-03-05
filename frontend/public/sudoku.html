@@ -43,7 +43,142 @@
     </header>
 
     <main id="main" class="p-3 container-md">
+        <section id="sudoku-section" class="my-3 py-3 row bg-light">
+            <header id="sudoku-section-header" class="col-sm-12">
+                <h2 id="heading-sudoku-section">Sudoku Solver</h2>
+            </header>
+        </section>
+        <article id="api-usage" class="p-3 row bg-light">
+            <section id="introduction" class="my-2">
+                <header id="introduction-header">
+                    <h3 id="heading-introduction" title="Introduction to the API usage">Introduction</h3>
+                </header>
+                <p>
+                    This is a simple project, and as the name implies 
+                    is a sudoku solver but can also be used to check if a number 
+                    is valid to be used in a given coordinate - 
+                    we use coordinates to track all squares in a puzzle.
+                </p>
+                <p class="m-0">
+                    The game is divided into rows, columns, and areas.
+                    Starting from the fact that the game is a larger area of <code>9X9</code> - 
+                    that gives us <code>81 squares</code> to work with:
+                </p>
+                <ul class="list-group my-2">
+                    <li class="list-group-item">
+                        Each <code>row</code> is composed of 9 squares, 
+                        as well as each <code>column</code> and each 
+                        <code>area</code> - in <code>3x3</code> format.
+                    </li>
+                    <li class="list-group-item">
+                        Each <code>row</code> receives a letter from <code>A to I</code> 
+                        as a coordinate is the first line - top - the letter <code>A</code> 
+                        and the last line - base - the letter <code>I</code>.
+                    </li>
+                    <li class="list-group-item">
+                        Each <code>column</code> receives as a coordinate a number 
+                        from <code>1 to 9</code>, the first column - left, column <code>1</code>, 
+                        and the last column - right - column <code>9</code>.
+                    </li>
+                </ul>
+                <div class="text-center">
+                    <img 
+                        src="./public/images/sudoku-solver-usage.png" 
+                        class="img-fluid"
+                        alt="Image explaining the sudoku grid coordinates."
+                    >
+                </div>
+            </section>
 
+            <section id="usage-section" class="my-2 row">
+                <header id="usage-section-header">
+                    <h3 id="heading-usage-section">Usage</h3>
+                </header>
+
+                <section id="usage-solve" class="col-md-6">
+                    <header id="usage-solve-header">
+                        <h5 id="heading-usage-solve" title="Usage - Solve Sudoku">Solve</h5>
+                    </header>
+                    <p>
+                        <span class="fw-semibold fst-italic">To get the puzzle solved</span>, 
+                        you must send a POST request with a body to <code>/sudoku-solver/api/v1/solve</code>.
+                        The body should be an object with a <code>puzzle</code> key and the value 
+                        should be a string with all the numbers from the puzzle.
+                    </p>
+                    <p class="mt-3">
+                        All blank spaces should be replaced with a dot - <code>.</code>. So the following game should have a puzzle string that looks like this:
+                        <code>.7.89.....5....3.4.2..4..1.5689..472...6.....1.7.5.63873.1.2.8.6..47.1..2.9.387.6</code>
+                    </p>
+                    <div class="text-center m-2">
+                        <img
+                            src="./public/images/full-sudoku-solver-img.png" 
+                            class="img-fluid"
+                            alt="Sudoku puzzle image."
+                        >
+                    </div>
+                    <p class="m-0">In this case, the answer will be an object that looks like this:</p>
+                    <code>
+                        {
+                            "message": "Puzzle solved",
+                            "solution": "473891265851726394926345817568913472342687951197254638734162589685479123219538746"
+                        }
+                    </code>
+                    <h5 id="usage-section-solved-notes">Notes</h5>
+                    <ul id="solved-notes" class="list-group my-2">
+                        <li class="list-group-item">
+                            The string must be 81 characteres long
+                        </li>
+                        <li class="list-group-item">
+                            It does not accept any value other than a number - 
+                            <code>0 to 9</code> and a dot - <code>.</code>
+                        </li>
+                    </ul>
+
+                </section>
+
+                <section id="usage-validate" class="col-md-6">
+                    <header id="usage-validate-header">
+                        <h5 id="heading-usage-validate" title="Usage - Validate Sudoku">Validate</h5>
+                    </header>
+                    <p>
+                        <span class="fw-semibold fst-italic">To validate a given value in a given coordinate in the puzzle</span>, 
+                        you must send a POST request with a body to 
+                        <code>/sudoku-solver/api/v1/check</code>.
+                        The body must have 3 key-value pairs: puzzle, coordinate, and value.
+                    </p>
+                    <p class="m-0">In this case, the answer will be an object:</p>
+                    <ul id="solved-notes" class="list-group my-2">
+                        <li class="list-group-item">If there are no conflicts: <code>{ "valid": true }</code></li>
+                        <li class="list-group-item">
+                            If there are one or more conflicts:
+                            <code>
+                                {
+                                    "valid": false,
+                                    "conflict": [
+                                        "row",
+                                        "column",
+                                        "region"
+                                    ]
+                                }
+                            </code>
+                        </li>
+                    </ul>
+                    <h5 id="usage-section-solved-notes">Notes</h5>
+                    <ul id="solved-notes" class="list-group my-2">
+                        <li class="list-group-item">
+                            The string must be 81 characteres long.
+                        </li>
+                        <li class="list-group-item">
+                            Coordinate should be 2 characters long composed of a letter and a number. 
+                            <span class="fw-semibold fst-italic">e.g.</span>: <code>A3</code>.
+                        </li>
+                        <li class="list-group-item">
+                            The value must be a <code>number</code>.
+                        </li>
+                    </ul>
+                </section>
+            </section>
+        </article>
     </main>
 
     <footer id="footer" class="container-fluid bg-primary text-white text-center">
@@ -59,7 +194,7 @@
                 </a>
             </div>
         </section>
-        <p title="by jvitoralb">by jvitoralb</p>
+        <p title="by jvitoralb" class="m-0 p-0">by jvitoralb</p>
     </footer>
 
 
