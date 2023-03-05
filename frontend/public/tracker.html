@@ -183,11 +183,193 @@
             </div>
         </section>
 
-        <section id="api-usage-section" class="my-3 py-3 row bg-light">
-            <header id="api-usage-header">
-                <h2>API Usage</h2>
-            </header>
-        </section>
+        <article id="api-usage" class="p-3 row bg-light">
+            <section id="introduction" class="my-2">
+                <header id="introduction-sec-header">
+                    <h3 id="heading-introduction-sec" title="Introduction to the API usage">Introduction</h3>
+                </header>
+                <p>The idea behind this project was to create a tool to track issues on a project.</p>
+            </section>
+
+            <section id="usage" class="my-2 gy-3 row">
+                <header id="usage-sec-header">
+                    <h3 id="heading-usage-sec" title="API Usage">Usage</h3>
+                </header>
+                <section id="usage-create-sec" class="col-md-6">
+                    <header id="usage-create-header">
+                        <h5 id="heading-usage-sec" title="API Usage - Create">Create</h5>
+                    </header>
+                    <p>
+                        <span class="fw-semibold fst-italic">Creating a project</span> requires only a name.
+                        To create an issue, the model needs 6 pieces of information, some of which are required:
+                    </p>
+                    <ul class="list-group list-group text-center my-2">
+                        <li class="list-group-item">
+                            Project name - <span class="fw-semibold fst-italic">required</span>
+                        </li>
+                        <li class="list-group-item">
+                            Issue title - <span class="fw-semibold fst-italic">required</span>
+                        </li>
+                        <li class="list-group-item">
+                            Issue text - <span class="fw-semibold fst-italic">required</span>
+                        </li>
+                        <li class="list-group-item">
+                            Created by - <span class="fw-semibold fst-italic">required</span>
+                        </li>
+                        <li class="list-group-item">
+                            Assigned to - <span class="fw-semibold fst-italic">optional</span>
+                        </li>
+                        <li class="list-group-item">
+                            Status text - <span class="fw-semibold fst-italic">optional</span>
+                        </li>
+                    </ul>
+                    <p class="m-0">
+                        All this info must be sent as a body in a POST request to
+                        <code>/issue-tracker/api/v1/issues/{project name}</code>.
+                        In this case, the answer will be an object with 10 key-value pairs:
+                    </p>
+                    <code>
+                    {
+                        "_id": "Issue id String",
+                        "project": "Project id String",
+                        "issue_title": "Issue title String",
+                        "issue_text": "Issue text String",
+                        "created_on": "Date String",
+                        "updated_on": "Date String",
+                        "created_by": "String",
+                        "assigned_to": "String",
+                        "open": true,
+                        "status_text": "String"
+                    }
+                    </code>
+                    <h5 id="heading-usage-create-notes" title="Notes on API Usage - Create" class="mt-3">
+                        Notes
+                    </h5>
+                    <ul id="usage-create-notes" class="list-group list-group my-2">
+                        <li class="list-group-item">
+                            The body keys must be all in small letters
+                            and the spaces must be replaced by <code>_</code> -
+                            <span class="fw-semibold fst-italic">e.g.</span>: 
+                            <code>project_name</code>, <code>issue_title</code>, 
+                            <code>issue_text</code>, <code>created_by</code>.
+                        </li>
+                        <li class="list-group-item">
+                            The project name is unique.
+                        </li>
+                    </ul>
+                </section>
+
+                <section id="usage-read-sec" class="col-md-6">
+                    <header id="usage-read-header">
+                        <h5 id="heading-read-section" title="API Usage - Read">Read</h5>
+                    </header>
+                    <p>
+                        <span class="fw-semibold fst-italic">To retrieve all projects</span>, 
+                        you must send a GET request to <code>/issue-tracker/api/v1/projects</code>.
+                    </p>
+                    <p class="m-0">
+                        The answer will be an Array with all projects,
+                        and each project will have 3 key-value pairs:
+                    </p>
+                    <code>
+                        [
+                            {
+                                "_id": "Project _id String",
+                                "name": "Project name String",
+                                "issues": [Issues id Strings]
+                            }
+                        ]
+                    </code>
+                    <p class="mt-3">
+                        <span class="fw-semibold fst-italic">To search project issues</span>, 
+                        you need its name and send a GET request to <code>/issue-tracker/api/v1/issues/{project name}</code>.
+                    </p>
+                    <p class="m-0">In this case, the answer will be an object with 3 key-value pairs:</p>
+                    <code>
+                        {
+                            "_id": "Project _id String"
+                            "name": "Project name String"
+                            "issues": [Issues Objects]
+                        }
+                    </code>
+                    <p class="mt-3">
+                        <span class="fw-semibold fst-italic">To make the search more precise</span>, 
+                        you can use filters as queries. The options to send as filters are:
+                    </p>
+                    <ul class="list-group list-group text-center my-2">
+                        <li class="list-group-item">Issue id</li>
+                        <li class="list-group-item">Issue title</li>
+                        <li class="list-group-item">Assigned to</li>
+                        <li class="list-group-item">Created by</li>
+                        <li class="list-group-item">Open</li>
+                    </ul>
+                    <h5 id="heading-usage-read-notes" title="Notes on API Usage - Read" class="mt-3">Notes</h5>
+                    <ul id="usage-read-notes" class="list-group list-group my-2">
+                        <li class="list-group-item">
+                            The query keys must be all in small letters,
+                            and the spaces must be replaced by <code>_</code> - 
+                            <span class="fw-semibold fst-italic">e.g.</span>: 
+                            <code>issue_id</code>, <code>issue_title</code>, <code>created_by</code>.
+                        </li>
+                    </ul>
+                </section>
+
+                <section id="usage-update-sec" class="col-md-6">
+                    <header id="usage-update-header">
+                        <h5 id="heading-update-section" title="API Usage - Update">Update</h5>
+                    </header>
+                    <p>
+                        <span class="fw-semibold fst-italic">To update a project issue</span>, 
+                        you must send a PUT request to <code>/issue-tracker/api/v1/issues/{project name}</code>.
+                    </p>
+                    <p>The request must have a body with the project name, issue id, and the fields to update.</p>
+                    <p class="m-0">In this case, the answer will be an object with 2 key-value pairs:</p>
+                    <code>
+                        {
+                            "result": "successfully updated",
+                            "_id": "Issue id String"
+                        }
+                    </code>
+                </section>
+
+                <section id="usage-delete-sec" class="col-md-6">
+                    <header id="usage-delete-header">
+                        <h5 id="heading-delete-section" title="API Usage - Delete">Delete</h5>
+                    </header>
+                    <p>
+                        <span class="fw-semibold fst-italic">To delete a project issue</span>, 
+                        you must send a DELETE request to <code>/issue-tracker/api/v1/issues/{project name}</code>
+                    </p>
+                    <p>The request must have a body with the issue id.</p>
+                    <p class="m-0">In this case, the answer will be an object with 2 key-value pairs:</p>
+                    <code>
+                        {
+                            "result": "successfully deleted",
+                            "_id": "Issue id String"
+                        }
+                    </code>
+                    <p class="mt-3">
+                        <span class="fw-semibold fst-italic">To delete a project</span>, 
+                        you must send a DELETE request to <code>/issue-tracker/api/v1/projects/{project name}</code>.
+                    </p>
+                    <p class="m-0">In this case, the answer will be an object with 2 key-value pairs:</p>
+                    <code>
+                        {
+                            "result": "successfully deleted",
+                            "name": "Project name String"
+                        }
+                    </code>
+                    <h5 id="heading-usage-delete-notes" title="Notes on API Usage - Delete" class="mt-3">
+                        Notes
+                    </h5>
+                    <ul id="usage-delete-notes" class="list-group list-group my-2">
+                        <li class="list-group-item">
+                            When a project is deleted, all of its issues are deleted as well.
+                        </li>
+                    </ul>
+                </section>
+            </section>
+        </article>
     </main>
 
     <footer id="footer" class="container-fluid bg-primary text-white text-center">
@@ -203,7 +385,7 @@
                 </a>
             </div>
         </section>
-        <p title="by jvitoralb">by jvitoralb</p>
+        <p title="by jvitoralb" class="m-0 p-0">by jvitoralb</p>
     </footer>
 
     <script src="https://kit.fontawesome.com/2e440afa55.js" crossorigin="anonymous"></script>
