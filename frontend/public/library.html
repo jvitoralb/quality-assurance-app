@@ -112,11 +112,199 @@
             </section>
         </section>
 
-        <section id="api-usage-section" class="my-3 py-3 row bg-light">
-            <header id="api-usage-header">
-                <h2>API Usage</h2>
-            </header>
-        </section>
+        <article id="api-usage" class="p-3 row bg-light">
+            <section id="introduction" class="my-2">
+                <header id="introduction-sec-header">
+                    <h3 id="heading-introduction-sec" title="Introduction to the API usage">Introduction</h3>
+                </header>
+                <p>A simple library project in which we can store books and keep track of comments on all books.</p>
+            </section>
+
+            <section id="usage" class="my-2 gy-3 row">
+                <header id="api-usage-header">
+                    <h3 id="heading-usage-sec" title="API Usage">Usage</h3>
+                </header>
+
+                <section id="usage-create-sec" class="col-md-6">
+                    <header id="usage-create-header">
+                        <h5 id="heading-create-section" title="API Usage - Create">Create</h5>
+                    </header>
+                    <p class="m-0"><span class="fw-semibold fst-italic">Storing a book</span> requires:</p>
+                    <ul class="list-group text-center my-2">
+                        <li class="list-group-item">
+                            Book name <span class="fw-semibold fst-italic">required</span>
+                        </li>
+                        <li class="list-group-item">
+                            Author name <span class="fw-semibold fst-italic">optional</span>
+                        </li>
+                    </ul>
+                    <p class="m-0">
+                        This info must be sent as a body in a POST request to 
+                        <code>/personal-library/api/v1/books</code>.
+                        In this case, the answer will be an object with 3 key-value pairs:
+                    </p>
+                    <code>
+                        {
+                            "_id": "Book id String",
+                            "title": "Book title String",
+                            "author": "Book Author name String"
+                        }
+                    </code>
+                    <h5 id="heading-usage-create-notes" class="mt-3">Notes</h5>
+                    <ul id="usage-create-notes" class="list-group my-2">
+                        <li class="list-group-item">
+                            If the author's name is not sent the default value will be 
+                            <span class="fw-semibold fst-italic">Unknown</span>
+                        </li>
+                    </ul>
+                    <p class="mt-3 mb-0"><span class="fw-semibold fst-italic">Creating a comment</span> requires:</p>
+                    <ul class="list-group text-center my-2">
+                        <li class="list-group-item">Book id</li>
+                        <li class="list-group-item">Text</li>
+                    </ul>
+                    <p class="m-0">
+                        This info must be sent as a body in a POST request to 
+                        <code>/personal-library/api/v1/books/{book id}</code>.
+                        In this case, the answer will be an array with the book object in it:
+                    </p>
+                    <code>
+                        [
+                            {
+                                "_id": "Book id String",
+                                "title": "Book title String",
+                                "author": "Author name String",
+                                "commentcount": Number,
+                                "comments": [
+                                    {
+                                        "_id": "Comment id String",
+                                        "text": "Comment text String",
+                                        "created_on": "Date String",
+                                        "created_by": "Ursinho Pooh!"
+                                    }
+                                ]
+                            }
+                        ]
+                    </code>
+                    <h5 id="heading-usage-create-notes" class="mt-3">Notes</h5>
+                    <ul id="usage-create-notes" class="list-group my-2">
+                        <li class="list-group-item">
+                            Book id presence in the body is indifferent, but I advise avoiding it.
+                        </li>
+                        <li class="list-group-item">
+                            Comment created_by has 
+                            <span class="fw-semibold fst-italic">Ursinho Pooh!</span> 
+                            as default value.
+                        </li>
+                    </ul>
+                </section>
+
+                <section id="usage-read-sec" class="col-md-6">
+                    <header id="usage-read-header">
+                        <h5 id="heading-read-section" title="API Usage - Read">Read</h5>
+                    </header>
+                    <p class="m-0">
+                        <span class="fw-semibold fst-italic">To retrieve all books</span>, 
+                        you must send a GET request to 
+                        <code>/personal-library/api/v1/books</code>.
+                        The answer will be an Array with all books objects:
+                    </p>
+                    <code>
+                        [
+                            {
+                                "_id": "Book id String",
+                                "title": "Book title String",
+                                "author": "Author name String",
+                                "commentcount": Number
+                            }
+                        ]
+                    </code>
+                    <p class="mt-3 mb-0">
+                        <span class="fw-semibold fst-italic">To search a specific book</span>, 
+                        you need the book id and send a GET request to 
+                        <code>/personal-library/api/v1/books/{book id}</code>.
+                        In this case, the answer will be an Array with a book object and all of its comments:
+                    </p>
+                    <code>
+                        [
+                            {
+                                "_id": "Book id String",
+                                "title": "Book title String",
+                                "author": "Author name String",
+                                "commentcount": Number,
+                                "comments": [
+                                    {
+                                        "_id": "Comment id String",
+                                        "text": "Comment text String",
+                                        "created_on": "Date String",
+                                        "created_by": "Ursinho Pooh!"
+                                    }
+                                ]
+                            }
+                        ]
+                    </code>
+                </section>
+
+                <section id="usage-update-sec" class="col-md-6">
+                    <header id="usage-update-sec-header">
+                        <h5 id="heading-usage-update-sec" title=""></h5>
+                    </header>
+                </section>
+
+                <section id="usage-delete-sec" class="col-md-6">
+                    <header id="usage-delete-sec-header">
+                        <h5 id="heading-usage-delete-sec" title="">Delete</h5>
+                    </header>
+                    <p class="m-0">
+                        <span class="fw-semibold fst-italic">To delete a book</span>, 
+                        you must send a DELETE request to 
+                        <code>/personal-library/api/v1/books/{book id}</code>. 
+                        The answer will be:
+                    </p>
+                    <code>
+                        {
+                            "message": "book delete successful",
+                            "_id": "Book id String",
+                            "comments": {
+                                "message": "all comments deleted",
+                                "book_id": "Book id String"
+                            }
+                        }
+                    </code>
+                    <h5 id="heading-usage-delete-notes" class="mt-3">Notes</h5>
+                    <ul id="usage-delete-notes" class="list-group my-2">
+                        <li class="list-group-item">Deleting a book also deletes all of its comments.</li>
+                    </ul>
+                    <p class="mt-3 mb-0">
+                        <span class="fw-semibold fst-italic">To delete all books</span>, 
+                        you must send a DELETE request to 
+                        <code>/personal-library/api/v1/books</code>. 
+                        The answer will be:
+                    </p>
+                    <code>
+                        {
+                            "message": "complete delete successful",
+                            "comments": {
+                                "message": "all comments deleted"
+                            }
+                        }
+                    </code>
+                    <p class="mt-3 mb-0">
+                        <span class="fw-semibold fst-italic">To delete a comment</span>, 
+                        you must send the comment's id as value to a 
+                        <code>comment</code> key encoded in the URL. 
+                        So, in this case, the DELETE request URL should be 
+                        <code>/personal-library/api/v1/books/{book id}?comment={comment id}</code>.
+                        The answer will be:
+                    </p>
+                    <code>
+                        {
+                            "message": "comment delete successful",
+                            "_id": "Comment id String"
+                        }
+                    </code>
+                </section>
+            </section>
+        </article>
     </main>
 
     <footer id="footer" class="container-fluid bg-primary text-white text-center">
@@ -132,7 +320,7 @@
                 </a>
             </div>
         </section>
-        <p title="by jvitoralb">by jvitoralb</p>
+        <p title="by jvitoralb" class="m-0 p-0">by jvitoralb</p>
     </footer>
 
 
