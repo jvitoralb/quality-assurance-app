@@ -43,7 +43,67 @@
     </header>
 
     <main id="main" class="p-3 container-md">
+        <section id="translator-section" class="my-3 py-3 row bg-light">
+            <header id="translator-section-header">
+                <h3 id="heading-translator-section" title="English Translator">English Translator</h3>
+            </header>
+        </section>
 
+        <article id="api-usage" class="p-3 row bg-light">
+            <section id="introduction" class="my-2">
+                <header id="introduction-header">
+                    <h3 id="heading-introduction" title="Introduction to the API usage">Introduction</h3>
+                </header>
+                <p>
+                    As the name implies this project work as a translator 
+                    between british english and north american english.
+                </p>
+            </section>
+            <section id="usage" class="my-2 row">
+                <header id="usage-header">
+                    <h3 id="heading-usage" title="API usage">Usage</h3>
+                </header>
+                <p>
+                    <span class="fw-semibold fst-italic">To translate text from british english</span>, 
+                    you must send a POST request with a body to <code>/english-translator/api/v1/translate</code>.
+                    The body should have 2 key-value pairs: text and locale.
+                    To set up the locale option is simple, if you wish the 
+                    translation of a british text to american english use: 
+                    <code>british-to-american</code> or <code>american-to-british</code> 
+                    if you want to translate from american to british.
+                </p>
+                <p class="m-0">
+                    For example, to translate <code>Mangoes are my favorite fruit.</code> 
+                    to american english, the post request body must be:
+                </p>
+                <code>
+                    {
+                        text: 'Mangoes are my favorite fruit.',
+                        locale: 'american-to-british'
+                    }
+                </code>
+                <p class="mt-3 mb-0">
+                    In this case, the answer will be an object with 2 key-value pairs: 
+                    text and translation. The translation value is a string with the translated 
+                    word wrapped with an HTML <code>span</code> element.
+                </p>
+                <code>
+                    {
+                        text: 'Mangoes are my favorite fruit.',
+                        translation: 'Mangoes are my &lt;span class="highlight"&gt;favourite&lt;/span&gt; fruit.'
+                    }
+                </code>
+                <h5 id="heading-usage-notes" class="mt-3">Notes</h5>
+                <ul id="usage-notes" class="list-group my-2">
+                    <li class="list-group-item">
+                        In case the text sent is in british english and was requested a 
+                        british translation by the locale, the answer will still be an object 
+                        with the keys <code>text</code> and <code>translation</code> but the 
+                        translation value will be: <code>Everything looks good to me!</code>.
+                    </li>
+                </ul>
+            </section>
+        </article>
     </main>
 
     <footer id="footer" class="container-fluid bg-primary text-white text-center">
@@ -59,7 +119,7 @@
                 </a>
             </div>
         </section>
-        <p title="by jvitoralb">by jvitoralb</p>
+        <p title="by jvitoralb" class="m-0 p-0">by jvitoralb</p>
     </footer>
 
 
