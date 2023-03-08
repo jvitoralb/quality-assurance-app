@@ -1,7 +1,9 @@
 const createHTMLElem = {
-    input: (classAttr = 'form-select') => {
+    input: (classAttr = 'form-select', customType = 'text', customId = 'input-id') => {
         let input = document.createElement('input');
         input.setAttribute('class', classAttr);
+        input.setAttribute('type', customType);
+        input.setAttribute('id', customId);
         return input;
     },
     select: (classAttr = 'form-select') => {
@@ -75,6 +77,19 @@ const createHTMLElem = {
         width && img.setAttribute('width', width);
         height && img.setAttribute('height', height);
         return img;
+    },
+    trow: () => {
+        let tr = document.createElement('tr');
+        return tr;
+    },
+    tcell: (style) => {
+        let td = document.createElement('td');
+        style && td.setAttribute('style', style);
+        return td;
+    },
+    tbody: () => {
+        let tbody = document.createElement('tbody');
+        return tbody;
     }
 }
 export default createHTMLElem;
