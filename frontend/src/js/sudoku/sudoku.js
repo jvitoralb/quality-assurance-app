@@ -1,5 +1,5 @@
 import createHTMLElem from '../utils/domElements.js';
-import handleAPICalls from './sudokuHandlers.js';
+import initEvents from './sudokuEvents.js';
 import puzzles from './sudokuPuzzles.js';
 
 export const resultContainer = document.querySelector('#validate-solve-result');
@@ -54,8 +54,14 @@ const loadBoard = () => {
             tableBody.appendChild(tableRow);
         }
     }
-
     sudokuBoard.appendChild(tableBody);
+}
+
+export const clearBoard = () => {
+    const allDataCells = document.querySelectorAll('td');
+    for(let i = 0; i < allDataCells.length; i++) {
+        allDataCells[i].firstChild.value = '';
+    }
 }
 
 const getIndex = (coordinate) => {
@@ -67,7 +73,7 @@ const getIndex = (coordinate) => {
     return (lettersNumbers[coordinate[0]]) + (coordinate[1] - 1);
 }
 
-const loadPuzzle = () => {
+export const loadPuzzle = () => {
     const selectedPuzzle = puzzles[Math.floor(Math.random() * puzzles.length)];
     const allDataCells = document.querySelectorAll('td');
 
@@ -80,7 +86,7 @@ const loadPuzzle = () => {
     }
 }
 
-const getPuzzleState = () => {
+export const getPuzzleState = () => {
     const allDataCells = document.querySelectorAll('td');
     let puzzle = '';
 
@@ -91,29 +97,7 @@ const getPuzzleState = () => {
             puzzle += allDataCells[i].firstChild.value;
         }
     }
-
     return { puzzle };
-}
-
-const getFormState = (targetForm) => {
-    const coordValue = {}
-
-    for(const pair of new FormData(targetForm).entries()) {
-        coordValue[pair[0]] = pair[1];
-    }
-
-    return coordValue;
-}
-
-export const resultCleaner = () => {
-    const gameSection = document.querySelector('#game-section');
-    const removeInfo = () => {
-        while(resultContainer.firstChild) {
-            resultContainer.removeChild(resultContainer.firstChild);
-        }
-        gameSection.removeEventListener('click', removeInfo);
-    }
-    gameSection.addEventListener('click', removeInfo);
 }
 
 export const completePuzzle = (result) => {
@@ -127,27 +111,6 @@ export const completePuzzle = (result) => {
             allDataCells[i].firstChild.value = result.solution[coordIndex];
         }
     }
-}
-
-const initEvents = () => {
-    const solveButton = document.querySelector('#solve-puzzle-btn');
-    const checkValueForm = document.querySelector('#check-value');
-    const solvePuzzle = (e) => {
-        const puzzle = getPuzzleState();
-        const targetId = e.target.getAttribute('id');
-        handleAPICalls(puzzle, targetId);
-    }
-    const checkOnPuzzle = (e) => {
-        e.preventDefault();
-        const puzzle = getPuzzleState();
-        const coordValue = getFormState(e.target);
-        const targetId = e.target.getAttribute('id');
-        const allData = Object.assign({}, puzzle, coordValue);
-        handleAPICalls(allData, targetId);
-    }
-
-    solveButton.addEventListener('click', solvePuzzle);
-    checkValueForm.addEventListener('submit', checkOnPuzzle);
 }
 
 const start = () => {

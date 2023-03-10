@@ -1,5 +1,6 @@
-import { resultContainer, resultCleaner, completePuzzle } from './sudoku.js';
+import { resultContainer, completePuzzle } from './sudoku.js';
 import createHTMLElem from '../utils/domElements.js';
+import { resultCleaner } from './sudokuEvents.js';
 
 
 const handleError = (errorResult, source) => {
@@ -27,15 +28,20 @@ const handleAnswer = (answerResult, source) => {
     }
     const checkAnswer = (result) => {
         let text = result.valid === false ? 'Conflicts:' : 'No conflicts!';
-        let textNode = createHTMLElem['paragraph'](text);
+        let textNode = createHTMLElem['paragraph'](text, 'm-1 text-center');
         resultContainer.appendChild(textNode);
 
         if (result.conflict) {
             let list = createHTMLElem['unorderedList']();
             for(let i = 0; i < result.conflict.length; i++) {
-                list.appendChild(createHTMLElem['listItems'](result.conflict[i]));
+                list.appendChild(createHTMLElem['listItems'](result.conflict[i], 'list-group-item mx-1 text-center'));
             }
             resultContainer.appendChild(list);
+        }
+    }
+    const clearResultNode = () => {
+        while(resultContainer.firstChild) {
+            resultContainer.removeChild(resultContainer.firstChild);
         }
     }
 
@@ -43,6 +49,7 @@ const handleAnswer = (answerResult, source) => {
         'check-value': checkAnswer,
         'solve-puzzle-btn': solveAnswer
     }
+    clearResultNode();
     actionsCallbacks[source](answerResult);
     resultCleaner();
 }
