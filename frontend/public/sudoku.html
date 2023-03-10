@@ -54,21 +54,24 @@
 
             <section id="validate-section" class="p-3 row d-flex align-items-center justify-content-center">
                 <form id="check-value" class="col-sm-4 p-3 text-center">
+                    <label for="check-coordinate" class="float-start mx-1">Coordinate</label>
                     <input 
                         id="check-coordinate" name="coordinate" class="form-control m-1" type="text" 
-                        placeholder="coordinate" maxlength="2" required
+                        placeholder="A3" maxlength="2" required
                     >
+                    <label for="check-value" class="float-start mx-1">Value</label>
                     <input 
                         id="check-value" name="value" class="form-control m-1" type="number" 
-                        placeholder="value" required
+                        placeholder="6" required
                     >
                     <button id="check-value-btn" class="btn btn-primary m-1">Validate</button>
                 </form>
 
                 <div id="validate-solve-result" class="col-sm-4 p-3 d-flex flex-column"></div>
 
-                <div class="col-sm-4 p-3 text-center">
-                    <button id="solve-puzzle-btn" class="btn btn-primary">Solve Puzzle!</button>
+                <div class="col-sm-4 p-3 d-flex justify-content-between">
+                    <button id="solve-puzzle-btn" class="btn btn-primary mx-1">Solve Puzzle!</button>
+                    <button id="new-game-btn" class="btn btn-primary mx-1">New Game</button>
                 </div>
             </section>
         </section>
