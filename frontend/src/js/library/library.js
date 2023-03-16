@@ -1,6 +1,6 @@
 import createHTMLElem from '../utils/domElements.js';
 import initFormsListeners from './libraryForms.js';
-import handleAPICalls from './libraryApi.js';
+import handleAPICalls from './libraryHandlers.js';
 
 export const bookContainer = document.querySelector('#books-container');
 export const commentsList = document.querySelector('#book-modal-comments');
@@ -20,7 +20,6 @@ export const displayBookInfo = ({ bookTitle, bookAuthor,  commentNodes }) => {
         commentsList.appendChild(commentNodes[i]);
     }
 }
-
 
 export const createCommentElement = ({ _id, created_by, created_on, text }) => {
     let li = createHTMLElem['listItems']('', 'list-group-item d-flex', _id);
