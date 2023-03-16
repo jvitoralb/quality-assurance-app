@@ -2,7 +2,7 @@ import createHTMLElem from '../utils/domElements.js';
 import { clearInputs } from './libraryForms.js';
 import {
     bookContainer, commentsList, addBookModal, addBookModalElem,
-    createCommentElement, createBookElement, displayBookInfo
+    createCommentElement, createBookElement, displayBookInfo, bookInfoModalElem
 } from './library.js';
 
 
