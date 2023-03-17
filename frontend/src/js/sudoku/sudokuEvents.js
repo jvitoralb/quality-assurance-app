@@ -2,7 +2,7 @@ import handleAPICalls from './sudokuHandlers.js';
 import { getPuzzleState, clearBoard, loadPuzzle, resultContainer } from './sudoku.js';
 
 
-export const resultCleaner = () => {
+export const resultCleanerEvent = () => {
     const gameSection = document.querySelector('#game-section');
     const removeInfo = () => {
         while(resultContainer.firstChild) {
