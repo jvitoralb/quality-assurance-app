@@ -1,7 +1,13 @@
-import { resultContainer, completePuzzle } from './sudoku.js';
 import createHTMLElem from '../utils/domElements.js';
-import { resultCleaner } from './sudokuEvents.js';
+import { resultCleanerEvent } from './sudokuEvents.js';
+import { resultContainer, completePuzzle } from './sudoku.js';
 
+
+const clearResultNode = () => {
+    while(resultContainer.firstChild) {
+        resultContainer.removeChild(resultContainer.firstChild);
+    }
+}
 
 const handleError = (errorResult, source) => {
     const checkError = (message) => {
@@ -12,12 +18,14 @@ const handleError = (errorResult, source) => {
         let text = createHTMLElem['paragraph'](message.error, 'm-1 text-center');
         resultContainer.appendChild(text);
     }
+
     const actionsCallbacks = {
         'check-value': checkError,
         'solve-puzzle-btn': solveError
     }
+    clearResultNode();
     actionsCallbacks[source](errorResult);
-    resultCleaner();
+    resultCleanerEvent();
 }
 
 const handleAnswer = (answerResult, source) => {
@@ -39,11 +47,6 @@ const handleAnswer = (answerResult, source) => {
             resultContainer.appendChild(list);
         }
     }
-    const clearResultNode = () => {
-        while(resultContainer.firstChild) {
-            resultContainer.removeChild(resultContainer.firstChild);
-        }
-    }
 
     const actionsCallbacks = {
         'check-value': checkAnswer,
@@ -51,7 +54,7 @@ const handleAnswer = (answerResult, source) => {
     }
     clearResultNode();
     actionsCallbacks[source](answerResult);
-    resultCleaner();
+    resultCleanerEvent();
 }
 
 const handleAPICalls = (data, source) => {
@@ -88,7 +91,7 @@ const handleAPICalls = (data, source) => {
             });
             const answer = await request.json();
 
-            if (request.status === 400) {
+            if (request.status === 400 || answer.hasOwnProperty('error')) {
                 throw answer;
             }
 
