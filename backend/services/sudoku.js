@@ -218,6 +218,15 @@ export class SudokuSolver {
         }
     }
 
+    allCellsSolved = () => {
+        for(let i = 0; i < this.cellsList.length; i++) {
+            if (this.cellsList[i].solved === false) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     forward = () => {
         if (this.cellsList[this.cellIndex].solved && this.cellIndex < this.cellsList.length) {
             this.cellIndex++;
@@ -263,6 +272,18 @@ export class SudokuSolver {
         try {
             this.validate();
             this.setCellsList();
+
+            if (!this.cellsList.length) {
+                throw { message: 'Puzzle cannot be solved' }
+            }
+
+            if (this.allCellsSolved() === true) {
+                return {
+                    message: 'Puzzle solved',
+                    solution: this.puzzle
+                }
+            }
+
             this.solve();
         } catch(e) {
             throw new CustomError(e.message, 200);
