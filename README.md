@@ -1,6 +1,6 @@
 # Quality Assurance App
 
-This is an end-to-end app with five different projects built mainly with JavaScript. The main goal for the app was to practice Test Driven Development. This project is part of the freeCodeCamp curriculum. To see the app live [click here](https://quality-assurance-app.onrender.com/).
+This is an end-to-end app with five different projects built mainly with JavaScript. The main goal for the app was to practice Test Driven Development. This project is part of the freeCodeCamp curriculum.  
 
 To see the app live [click here](https://quality-assurance-app.onrender.com/).
 
