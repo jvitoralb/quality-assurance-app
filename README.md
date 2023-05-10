@@ -11,7 +11,7 @@ To see the app live [click here](https://quality-assurance-app.onrender.com/).
 - [English Translator](#english-translator)
 
 ### [Backend](backend)
-The backend was built with Nodejs and Expressjs following the MVC software design pattern, and all APIs follow the REST architectural style.  
+The backend was built with Nodejs and Expressjs following the Microservices architecture style, and all APIs follow the REST architectural style.  
 The choice for the database was MongoDB and the mongoose library to manage and store the data.  
 
 ### [Tests](backend/tests)
