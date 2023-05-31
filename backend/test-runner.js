@@ -24,12 +24,15 @@
 *
 *
 */
+import * as dotenv from 'dotenv';
 import assertionAnalyser from './assertion-analyser.js';
 import EventEmitter from 'events';
 import Mocha from 'mocha';
 import path from 'path';
 import fs from 'fs';
 const analyser = assertionAnalyser;
+
+dotenv.config();
 
 
 // const analyser = require('./assertion-analyser.cjs');
@@ -40,14 +43,15 @@ const analyser = assertionAnalyser;
 //     path = require('path');
 
 let mocha = new Mocha();
-let testDir = './tests'
+let testDir = './tests';
 
 
 // Add each .js file to the mocha instance
 fs.readdirSync(testDir).filter(function (file) {
     // Only keep the .js files
-    return file.substr(-4) === '.cjs';
-    // return file.substr(-3) === '.js';
+    if (file === process.env.PROJECT_TO_TEST_NAME + 'Test.cjs') {
+        return file.substr(-4) === '.cjs';
+    }
 }).forEach(function (file) {
     mocha.addFile(
         path.join(testDir, file)
