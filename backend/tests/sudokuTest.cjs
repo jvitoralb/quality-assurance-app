@@ -2,8 +2,6 @@ const chai = require('chai')
 const chaiHttp = require('chai-http')
 
 
-if (process.env.PROJECT_TEST !== 'sudoku') return
-
 const assert = chai.assert
 const puzzlesAndSolutions = [
     [

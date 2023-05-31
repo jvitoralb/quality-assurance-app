@@ -3,8 +3,6 @@ const chai = require('chai')
 const chaiHttp = require('chai-http')
 
 
-if (process.env.PROJECT_TEST !== 'library') return
-
 chai.use(chaiHttp)
 
 suite('Library Functional Tests', async () => {

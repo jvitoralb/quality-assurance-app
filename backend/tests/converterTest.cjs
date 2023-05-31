@@ -3,8 +3,6 @@ const chai = require('chai')
 const chaiHttp = require('chai-http')
 
 
-if (process.env.PROJECT_TEST !== 'converter') return
-
 suite('Unit Tests', async () => {
     const ConvertHandler = (await import('../services/converter.js')).default
     let assert = chai.assert

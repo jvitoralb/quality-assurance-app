@@ -2,8 +2,6 @@ const chai = require('chai')
 const chaiHttp = require('chai-http')
 
 
-if (process.env.PROJECT_TEST !== 'translator') return
-
 const assert = chai.assert
 
 suite('Unit Tests', async function() {
