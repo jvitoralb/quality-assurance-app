@@ -26,15 +26,19 @@ A simple metric-imperial converter with only 3 basic units of measurement:
 - Length: we can convert Kilometers to Miles and vice-versa.
 - Mass: we can convert Kilograms to Pounds and vice-versa.
 - Volume: we can convert Liters to Gallons and vice-versa.
+[More details](backend/README.md#metric-imperial-converter)
 
 ## [Issue Tracker](backend/README.md#issue-tracker)
 The idea behind this project was to create a tool to track issues on a project.
+[More details](backend/README.md#issue-tracker)
 
 ## [Personal Library](backend/README.md#personal-library)
 A simple library project in which we can store books and keep track of comments on all books.
+[More details](backend/README.md#personal-library)
 
 ## [Sudoku Solver](backend/README.md#sudoku-solver)
 This is a simple project, and as the name implies, this is a sudoku solver but can also be used to check if a number is valid to be used in a given coordinate - we use coordinates to track all squares in a puzzle.
+[More details](backend/README.md#sudoku-solver)
 
 The game is divided into rows, columns, and areas.
 Starting from the fact that the game is a larger area of `9X9` - that gives us `81 squares` to work with:
@@ -51,6 +55,7 @@ Starting from the fact that the game is a larger area of `9X9` - that gives us `
 
 ## [English Translator](backend/README.md#english-translator)
 As the name implies this project work as a translator between british english and north american english.
+[More details](backend/README.md#english-translator)
 
 ### [Live App](https://quality-assurance-app.onrender.com/)
 
