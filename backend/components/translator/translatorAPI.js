@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import fcctesting from './fcctesting.cjs';
-import { validateBody } from '../middleware/translator.js';
-import { homeTranslator, getTranslation } from '../controllers/translator.js';
+import fcctesting from '../../routes/fcctesting.cjs';
+import { validateBody } from './translatorMiddleware.js';
+import { homeTranslator, getTranslation } from './translatorController.js';
 
 
 const translator = Router();

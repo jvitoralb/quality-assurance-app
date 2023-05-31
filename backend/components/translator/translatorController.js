@@ -1,6 +1,6 @@
-import CustomError from '../errors/custom.js';
-import pathFrontend from '../utils/config.js';
-import Translator from '../services/translator.js';
+import CustomError from '../../errors/custom.js';
+import pathFrontend from '../../configs/pathConfig.js';
+import Translator from './translatorService.js';
 
 
 export const homeTranslator = (req, res, next) => {

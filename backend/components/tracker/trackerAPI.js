@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import fcctesting from './fcctesting.cjs';
-import { validateBody, validateQueries } from '../middleware/tracker.js';
+import fcctesting from '../../routes/fcctesting.cjs';
+import { validateBody, validateQueries } from './trackerMiddleware.js';
 import {
     getTrackerHome,
     getAllIssues,
@@ -9,7 +9,7 @@ import {
     updateIssues,
     deleteIssues,
     deleteProject
-} from '../controllers/tracker.js';
+} from './trackerController.js';
 
 
 const issueTracker = Router();

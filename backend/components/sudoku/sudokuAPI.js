@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import fcctesting from './fcctesting.cjs';
-import { checkPuzzle, validatePuzzle } from '../middleware/sudoku.js';
-import { homeSudoku, checkSudoku, solveSudoku } from '../controllers/sudoku.js';
+import fcctesting from '../../routes/fcctesting.cjs';
+import { checkPuzzle, validatePuzzle } from './sudokuMiddleware.js';
+import { homeSudoku, checkSudoku, solveSudoku } from './sudokuController.js';
 
 
 const sudokuSolver = Router();

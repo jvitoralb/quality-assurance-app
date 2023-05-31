@@ -1,5 +1,5 @@
-import CustomError from '../errors/custom.js'
-import { Book } from '../models/library.js'
+import CustomError from '../../errors/custom.js'
+import { Book } from './libraryModel.js'
 
 
 export const checkOnBooks = async (req, res, next) => {

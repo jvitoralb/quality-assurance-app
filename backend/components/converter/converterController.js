@@ -1,7 +1,7 @@
 import { join } from 'path'
-import pathFrontend from '../utils/config.js'
-import CustomError from '../errors/custom.js'
-import ConvertHandler from '../services/converter.js'
+import pathFrontend from '../../configs/pathConfig.js'
+import CustomError from '../../errors/custom.js'
+import ConvertHandler from './converterService.js'
 
 
 export const converterHome = (req, res, next) => {

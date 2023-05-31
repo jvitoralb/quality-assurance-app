@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 import { ObjectId } from 'mongodb'
-import CustomError from '../errors/custom.js'
-import { Project, Issue } from '../models/tracker.js'
+import CustomError from '../../errors/custom.js'
+import { Project, Issue } from './trackerModel.js'
 
 
 export default class IssuesTracker {

@@ -1,4 +1,4 @@
-import CustomError from '../errors/custom.js';
+import CustomError from '../../errors/custom.js';
 
 
 export class Cell {

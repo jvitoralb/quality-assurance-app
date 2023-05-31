@@ -1,5 +1,5 @@
-import CustomError from '../errors/custom.js'
-import ConvertHandler from '../services/converter.js'
+import CustomError from '../../errors/custom.js'
+import ConvertHandler from './converterService.js'
 
 
 const queryInput = (req, res, next) => {

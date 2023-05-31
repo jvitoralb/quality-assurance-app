@@ -1,5 +1,5 @@
-import CustomError from '../errors/custom.js'
-import { SudokuSolver, Cell } from '../services/sudoku.js'
+import CustomError from '../../errors/custom.js'
+import { SudokuSolver, Cell } from './sudokuService.js'
 
 
 export const checkPuzzle = (req, res, next) => {

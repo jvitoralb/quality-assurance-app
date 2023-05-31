@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import fcctesting from './fcctesting.cjs';
-import queryInput from '../middleware/converter.js';
-import { handleConversion, converterHome } from '../controllers/converter.js';
+import fcctesting from '../../routes/fcctesting.cjs';
+import queryInput from './converterMiddleware.js';
+import { handleConversion, converterHome } from './converterController.js';
 
 
 const imperialConverter = Router();

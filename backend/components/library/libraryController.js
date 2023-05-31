@@ -1,5 +1,5 @@
-import pathFrontend from '../utils/config.js'
-import { handleGet, handlePost, handleDelete } from '../services/library.js'
+import pathFrontend from '../../configs/pathConfig.js'
+import { handleGet, handlePost, handleDelete } from './libraryService.js'
 
 
 export const libraryHome = (req, res, next) => {

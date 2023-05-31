@@ -1,7 +1,7 @@
-import american from '../utils/translator/american.js';
-import british from '../utils/translator/british.js';
-import spelling from '../utils/translator/spellingAmericanBritish.js';
-import titles from '../utils/translator/titlesAmericanBritish.js';
+import american from './utils/american.js';
+import british from './utils/british.js';
+import spelling from './utils/spellingAmericanBritish.js';
+import titles from './utils/titlesAmericanBritish.js';
 
 
 class WordUtility {

@@ -1,5 +1,5 @@
-import pathFrontend from '../utils/config.js';
-import { SudokuSolver, Cell } from '../services/sudoku.js';
+import pathFrontend from '../../configs/pathConfig.js';
+import { SudokuSolver, Cell } from './sudokuService.js';
 
 
 export const homeSudoku = (req, res, next) => {
