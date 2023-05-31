@@ -52,12 +52,13 @@ export const handleAPIAnswer = (source, trackerAnswer) => {
     );
     const customPropName = {
         name: 'Project Name',
-        _id: (trackerAnswer.issues ? 'Project ID' : 'Issue ID'),
         project: 'Project ID',
+        _id: ((source === 'all-projects-btn' && trackerAnswer[0].issues) ? 'Project ID' : 'Issue ID'),
         result: trackerAnswer['result']
         // when delete or put are called the answer = { result: 'success..', ... }
         // this makes so the result prop text is replaced by its value - a string message
     }
+    
     const childNodes = [];
 
     if (source === 'all-projects-btn') {
