@@ -3,11 +3,11 @@ import cors from 'cors'
 import pathFrontend from './configs/pathConfig.js'
 import notFound from './middleware/notFound.js'
 import errorHandler from './middleware/error.js'
-import issueTracker from './components/tracker/trackerAPI.js'
-import imperialConverter from './components/converter/converterAPI.js'
+import issueTracker from './components/tracker/api/routes.js'
+import imperialConverter from './components/converter/api/routes.js'
 import personalLibrary from './components/library/api/routes.js'
-import sudokuSolver from './components/sudoku/sudokuAPI.js'
-import translator from './components/translator/translatorAPI.js'
+import sudokuSolver from './components/sudoku/api/routes.js'
+import translator from './components/translator/api/routes.js'
 
 
 const app = express()

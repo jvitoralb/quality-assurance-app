@@ -43,18 +43,16 @@ dotenv.config();
 //     path = require('path');
 
 let mocha = new Mocha();
-let testDir = './tests';
+let componentTests = './components/' + process.env.PROJECT_TO_TEST + '/tests/';
 
 
 // Add each .js file to the mocha instance
-fs.readdirSync(testDir).filter(function (file) {
+fs.readdirSync(componentTests).filter(function (file) {
     // Only keep the .js files
-    if (file === process.env.PROJECT_TO_TEST + 'Test.cjs') {
-        return file.substr(-4) === '.cjs';
-    }
+    return file.substr(-4) === '.cjs';
 }).forEach(function (file) {
     mocha.addFile(
-        path.join(testDir, file)
+        path.join(componentTests, file)
     );
 });
 
