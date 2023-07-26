@@ -44,7 +44,7 @@ dotenv.config();
 
 let mocha = new Mocha();
 let project = '/' + (process.env.PROJECT_TO_TEST || 'converter');
-let componentTests = './components' + project + '/tests';
+let componentTests = './services' + project + '/tests';
 
 
 // Add each .js file to the mocha instance
