@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import fcctesting from '../../routes/fcctesting.cjs';
+import fcctesting from '../../fcctesting.cjs';
 import queryInput from './converterMiddleware.js';
 import { handleConversion, converterHome } from './converterController.js';
 

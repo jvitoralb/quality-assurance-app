@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import fcctesting from '../../routes/fcctesting.cjs';
+import fcctesting from '../../fcctesting.cjs';
 import { checkPuzzle, validatePuzzle } from './sudokuMiddleware.js';
 import { homeSudoku, checkSudoku, solveSudoku } from './sudokuController.js';
 

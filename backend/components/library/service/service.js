@@ -1,6 +1,7 @@
 import { ObjectId } from 'mongodb'
-import connect from '../../configs/dbConnection.js'
-import { Book, Comment } from './libraryModel.js'
+import connect from '../database/connection.js'
+import { Book } from '../database/models/book.js'
+import { Comment } from '../database/models/comment.js'
 
 
 export class Books {

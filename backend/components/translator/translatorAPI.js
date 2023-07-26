@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import fcctesting from '../../routes/fcctesting.cjs';
+import fcctesting from '../../fcctesting.cjs';
 import { validateBody } from './translatorMiddleware.js';
 import { homeTranslator, getTranslation } from './translatorController.js';
 

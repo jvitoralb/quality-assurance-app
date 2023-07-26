@@ -1,7 +1,7 @@
 import IssuesTracker from './trackerService.js'
 import CustomError from '../../errors/custom.js'
 import pathFrontend from '../../configs/pathConfig.js'
-import connect from '../../configs/dbConnection.js'
+import connect from './connection.js'
 
 
 export const getTrackerHome = (req, res, next) => {

@@ -31,7 +31,7 @@ const fs = require('fs');
 
 
 module.exports = async function (app) {
-    const run = await import('../test-runner.js')
+    const run = await import('./test-runner.js')
     const runner = run.default
 
     app.route('/_api/server.js')

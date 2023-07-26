@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import fcctesting from '../../routes/fcctesting.cjs';
-import { libraryHandler, libraryHome } from './libraryController.js';
-import { checkTitle, checkText, checkOnBooks } from './libraryMiddleware.js';
+import fcctesting from '../../../fcctesting.cjs';
+import { libraryHandler, libraryHome } from './controllers.js';
+import { checkTitle, checkText, checkOnBooks } from './middlewares.js';
 
 
 const personalLibrary = Router();

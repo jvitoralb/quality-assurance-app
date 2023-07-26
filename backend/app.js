@@ -5,7 +5,7 @@ import notFound from './middleware/notFound.js'
 import errorHandler from './middleware/error.js'
 import issueTracker from './components/tracker/trackerAPI.js'
 import imperialConverter from './components/converter/converterAPI.js'
-import personalLibrary from './components/library/libraryAPI.js'
+import personalLibrary from './components/library/api/routes.js'
 import sudokuSolver from './components/sudoku/sudokuAPI.js'
 import translator from './components/translator/translatorAPI.js'
 

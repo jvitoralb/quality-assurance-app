@@ -49,7 +49,7 @@ let testDir = './tests';
 // Add each .js file to the mocha instance
 fs.readdirSync(testDir).filter(function (file) {
     // Only keep the .js files
-    if (file === process.env.PROJECT_TO_TEST_NAME + 'Test.cjs') {
+    if (file === process.env.PROJECT_TO_TEST + 'Test.cjs') {
         return file.substr(-4) === '.cjs';
     }
 }).forEach(function (file) {
