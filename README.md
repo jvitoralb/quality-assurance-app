@@ -14,7 +14,7 @@ To see the app live [click here](https://quality-assurance-app.onrender.com/).
 The backend was built with Nodejs and Expressjs following the Microservices architecture style, and all APIs follow the REST architectural style.  
 The choice for the database was MongoDB and the mongoose library to manage and store the data.  
 
-### [Tests](backend/tests)
+### [Tests](backend)
 As said before, the main goal of this project was to practice TDD. So I used Chai.js to handle all the tests - unit and functional.
 
 ### [Frontend](frontend)
