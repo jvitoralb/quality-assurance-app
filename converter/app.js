@@ -12,6 +12,6 @@ app.use(express.static(pathFrontend));
 
 app.use(imperialConverter);
 
-imperialConverter.use(errorHandler);
+app.use(errorHandler);
 
 export default app;
