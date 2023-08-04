@@ -5,8 +5,8 @@ const chaiHttp = require('chai-http')
 const assert = chai.assert
 
 suite('Functional Tests', async function() {
-    const app = (await import('../../gateway/app.js')).default
-    const pathAPI = '/english-translator/api/v1/translate'
+    const app = (await import('../app.js')).default
+    const pathAPI = '/api/v1/translate'
 
     chai.use(chaiHttp)
 
