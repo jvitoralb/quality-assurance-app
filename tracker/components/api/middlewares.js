@@ -1,4 +1,4 @@
-import CustomError from '../../errors/custom.js'
+import CustomError from '../../lib/error/custom.js'
 
 
 export const validateQueries = (req, res, next) => {

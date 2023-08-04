@@ -1,7 +1,12 @@
 import IssuesTracker from '../service/services.js'
-import CustomError from '../../errors/custom.js'
+import CustomError from '../../lib/error/custom.js'
 import connect from '../database/connection.js'
+import pathFrontend from '../../lib/pathConfig.js'
 
+
+export const trackerHome = (req, res, next) => {
+    res.status(200).sendFile(`${pathFrontend}/public/tracker.html`)
+}
 
 export const getAllProjects = async (req, res, next) => {
     const trackerRef = new IssuesTracker()

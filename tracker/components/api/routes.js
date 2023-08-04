@@ -1,7 +1,8 @@
 import { Router } from 'express';
 // import fcctesting from '../../../fcctesting.cjs';
-import { errorHandler, validateBody, validateQueries } from './middlewares.js';
+import { validateBody, validateQueries } from './middlewares.js';
 import {
+    trackerHome,
     getAllIssues,
     getAllProjects,
     createIssues,
@@ -12,6 +13,9 @@ import {
 
 
 const issueTracker = Router();
+
+issueTracker.route('/')
+.get(trackerHome);
 
 issueTracker.route('/api/v1/projects')
 .get(getAllProjects);
@@ -24,8 +28,6 @@ issueTracker.route('/api/v1/issues/:project')
 .post(createIssues)
 .put(validateBody, updateIssues)
 .delete(validateBody, deleteIssues);
-
-issueTracker.use(errorHandler);
 
 // fcctesting(issueTracker);
 

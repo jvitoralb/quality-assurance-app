@@ -6,7 +6,7 @@ dotenv.config()
 
 const connect = async () => {
     try {
-        await mongoose.connect(process.env.PROJECT_DB, { useNewUrlParser: true, useUnifiedTopology: true })
+        await mongoose.connect(process.env.TRACKER_DB, { useNewUrlParser: true, useUnifiedTopology: true })
         return 'done'
     } catch(err) {
         console.log(err)

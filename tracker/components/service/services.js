@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 import { ObjectId } from 'mongodb'
-import CustomError from '../../errors/custom.js'
+import CustomError from '../../lib/error/custom.js'
 import { Project } from '../database/models/project.js'
 import { Issue } from '../database/models/issue.js'
 

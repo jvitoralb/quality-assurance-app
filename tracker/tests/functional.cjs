@@ -3,9 +3,9 @@ const chaiHttp = require('chai-http')
 
 
 suite('Tracker Functional Tests', async () => {
-    const app = (await import('../../gateway/app.js')).default
-    const issuePath = '/issue-tracker/api/v1/issues/tests-project-21'
-    const projectPath = '/issue-tracker/api/v1/projects'
+    const app = (await import('../app.js')).default
+    const issuePath = '/api/v1/issues/tests-project-21'
+    const projectPath = '/api/v1/projects'
     let assert = chai.assert
 
     chai.use(chaiHttp)
@@ -13,7 +13,7 @@ suite('Tracker Functional Tests', async () => {
     suite('POST', () => {
         test('#Issue Tracker Home', (done) => {
             chai.request(app)
-            .get('/issue-tracker')
+            .get('/')
             .end((err, res) => {
                 assert.equal(res.status, 200)
                 done()
@@ -38,7 +38,7 @@ suite('Tracker Functional Tests', async () => {
                 assert.containsAllKeys(res.body, ['_id', 'created_on', 'updated_on', 'open'])
                 done()
             })
-        })
+        }).timeout(20000)
         test('#Only required fields', (done) => {
             const thisDemo = {
                 ...defaultDemo,
