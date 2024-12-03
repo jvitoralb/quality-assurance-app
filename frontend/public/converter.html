@@ -7,43 +7,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
     <title>QA Projects - Imperial Converter</title>
+    <style>
+        .font-sm-c {
+            font-size: 12px;
+        }
+
+        .shadow-c {
+            box-shadow: 0 0.35px 7px rgba(0, 0, 0, 0.65);
+        }
+    </style>
 </head>
 
 <body>
-    <header id="header" class="container-fluid py-2 bg-primary">
-        <nav id="navigation-bar" class="navbar navbar-dark navbar-expand-md">
+    <header id="header" class="shadow-c fw-semibold container-fluid py-2 bg-primary">
+        <nav id="navigation-bar" class="py-2 px-4 navbar navbar-dark navbar-expand-md d-flex justify-content-between">
             <h2 class="navbar-brand">
                 <a class="navbar-brand" href="/">
                     Quality Assurance Projects
                 </a>
             </h2>
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <ul class="collapse navbar-collapse navbar-nav" id="navbarSupportedContent">
-                <li class="nav-item">
-                    <a class="nav-link active" href="/metric-converter">Metric Converter</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/issue-tracker">Issues Tracker</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/personal-library">Library</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/sudoku-solver">Sudoku</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/english-translator">Translator</a>
-                </li>
-            </ul>
+            <div>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+    
+                <ul class="collapse navbar-collapse navbar-nav" id="navbarSupportedContent">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/metric-converter">Metric Converter</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/issue-tracker">Issues Tracker</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/personal-library">Library</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/sudoku-solver">Sudoku</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/english-translator">Translator</a>
+                    </li>
+                </ul>
+            </div>
         </nav>
     </header>
 
-    <main id="main" class="p-3 container-md">
-        <section id="metric-converter-section" class="my-3 py-3 row bg-light">
+    <main id="main" class="p-3 container-md w-75">
+        <section id="metric-converter-section" class="my-3 p-3 row bg-light">
             <header id="converter-section-header">
                 <h3 id="heading-converter-section" title="Metric/Imperial Converter" class="text-start">
                     Metric Converter
@@ -76,7 +87,7 @@
             </div>
         </section>
 
-        <article id="metric-imperial-converter" class="p-3 row bg-light">
+        <article id="metric-imperial-converter" class="my-3 p-3 row bg-light">
             <section id="introduction" class="my-2 col-md-6">
                 <header id="introduction-sec-header">
                     <h3 id="heading-introduction-sec" title="Introduction to the API usage">Introduction</h3>
@@ -147,7 +158,7 @@
         </article>
     </main>
 
-    <footer id="footer" class="container-fluid bg-primary text-white text-center">
+    <footer id="footer" class="container-fluid bg-primary text-white text-center shadow-c">
         <section id="socials-section" class="row py-3 g-3">
             <div class="col-sm-6">
                 <a class="link-light text-decoration-none" href="https://www.linkedin.com/in/jvitor-albuquerque/" target="_blank">
@@ -160,7 +171,7 @@
                 </a>
             </div>
         </section>
-        <p title="by jvitoralb" class="m-0 p-0">by jvitoralb</p>
+        <p title="by jvitoralb" class="m-0 p-0 font-sm-c">by jvitoralb</p>
     </footer>
 
 
